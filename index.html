@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scottland FC — Mabviravira · Zimbabwe Champions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#07090f;
+  --ink2:#0d1220;
+  --card:#111827;
+  --card2:#161f30;
+  --surface:#0a0f1c;
+  --border:rgba(255,255,255,.07);
+  --border2:rgba(255,200,0,.18);
+  --gold:#ffc800;
+  --gold2:#e6b400;
+  --gold3:rgba(255,200,0,.08);
+  --red:#e63946;
+  --green:#2dc653;
+  --muted:#4a5f7a;
+  --muted2:#7a96b8;
+  --white:#f0f6ff;
+  --F:'Barlow Condensed',sans-serif;
+  --B:'Syne',sans-serif;
+  --S:'DM Serif Display',serif;
+  --radius:2px;
+}
+html{scroll-behavior:smooth;font-size:15px}
+body{background:var(--ink);color:var(--white);font-family:var(--B);overflow-x:hidden;cursor:none}
+img{display:block}
+a{color:inherit;text-decoration:none}
+button{cursor:none}
+
+/* ──────── CURSOR ──────── */
+#cur{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .15s,width .2s,height .2s,border-radius .2s;mix-blend-mode:difference}
+#cur.link{width:40px;height:40px;border-radius:50%;background:var(--gold);opacity:.7}
+#cur-trail{position:fixed;width:32px;height:32px;border:1.5px solid rgba(255,200,0,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .1s ease,top .1s ease}
+
+/* ──────── BREAKING BANNER ──────── */
+#breaking-bar{background:var(--red);padding:10px 2rem;display:flex;align-items:center;gap:1.5rem;position:relative;z-index:200}
+#breaking-bar.hidden{display:none}
+.br-tag{background:#fff;color:var(--red);font-family:var(--F);font-size:11px;font-weight:900;letter-spacing:.18em;padding:3px 10px;flex-shrink:0}
+#br-text{font-family:var(--F);font-size:14px;font-weight:600;letter-spacing:.05em;flex:1}
+#br-close{background:none;border:none;color:rgba(255,255,255,.6);font-size:1.3rem;padding:0 4px;transition:color .2s}
+#br-close:hover{color:#fff}
+
+/* ──────── NEWS TICKER ──────── */
+.ticker{background:var(--gold);padding:7px 0;overflow:hidden;position:relative}
+.ticker::before,.ticker::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none}
+.ticker::before{left:0;background:linear-gradient(to right,var(--gold),transparent)}
+.ticker::after{right:0;background:linear-gradient(to left,var(--gold),transparent)}
+.ticker-track{display:flex;animation:tick 50s linear infinite;white-space:nowrap}
+.ticker-item{font-family:var(--F);font-size:12px;font-weight:700;letter-spacing:.1em;padding:0 2.5rem;color:var(--ink);flex-shrink:0}
+.ticker-item .sep{opacity:.4;margin:0 .5rem}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ──────── NAV ──────── */
+nav{position:sticky;top:0;z-index:150;background:rgba(7,9,15,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:all .3s}
+nav.scrolled{border-bottom-color:rgba(255,200,0,.2)}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 2rem;height:68px;display:flex;align-items:center;gap:0}
+.nav-logo{display:flex;align-items:center;gap:12px;margin-right:2.5rem;flex-shrink:0}
+.logo-badge{width:42px;height:42px;position:relative;flex-shrink:0}
+.logo-badge svg{width:42px;height:42px}
+.logo-pulse{position:absolute;inset:-3px;border-radius:50%;background:radial-gradient(circle,rgba(255,200,0,.25),transparent 70%);animation:glow 3s ease-in-out infinite}
+@keyframes glow{0%,100%{opacity:.5;transform:scale(.95)}50%{opacity:1;transform:scale(1.05)}}
+.logo-text .club{font-family:var(--F);font-size:20px;font-weight:900;letter-spacing:.06em;line-height:1;color:#fff}
+.logo-text .tag{font-family:var(--B);font-size:9px;font-weight:600;letter-spacing:.2em;color:var(--gold);line-height:1;margin-top:2px}
+.nav-links{display:flex;align-items:center;list-style:none;flex:1;gap:0;height:68px}
+.nav-links a{display:flex;align-items:center;height:68px;padding:0 .9rem;font-family:var(--F);font-size:13px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.45);transition:color .2s;position:relative;white-space:nowrap}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:.9rem;right:.9rem;height:2px;background:var(--gold);transform:scaleX(0);transform-origin:center;transition:transform .25s}
+.nav-links a:hover{color:var(--white)}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+.nav-links a.active{color:var(--white)}
+.nav-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.nav-pill{display:flex;align-items:center;gap:6px;background:rgba(44,198,83,.12);border:1px solid rgba(44,198,83,.3);padding:5px 12px;border-radius:99px;font-family:var(--F);font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--green)}
+.live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.7)}}
+.btn-nav{font-family:var(--F);font-size:12px;font-weight:800;letter-spacing:.12em;padding:9px 20px;border:none;cursor:none;transition:all .18s;white-space:nowrap}
+.btn-gold{background:var(--gold);color:var(--ink)}
+.btn-gold:hover{background:#ffe033;transform:translateY(-1px)}
+.btn-ghost-sm{background:transparent;border:1px solid var(--border);color:rgba(255,255,255,.5)}
+.btn-ghost-sm:hover{border-color:rgba(255,255,255,.3);color:#fff}
+#search-toggle{background:none;border:none;color:var(--muted2);padding:8px;font-size:1.1rem;transition:color .2s}
+#search-toggle:hover{color:var(--gold)}
+
+/* ──────── HERO ──────── */
+.hero{position:relative;height:100vh;min-height:640px;max-height:980px;display:flex;align-items:flex-end;overflow:hidden}
+.hero-bg{position:absolute;inset:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 20%;filter:brightness(.32) saturate(.6)}
+.hero-overlay{position:absolute;inset:0;background:
+  linear-gradient(120deg,rgba(7,9,15,.98) 0%,rgba(7,9,15,.6) 45%,rgba(7,9,15,.2) 100%),
+  linear-gradient(to top,var(--ink) 0%,rgba(7,9,15,.5) 28%,transparent 60%)}
+.hero-grid-lines{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.hero-grid-lines::before{content:'';position:absolute;inset:-50%;background:repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(255,200,0,.022) 79px,rgba(255,200,0,.022) 80px);animation:gridDrift 25s linear infinite}
+@keyframes gridDrift{0%{transform:translateX(0)}100%{transform:translateX(80px)}}
+.hero-content{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 2rem 5.5rem;width:100%;display:grid;grid-template-columns:1fr 360px;gap:4rem;align-items:end}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:1.4rem;opacity:0;animation:riseIn .55s .1s ease both}
+@keyframes riseIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.champs-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,200,0,.12);border:1px solid rgba(255,200,0,.4);padding:6px 14px;font-family:var(--F);font-size:10px;font-weight:800;letter-spacing:.2em;color:var(--gold)}
+.h1{font-family:var(--F);font-size:clamp(4rem,9vw,8.5rem);line-height:.9;font-weight:900;letter-spacing:.01em;margin-bottom:1.2rem;opacity:0;animation:riseIn .55s .2s ease both}
+.h1 .stroke{-webkit-text-stroke:2px var(--gold);color:transparent}
+.hero-sub{font-family:var(--S);font-style:italic;font-size:1.05rem;color:rgba(255,255,255,.5);max-width:440px;line-height:1.75;margin-bottom:2rem;opacity:0;animation:riseIn .55s .3s ease both}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;opacity:0;animation:riseIn .55s .4s ease both}
+.btn-lg{font-family:var(--F);font-size:13px;font-weight:900;letter-spacing:.14em;padding:14px 32px;border:none;cursor:none;transition:all .2s}
+.btn-lg.primary{background:var(--gold);color:var(--ink)}
+.btn-lg.primary:hover{background:#ffe033;transform:translateY(-2px)}
+.btn-lg.outline{background:transparent;border:1.5px solid rgba(255,255,255,.25);color:#fff}
+.btn-lg.outline:hover{border-color:#fff;transform:translateY(-2px)}
+
+/* HERO MATCH CARD */
+.hero-card{background:rgba(13,18,32,.88);border:1px solid var(--border2);backdrop-filter:blur(16px);padding:1.75rem;opacity:0;animation:riseIn .55s .5s ease both}
+.hc-header{font-family:var(--F);font-size:9px;font-weight:800;letter-spacing:.22em;color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.hc-header::after{content:'';flex:1;height:1px;background:var(--border2)}
+.hc-comp{font-family:var(--B);font-size:10px;color:var(--muted2);letter-spacing:.1em;text-align:center;margin-bottom:.9rem}
+.hc-teams{display:flex;align-items:center;justify-content:center;gap:1.25rem;margin-bottom:1rem}
+.hc-team{font-family:var(--F);font-size:1rem;font-weight:700;letter-spacing:.06em;flex:1;text-align:right}
+.hc-team.away{text-align:left}
+.hc-score{background:var(--gold);color:var(--ink);font-family:var(--F);font-size:2rem;font-weight:900;padding:.4rem 1.2rem;letter-spacing:.06em;text-align:center;min-width:84px}
+.hc-scorers{font-size:11px;color:var(--muted2);text-align:center;line-height:1.9;margin-bottom:1.2rem}
+.hc-scorers .name{color:rgba(255,255,255,.8)}
+.stat-grid{display:grid;grid-template-columns:auto 1fr 1fr auto;gap:4px 8px;align-items:center}
+.sg-val{font-family:var(--F);font-size:1rem;font-weight:700}
+.sg-val.right{text-align:right}
+.sg-bar{height:3px;background:var(--border);border-radius:99px;position:relative;overflow:hidden}
+.sg-fill{position:absolute;top:0;height:100%;background:var(--gold);border-radius:99px}
+.sg-fill.r{right:0}
+.sg-fill.l{left:0;background:rgba(74,95,122,.7)}
+.sg-label{font-family:var(--B);font-size:8px;letter-spacing:.14em;color:var(--muted);text-align:center;grid-column:2/4}
+
+/* ──────── MATCH STRIP ──────── */
+.match-strip{background:var(--ink2);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.ms-inner{max-width:1400px;margin:0 auto;display:flex;overflow-x:auto;scrollbar-width:none}
+.ms-inner::-webkit-scrollbar{display:none}
+.ms-cell{padding:16px 2rem;border-right:1px solid var(--border);flex-shrink:0;cursor:none;transition:background .18s}
+.ms-cell:hover{background:rgba(255,255,255,.025)}
+.ms-comp{font-family:var(--F);font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--gold);margin-bottom:5px}
+.ms-fixture{font-family:var(--F);font-size:14px;font-weight:700;letter-spacing:.04em;display:flex;align-items:center;gap:10px}
+.ms-result{padding:3px 10px;font-size:13px;font-family:var(--F);font-weight:800}
+.ms-result.w{background:var(--green);color:#fff}
+.ms-result.d{background:var(--gold);color:var(--ink)}
+.ms-result.l{background:var(--red);color:#fff}
+.ms-result.upcoming{background:transparent;border:1px solid var(--border);color:var(--muted2);font-size:11px}
+.ms-sub{font-family:var(--B);font-size:10px;color:var(--muted);margin-top:3px}
+
+/* ──────── COUNTDOWN ──────── */
+.countdown{background:linear-gradient(90deg,#0d1825,#07090f);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);padding:1.25rem 0}
+.cd-inner{max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;gap:2.5rem;justify-content:center;flex-wrap:wrap}
+.cd-label{font-family:var(--F);font-size:1rem;font-weight:700;letter-spacing:.1em;color:var(--gold)}
+.cd-units{display:flex;gap:.75rem;align-items:center}
+.cd-unit{text-align:center;min-width:52px}
+.cd-num{font-family:var(--F);font-size:2.2rem;font-weight:900;line-height:1;color:#fff}
+.cd-lbl{font-family:var(--B);font-size:8px;font-weight:600;letter-spacing:.18em;color:var(--muted2);margin-top:1px}
+.cd-sep{font-family:var(--F);font-size:1.8rem;color:var(--gold);opacity:.4;margin-bottom:10px}
+
+/* ──────── SECTION CHROME ──────── */
+.wrap{max-width:1400px;margin:0 auto;padding:5rem 2rem}
+.wrap.tight{padding:3rem 2rem}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2.5rem}
+.sh-left{display:flex;flex-direction:column;gap:3px}
+.eyebrow{font-family:var(--F);font-size:10px;font-weight:800;letter-spacing:.22em;color:var(--gold)}
+.section-title{font-family:var(--F);font-size:2.4rem;font-weight:900;letter-spacing:.04em;line-height:1}
+.sh-link{font-family:var(--F);font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--gold);border-bottom:1px solid rgba(255,200,0,.3);padding-bottom:2px;transition:color .2s;cursor:none}
+.sh-link:hover{color:#ffe033}
+
+/* ──────── NEWS MOSAIC ──────── */
+.news-mosaic{display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:270px 230px;gap:3px}
+.nc{position:relative;overflow:hidden;cursor:none;background:var(--card)}
+.nc:nth-child(1){grid-column:1/8;grid-row:1/3}
+.nc:nth-child(2){grid-column:8/13;grid-row:1/2}
+.nc:nth-child(3){grid-column:8/10;grid-row:2/3}
+.nc:nth-child(4){grid-column:10/13;grid-row:2/3}
+.nc img{width:100%;height:100%;object-fit:cover;transition:transform .65s ease,filter .3s;filter:brightness(.55) saturate(.7)}
+.nc:hover img{transform:scale(1.07);filter:brightness(.4) saturate(.65)}
+.nc-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(7,9,15,.98) 0%,rgba(7,9,15,.15) 55%,transparent 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:1.5rem}
+.nc-tag-wrap{position:absolute;top:1rem;left:1rem;display:flex;gap:6px}
+.nc-tag{font-family:var(--F);font-size:9px;font-weight:900;letter-spacing:.18em;padding:4px 11px}
+.nc-tag.gold{background:var(--gold);color:var(--ink)}
+.nc-tag.green{background:var(--green);color:#fff}
+.nc-tag.red{background:var(--red);color:#fff}
+.nc-cat{font-family:var(--F);font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--gold);margin-bottom:5px}
+.nc-title{font-family:var(--F);font-size:1rem;font-weight:700;letter-spacing:.03em;line-height:1.2}
+.nc:nth-child(1) .nc-title{font-size:2.1rem;letter-spacing:.02em}
+.nc-meta{font-size:11px;color:rgba(255,255,255,.35);margin-top:5px}
+.nc-read-btn{margin-top:.75rem;display:inline-block;font-family:var(--F);font-size:10px;font-weight:800;letter-spacing:.14em;color:var(--gold);border-bottom:1px solid rgba(255,200,0,.35);padding-bottom:1px;opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s}
+.nc:hover .nc-read-btn{opacity:1;transform:translateY(0)}
+
+/* ──────── STATS BAR ──────── */
+.stats-bar{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.stats-inner{max-width:1400px;margin:0 auto;padding:3.5rem 2rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1px}
+.stat-col{padding:2rem;border-right:1px solid var(--border);text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.stat-col:last-child{border-right:none}
+.stat-big{font-family:var(--F);font-size:4.5rem;font-weight:900;line-height:1;color:var(--gold)}
+.stat-name{font-family:var(--F);font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--muted2)}
+.stat-note{font-family:var(--B);font-size:11px;color:var(--muted)}
+
+/* ──────── MATCH CENTRE ──────── */
+.match-centre{background:var(--surface);border-top:1px solid var(--border)}
+.mc-inner{max-width:1400px;margin:0 auto;padding:4rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem}
+.tab-row{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:1.75rem}
+.tab{font-family:var(--F);font-size:11px;font-weight:800;letter-spacing:.12em;padding:10px 18px;cursor:none;color:var(--muted2);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab:hover:not(.active){color:var(--white)}
+
+/* STANDINGS TABLE */
+.stab{width:100%;border-collapse:collapse}
+.stab thead tr{border-bottom:1px solid var(--border)}
+.stab th{font-family:var(--F);font-size:9px;font-weight:700;letter-spacing:.16em;color:var(--muted);padding:8px 6px;text-align:center}
+.stab th:nth-child(2){text-align:left}
+.stab td{padding:9px 6px;text-align:center;font-size:13px;border-radius:3px;transition:background .15s}
+.stab td:nth-child(2){text-align:left;font-family:var(--F);font-size:13px;font-weight:700;letter-spacing:.04em}
+.stab tr:hover td{background:rgba(255,255,255,.03)}
+.stab tr.us td{background:rgba(255,200,0,.07)}
+.stab tr.us td:nth-child(2){color:var(--gold)}
+.pos-num{font-family:var(--F);font-size:13px;color:var(--muted2)}
+.pos-num.top{color:var(--gold)}
+.pts{font-family:var(--F);font-size:15px;font-weight:900}
+.pts.gold{color:var(--gold)}
+.form-dots{display:flex;gap:3px;justify-content:flex-end}
+.fd{width:8px;height:8px;border-radius:50%}
+.fd.w{background:var(--green)}.fd.d{background:var(--gold)}.fd.l{background:var(--red)}
+
+/* FIXTURES */
+.fix-list{display:flex;flex-direction:column;gap:3px}
+.fix-item{background:var(--card);padding:1rem 1.25rem;display:grid;grid-template-columns:50px 1fr auto;align-items:center;gap:1rem;cursor:none;transition:background .18s;border-left:3px solid transparent}
+.fix-item:hover{background:var(--card2);border-left-color:var(--gold)}
+.fix-date{text-align:center}
+.fix-day{font-family:var(--F);font-size:1.5rem;font-weight:900;color:var(--gold);line-height:1}
+.fix-mon{font-family:var(--F);font-size:9px;letter-spacing:.14em;color:var(--muted2)}
+.fix-vs{font-family:var(--F);font-size:13px;font-weight:700;letter-spacing:.04em}
+.fix-info{font-family:var(--B);font-size:10px;color:var(--muted);margin-top:2px}
+.fix-comp{font-family:var(--F);font-size:9px;font-weight:800;letter-spacing:.12em;padding:4px 10px;background:rgba(255,200,0,.1);border:1px solid var(--border2);color:var(--muted2)}
+
+/* ──────── SOCIAL FEED ──────── */
+.social-scroll{display:flex;gap:3px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.social-scroll::-webkit-scrollbar{display:none}
+.sc{min-width:285px;max-width:285px;background:var(--card);padding:1.25rem;border-top:3px solid transparent;cursor:none;transition:all .25s;flex-shrink:0;position:relative}
+.sc:hover{background:var(--card2);transform:translateY(-3px)}
+.sc.tw{border-top-color:#1DA1F2}.sc.ig{border-top-color:#E1306C}.sc.fb{border-top-color:#1877F2}.sc.yt{border-top-color:#FF0000}
+.sc-head{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.sc-ico{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0}
+.sc-ico.tw{background:#1DA1F2}.sc-ico.ig{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}.sc-ico.fb{background:#1877F2}.sc-ico.yt{background:#FF0000}
+.sc-handle{font-family:var(--F);font-size:11px;font-weight:700;color:var(--muted2)}
+.sc-time{font-family:var(--B);font-size:10px;color:var(--muted);margin-left:auto}
+.sc-body{font-size:13px;line-height:1.6;color:rgba(255,255,255,.8);margin-bottom:11px}
+.sc-img{width:100%;height:120px;object-fit:cover;margin-bottom:10px}
+.sc-engage{display:flex;gap:12px}
+.se{font-family:var(--B);font-size:11px;color:var(--muted2)}
+.live-badge-sm{display:inline-flex;align-items:center;gap:4px;background:rgba(44,198,83,.15);border:1px solid rgba(44,198,83,.3);padding:2px 7px;border-radius:99px;font-family:var(--F);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--green);margin-left:auto}
+
+/* ──────── FAN WALL ──────── */
+.fan-wall-track{display:flex;gap:3px;animation:fanScroll 35s linear infinite}
+.fan-wall-track:hover{animation-play-state:paused}
+@keyframes fanScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.fw-item{flex-shrink:0;background:var(--card);border:1px solid var(--border);padding:.85rem 1.1rem;min-width:230px;cursor:none;transition:border-color .2s}
+.fw-item:hover{border-color:var(--border2)}
+.fw-name{font-family:var(--F);font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--gold);margin-bottom:3px}
+.fw-msg{font-size:12px;color:rgba(255,255,255,.55);line-height:1.45}
+
+/* ──────── SQUAD ──────── */
+.squad-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:3px}
+.pc{position:relative;overflow:hidden;cursor:none;background:var(--card);aspect-ratio:.7;transition:all .3s}
+.pc:hover{transform:translateY(-5px);z-index:3}
+.pc img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:filter .4s,transform .5s;filter:grayscale(20%) brightness(.85)}
+.pc:hover img{filter:grayscale(0%) brightness(.75);transform:scale(1.07)}
+.pc-num{position:absolute;top:6px;left:8px;font-family:var(--F);font-size:4rem;font-weight:900;color:rgba(255,255,255,.06);line-height:1;pointer-events:none}
+.pc-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(7,9,15,.98) 0%,transparent 50%)}
+.pc-info{position:absolute;bottom:0;left:0;right:0;padding:12px}
+.pc-pos{font-family:var(--F);font-size:8px;font-weight:800;letter-spacing:.2em;color:var(--gold);margin-bottom:3px}
+.pc-name{font-family:var(--F);font-size:1rem;font-weight:700;letter-spacing:.03em;line-height:1.15}
+.pc-flag{font-size:13px;margin-top:3px}
+.pc.feat{grid-column:span 2;grid-row:span 2}
+.pc.feat .pc-name{font-size:1.5rem}
+.pc.feat .pc-num{font-size:6rem}
+.pc-stats{position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:3px;opacity:0;transition:opacity .25s;pointer-events:none}
+.pc:hover .pc-stats{opacity:1}
+.pc-stat{background:rgba(7,9,15,.85);border:1px solid rgba(255,200,0,.25);padding:3px 8px;text-align:center}
+.pc-stat-val{font-family:var(--F);font-size:12px;font-weight:900;color:var(--gold);line-height:1}
+.pc-stat-lbl{font-family:var(--B);font-size:7px;letter-spacing:.1em;color:var(--muted2)}
+
+/* ──────── STADIUM CTA ──────── */
+.stadium-cta{position:relative;overflow:hidden;min-height:360px;display:flex;align-items:center}
+.stadium-cta img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.2) saturate(.4)}
+.stadium-cta::before{content:'';position:absolute;inset:0;background:linear-gradient(95deg,rgba(7,9,15,.97) 0%,rgba(7,9,15,.55) 55%,transparent 100%)}
+.stadium-cta::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 50px,rgba(255,200,0,.025) 50px,rgba(255,200,0,.025) 51px)}
+.cta-inner{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:4rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.cta-left h2{font-family:var(--F);font-size:clamp(2.5rem,5vw,4rem);font-weight:900;line-height:.95;letter-spacing:.04em;margin:10px 0 14px}
+.cta-left p{font-family:var(--S);font-style:italic;font-size:1rem;color:rgba(255,255,255,.5);line-height:1.8;max-width:380px;margin-bottom:1.75rem}
+.mem-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mem-card{background:rgba(255,255,255,.04);border:1px solid var(--border);padding:1.25rem;cursor:none;transition:all .22s;position:relative;overflow:hidden}
+.mem-card:hover{background:rgba(255,255,255,.07);border-color:var(--border2);transform:translateY(-2px)}
+.mem-card.feat{border-color:rgba(255,200,0,.45);background:rgba(255,200,0,.06)}
+.mem-card.feat::before{content:'POPULAR';position:absolute;top:0;right:0;background:var(--gold);color:var(--ink);font-family:var(--F);font-size:8px;font-weight:900;letter-spacing:.16em;padding:3px 9px}
+.mem-tier{font-family:var(--F);font-size:9px;font-weight:800;letter-spacing:.2em;color:var(--muted2);margin-bottom:4px}
+.mem-price{font-family:var(--F);font-size:1.6rem;font-weight:900;color:#fff;margin-bottom:2px}
+.mem-price sup{font-size:.9rem}
+.mem-cur{font-family:var(--B);font-size:10px;color:var(--muted2);margin-bottom:7px}
+.mem-perks{font-family:var(--B);font-size:11px;color:rgba(255,255,255,.45);line-height:1.6}
+
+/* ──────── PARTNERS ──────── */
+.partners{background:rgba(255,255,255,.02);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.4rem 0}
+.partners-inner{max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;gap:3.5rem;overflow-x:auto;scrollbar-width:none}
+.partners-inner::-webkit-scrollbar{display:none}
+.p-lbl{font-family:var(--F);font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--muted);flex-shrink:0;white-space:nowrap}
+.p-div{width:1px;height:22px;background:var(--border);flex-shrink:0}
+.p-logo{font-family:var(--F);font-size:1.05rem;font-weight:700;letter-spacing:.08em;color:rgba(255,255,255,.15);flex-shrink:0;transition:color .2s;cursor:none;white-space:nowrap}
+.p-logo:hover{color:rgba(255,255,255,.5)}
+
+/* ──────── FOOTER ──────── */
+footer{background:#030608;border-top:3px solid rgba(255,200,0,.3);padding:4rem 2rem 2rem}
+.footer-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr;gap:4rem}
+.fb-name{font-family:var(--F);font-size:1.6rem;font-weight:900;letter-spacing:.08em;margin-bottom:2px}
+.fb-sub{font-family:var(--F);font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--gold);margin-bottom:12px}
+.fb-p{font-family:var(--B);font-size:12px;color:var(--muted2);line-height:1.8;max-width:280px}
+.fb-social{display:flex;gap:7px;margin-top:1.25rem}
+.fs-icon{width:36px;height:36px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted2);text-decoration:none;transition:all .2s;cursor:none}
+.fs-icon:hover{background:rgba(255,200,0,.12);border-color:var(--border2);color:var(--gold)}
+.fc h4{font-family:var(--F);font-size:9px;font-weight:800;letter-spacing:.22em;color:var(--gold);margin-bottom:1rem}
+.fc ul{list-style:none}
+.fc li{margin-bottom:7px}
+.fc a{font-family:var(--B);font-size:13px;color:rgba(255,255,255,.35);transition:color .18s;cursor:none}
+.fc a:hover{color:#fff}
+.footer-bottom{max-width:1400px;margin:2rem auto 0;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-bottom p{font-family:var(--B);font-size:11px;color:var(--muted)}
+.zp{font-family:var(--F);font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--gold)}
+
+/* ──────── MODALS & OVERLAYS ──────── */
+
+/* ARTICLE MODAL */
+#article-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;overflow-y:auto;backdrop-filter:blur(10px)}
+.am-box{max-width:760px;margin:4rem auto;background:var(--card);border:1px solid var(--border2);padding:3rem 3.5rem;position:relative;animation:riseIn .3s ease}
+.am-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--muted2);font-size:1.5rem;transition:color .18s}
+.am-close:hover{color:#fff}
+#am-eyebrow{font-family:var(--F);font-size:9px;font-weight:800;letter-spacing:.22em;color:var(--gold);margin-bottom:.6rem}
+#am-title{font-family:var(--F);font-size:2.2rem;font-weight:900;letter-spacing:.03em;line-height:1.1;margin-bottom:.9rem}
+#am-meta{font-family:var(--B);font-size:11px;color:var(--muted2);padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:1.75rem}
+#am-img{width:100%;height:320px;object-fit:cover;margin-bottom:1.75rem}
+#am-body{font-family:var(--B);font-size:14px;line-height:1.9;color:rgba(255,255,255,.72)}
+#am-body p{margin-bottom:1.25rem}
+#am-body strong{color:#fff}
+.share-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+.share-btn{font-family:var(--F);font-size:11px;font-weight:800;letter-spacing:.1em;padding:9px 18px;border:none;cursor:none;transition:all .18s}
+.share-btn:hover{opacity:.85;transform:translateY(-1px)}
+.share-btn.x{background:rgba(29,161,242,.15);border:1px solid rgba(29,161,242,.3);color:#1DA1F2}
+.share-btn.fb{background:rgba(24,119,242,.15);border:1px solid rgba(24,119,242,.3);color:#1877F2}
+.share-btn.wa{background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.3);color:#25D366}
+
+/* LIGHTBOX */
+#lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:600;align-items:center;justify-content:center;flex-direction:column}
+#lb-close{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:rgba(255,255,255,.5);font-size:2rem;cursor:none;z-index:1}
+#lb-prev,#lb-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;width:50px;height:50px;font-size:1.6rem;cursor:none;transition:background .18s}
+#lb-prev:hover,#lb-next:hover{background:rgba(255,255,255,.12)}
+#lb-prev{left:1.5rem}
+#lb-next{right:1.5rem}
+#lb-img{max-width:90vw;max-height:80vh;object-fit:contain}
+#lb-caption{margin-top:.9rem;font-family:var(--S);font-style:italic;font-size:13px;color:rgba(255,255,255,.45)}
+#lb-counter{font-family:var(--F);font-size:10px;letter-spacing:.14em;color:var(--gold);margin-top:.4rem}
+
+/* GALLERY SECTION */
+#gallery-section{display:none}
+#gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:3px;grid-auto-rows:210px}
+#gallery-grid .gi:nth-child(4n+1){grid-row:span 2}
+#gallery-grid .gi:nth-child(6n+3){grid-column:span 2}
+.gi{position:relative;overflow:hidden;cursor:pointer;background:var(--card)}
+.gi img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease,filter .3s}
+.gi:hover img{transform:scale(1.08);filter:brightness(.65)}
+.gi-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(7,9,15,.92),transparent 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:12px;opacity:0;transition:opacity .28s}
+.gi:hover .gi-ov{opacity:1}
+.gi-cat{font-family:var(--F);font-size:9px;font-weight:800;letter-spacing:.18em;color:var(--gold);margin-bottom:3px}
+.gi-cap{font-family:var(--F);font-size:12px;font-weight:700;color:#fff}
+
+/* SEARCH OVERLAY */
+#search-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:700;align-items:flex-start;justify-content:center;padding-top:11vh;backdrop-filter:blur(12px)}
+.search-box{width:100%;max-width:650px;padding:0 1rem}
+.search-input-wrap{background:var(--card);border:1px solid var(--border2);padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1rem}
+.search-input-wrap span{font-size:1.1rem;color:var(--muted2)}
+#search-input{flex:1;background:none;border:none;color:#fff;font-family:var(--B);font-size:16px;outline:none}
+#search-input::placeholder{color:var(--muted)}
+#search-results{background:var(--card);border:1px solid var(--border);border-top:none;max-height:340px;overflow-y:auto}
+.sr-item{padding:12px 1.5rem;border-bottom:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:12px;transition:background .15s}
+.sr-item:hover{background:rgba(255,255,255,.04)}
+.sr-type{font-family:var(--F);font-size:9px;font-weight:800;letter-spacing:.18em;color:var(--gold);min-width:72px}
+.sr-title{font-family:var(--B);font-size:13px;color:rgba(255,255,255,.8)}
+
+/* ADMIN PANEL */
+#admin-btn{position:fixed;bottom:2rem;right:2rem;width:46px;height:46px;background:var(--gold);border:none;cursor:none;display:flex;align-items:center;justify-content:center;font-size:1.2rem;z-index:400;transition:all .2s}
+#admin-btn:hover{background:#ffe033;transform:scale(1.08)}
+#admin-panel{display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.9);overflow-y:auto;backdrop-filter:blur(14px)}
+.admin-box{max-width:920px;margin:3rem auto;padding:0 1rem}
+.admin-wrap{background:var(--card);border:1px solid var(--border2);padding:2.5rem;position:relative}
+.admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.admin-title{font-family:var(--F);font-size:2rem;font-weight:900;letter-spacing:.06em;color:var(--gold)}
+.admin-sub{font-family:var(--B);font-size:11px;color:var(--muted2);margin-top:3px}
+.adm-tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--muted2);font-family:var(--F);font-size:12px;font-weight:800;letter-spacing:.1em;padding:10px 18px;cursor:none;margin-bottom:-1px;transition:all .2s}
+.adm-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.adm-tab:hover:not(.active){color:#fff}
+.adm-content{display:none}
+.adm-content.active{display:block}
+.input-label{font-family:var(--F);font-size:10px;font-weight:800;letter-spacing:.16em;color:var(--muted2);display:block;margin-bottom:6px}
+.inp{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);color:#fff;padding:11px 14px;font-family:var(--B);font-size:13px;outline:none;transition:border-color .18s}
+.inp:focus{border-color:rgba(255,200,0,.4)}
+.inp-select{background:var(--card)}
+.btn-adm{font-family:var(--F);font-size:12px;font-weight:900;letter-spacing:.12em;padding:12px 28px;border:none;cursor:none;transition:all .18s}
+.btn-adm.primary{background:var(--gold);color:var(--ink)}
+.btn-adm.primary:hover{background:#ffe033}
+.btn-adm.ghost{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--muted2)}
+.btn-adm.ghost:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+.drop-zone{border:2px dashed rgba(255,200,0,.25);padding:2.5rem;text-align:center;cursor:pointer;transition:all .2s}
+.drop-zone:hover,.drop-zone.over{border-color:var(--gold);background:rgba(255,200,0,.04)}
+.up-prev{position:relative;width:75px;height:75px;background:var(--card2);border:1px solid var(--border);overflow:hidden}
+.up-prev img{width:100%;height:100%;object-fit:cover}
+.up-prev-del{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.75);border:none;color:#fff;width:18px;height:18px;font-size:10px;cursor:none;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.bn-template{padding:9px 14px;background:rgba(255,255,255,.03);border:1px solid var(--border);font-family:var(--B);font-size:12px;cursor:pointer;transition:background .15s;border-left:3px solid transparent}
+.bn-template:hover{background:rgba(255,255,255,.06);border-left-color:var(--gold)}
+.admin-gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:4px;margin-top:.75rem}
+.agg-item{position:relative;aspect-ratio:1;overflow:hidden}
+.agg-item img{width:100%;height:100%;object-fit:cover}
+.agg-del{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .18s}
+.agg-item:hover .agg-del{opacity:1}
+.ticker-item-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(255,255,255,.03);border:1px solid var(--border)}
+
+/* TOAST */
+#toast{position:fixed;bottom:5rem;right:2rem;background:var(--card2);border:1px solid var(--border2);border-left:3px solid var(--gold);padding:13px 18px;font-family:var(--B);font-size:13px;font-weight:600;z-index:9999;transform:translateY(16px);opacity:0;transition:all .3s;pointer-events:none;max-width:320px}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .55s ease,transform .55s ease}
+.reveal.vis{opacity:1;transform:translateY(0)}
+
+/* MOBILE */
+@media(max-width:900px){
+  .hero-content{grid-template-columns:1fr}
+  .hero-card{display:none}
+  .mc-inner{grid-template-columns:1fr}
+  .cta-inner{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr 1fr}
+  .news-mosaic{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .nc:nth-child(1){grid-column:1/-1;grid-row:auto;height:320px}
+  .nc:nth-child(n+2){grid-column:auto;grid-row:auto;height:220px}
+  .stats-inner{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-trail"></div>
+
+<!-- BREAKING NEWS BAR -->
+<div id="breaking-bar">
+  <span class="br-tag">BREAKING</span>
+  <span id="br-text">🏆 MABVIRAVIRA ARE CHAMPIONS — Scottland FC crowned 2025 Castle Lager PSL winners in debut top-flight season</span>
+  <button id="br-close" onclick="document.getElementById('breaking-bar').classList.add('hidden')">×</button>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track" id="ticker-track">
+    <span class="ticker-item">🏆 2025 Castle Lager PSL Champions<span class="sep">·</span>First debut-season title since Black Rhinos 1984</span>
+    <span class="ticker-item">⚽ Tymon Machope — 16 goals in 2025 season</span>
+    <span class="ticker-item">🌟 Knowledge Musona signed August 2025 — highest earner in Zim PSL</span>
+    <span class="ticker-item">🔵 Castle Challenge Cup winners 2026 — Scottland 5–0 Dynamos</span>
+    <span class="ticker-item">📅 Next: Scottland FC vs Simba Bhora · Castle Lager PSL 2026</span>
+    <span class="ticker-item">👔 Head Coach: Norman Mapeza</span>
+    <span class="ticker-item">🇿🇼 Based in Mabvuku, Harare · Founded 2023</span>
+    <span class="ticker-item">🏟️ Home: Rufaro Stadium, Harare</span>
+    <span class="ticker-item">🏆 2025 Castle Lager PSL Champions<span class="sep">·</span>First debut-season title since Black Rhinos 1984</span>
+    <span class="ticker-item">⚽ Tymon Machope — 16 goals in 2025 season</span>
+    <span class="ticker-item">🌟 Knowledge Musona signed August 2025 — highest earner in Zim PSL</span>
+    <span class="ticker-item">🔵 Castle Challenge Cup winners 2026 — Scottland 5–0 Dynamos</span>
+    <span class="ticker-item">📅 Next: Scottland FC vs Simba Bhora · Castle Lager PSL 2026</span>
+    <span class="ticker-item">👔 Head Coach: Norman Mapeza</span>
+    <span class="ticker-item">🇿🇼 Based in Mabvuku, Harare · Founded 2023</span>
+    <span class="ticker-item">🏟️ Home: Rufaro Stadium, Harare</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="cursor:none">
+      <div class="logo-badge">
+        <div class="logo-pulse"></div>
+        <svg viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="21" cy="21" r="20" fill="#0d1220" stroke="#ffc800" stroke-width="1.5"/>
+          <line x1="1" y1="1" x2="41" y2="41" stroke="white" stroke-width="5" stroke-linecap="round"/>
+          <line x1="41" y1="1" x2="1" y2="41" stroke="white" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="21" cy="21" r="11.5" fill="#0d1220" stroke="#ffc800" stroke-width="1"/>
+          <text x="21" y="18.5" text-anchor="middle" font-family="Georgia,serif" font-size="7" font-weight="bold" fill="#ffc800" letter-spacing="1">SFC</text>
+          <text x="21" y="27" text-anchor="middle" font-family="Georgia,serif" font-size="4.5" fill="rgba(255,255,255,.6)" letter-spacing=".5">ZIMBABWE</text>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <div class="club">Scottland FC</div>
+        <div class="tag">Mabviravira · Champions</div>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#" class="active" onclick="scrollToSection(event,'news-section')">News</a></li>
+      <li><a href="#" onclick="scrollToSection(event,'squad-section')">Squad</a></li>
+      <li><a href="#" onclick="scrollToSection(event,'match-centre')">Match Centre</a></li>
+      <li><a href="#" onclick="scrollToSection(event,'social-section')">Social</a></li>
+      <li><a href="#" onclick="scrollToSection(event,'membership-cta')">Membership</a></li>
+      <li><a href="#" onclick="scrollToSection(event,'footer-main')">Club</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="nav-pill"><div class="live-dot"></div> 2026 PSL SEASON</div>
+      <button id="search-toggle" onclick="openSearch()" title="Search (Ctrl+K)">🔍</button>
+      <button class="btn-nav btn-ghost-sm" onclick="showModal('sign-in')">Sign In</button>
+      <button class="btn-nav btn-gold" onclick="scrollToSection(null,'membership-cta')">Join Mabviravira</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1900&q=75&auto=format&fit=crop" alt="Scottland FC">
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <div class="champs-badge">🏆 2025 CASTLE LAGER PSL CHAMPIONS</div>
+      </div>
+      <h1 class="h1">
+        <span>HISTORY.</span><br>
+        <span class="stroke">MADE IN</span><br>
+        <span>MABVUKU.</span>
+      </h1>
+      <p class="hero-sub">From Northern Region to national champions in two seasons. Scottland FC — owned by Scott Sakupwanya — is Zimbabwe's most electrifying club story. This is just the beginning.</p>
+      <div class="hero-actions">
+        <button class="btn-lg primary" onclick="openArticle(0)">Read the Story</button>
+        <button class="btn-lg outline" onclick="scrollToSection(null,'match-centre')">▶ 2026 Season</button>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hc-header">CASTLE CHALLENGE CUP · 2026</div>
+      <div class="hc-comp">RUFARO STADIUM, HARARE · 1 MARCH 2026</div>
+      <div class="hc-teams">
+        <div class="hc-team">Scottland FC</div>
+        <div class="hc-score">5–0</div>
+        <div class="hc-team away">Dynamos FC</div>
+      </div>
+      <div class="hc-scorers">
+        <span class="name">Ziocha</span> 17' · <span class="name">Machope</span> 40'<br>
+        <span class="name">W. Musona</span> 67' · <span class="name">K. Musona</span> 75' · <span class="name">Billiat</span> 90'<br>
+        <span style="color:var(--muted);font-size:10px">Dynamos — no scorers · Collins Mujuru 🔴 84'</span>
+      </div>
+      <div class="stat-grid">
+        <div class="sg-val right">72%</div>
+        <div class="sg-bar"><div class="sg-fill r" style="width:72%"></div></div>
+        <div class="sg-bar"><div class="sg-fill l" style="width:28%"></div></div>
+        <div class="sg-val">28%</div>
+        <div></div><div class="sg-label">POSSESSION</div><div></div><div></div>
+        <div class="sg-val right" style="margin-top:6px">18</div>
+        <div class="sg-bar" style="margin-top:6px"><div class="sg-fill r" style="width:78%"></div></div>
+        <div class="sg-bar" style="margin-top:6px"><div class="sg-fill l" style="width:22%"></div></div>
+        <div class="sg-val" style="margin-top:6px">5</div>
+        <div></div><div class="sg-label">SHOTS</div><div></div><div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MATCH STRIP -->
+<div class="match-strip">
+  <div class="ms-inner" id="match-strip-inner">
+    <div class="ms-cell">
+      <div class="ms-comp">CASTLE CHALLENGE CUP · FT</div>
+      <div class="ms-fixture">Scottland <span class="ms-result w">5–0</span> Dynamos</div>
+      <div class="ms-sub">1 March 2026 · Rufaro Stadium</div>
+    </div>
+    <div class="ms-cell">
+      <div class="ms-comp">INDEPENDENCE CUP · FT</div>
+      <div class="ms-fixture">Scottland <span class="ms-result w">1–0</span> Highlanders</div>
+      <div class="ms-sub">April 2026</div>
+    </div>
+    <div class="ms-cell">
+      <div class="ms-comp">CASTLE LAGER PSL 2026 · MD8</div>
+      <div class="ms-fixture">Scottland <span class="ms-result upcoming">vs</span> Dynamos</div>
+      <div class="ms-sub">Rufaro · 22 April 2026</div>
+    </div>
+    <div class="ms-cell">
+      <div class="ms-comp">CASTLE LAGER PSL 2026 · MD9</div>
+      <div class="ms-fixture">Scottland <span class="ms-result upcoming">vs</span> Simba Bhora</div>
+      <div class="ms-sub">Rufaro · 3 May 2026</div>
+    </div>
+    <div class="ms-cell">
+      <div class="ms-comp">2025 SEASON RECORD</div>
+      <div class="ms-fixture" style="font-size:1.3rem">65 pts</div>
+      <div class="ms-sub">Champions · 7 clear of 2nd</div>
+    </div>
+    <div class="ms-cell">
+      <div class="ms-comp">PSL 2026 FORM</div>
+      <div class="ms-fixture" style="gap:4px">
+        <span class="ms-result d" style="font-size:10px;padding:3px 8px">D</span>
+        <span class="ms-result d" style="font-size:10px;padding:3px 8px">D</span>
+        <span class="ms-result w" style="font-size:10px;padding:3px 8px">W</span>
+        <span class="ms-result w" style="font-size:10px;padding:3px 8px">W</span>
+      </div>
+      <div class="ms-sub">Last 4 league games</div>
+    </div>
+  </div>
+</div>
+
+<!-- COUNTDOWN to next match -->
+<div class="countdown">
+  <div class="cd-inner">
+    <div class="cd-label">⚽ NEXT: SCOTTLAND VS SIMBA BHORA</div>
+    <div class="cd-units">
+      <div class="cd-unit"><div class="cd-num" id="cd-d">--</div><div class="cd-lbl">DAYS</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-unit"><div class="cd-num" id="cd-h">--</div><div class="cd-lbl">HRS</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-unit"><div class="cd-num" id="cd-m">--</div><div class="cd-lbl">MIN</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-unit"><div class="cd-num" id="cd-s">--</div><div class="cd-lbl">SEC</div></div>
+    </div>
+    <button class="btn-nav btn-gold" onclick="showToast('🎟 Ticket info coming soon — follow our social channels!')">Get Tickets</button>
+  </div>
+</div>
+
+<!-- NEWS SECTION -->
+<div id="news-section" class="wrap">
+  <div class="section-head">
+    <div class="sh-left">
+      <div class="eyebrow">LATEST FROM MABVUKU</div>
+      <div class="section-title">Club News</div>
+    </div>
+    <a href="#" class="sh-link" onclick="showToast('📰 Full news archive coming soon!')">All Stories →</a>
+  </div>
+  <div class="news-mosaic">
+    <div class="nc reveal" onclick="openArticle(0)">
+      <div class="nc-tag-wrap"><span class="nc-tag gold">CHAMPIONS</span></div>
+      <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=900&q=75&auto=format&fit=crop" alt="">
+      <div class="nc-overlay">
+        <div class="nc-cat">CASTLE LAGER PSL · 2 NOV 2025</div>
+        <div class="nc-title">Scottland FC crowned 2025 PSL Champions — history made in debut top-flight season with emphatic 5–1 win</div>
+        <div class="nc-meta">6 min read · Ascot Stadium, Gweru</div>
+        <span class="nc-read-btn">Read Story →</span>
+      </div>
+    </div>
+    <div class="nc reveal" onclick="openArticle(1)">
+      <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=700&q=75&auto=format&fit=crop" alt="">
+      <div class="nc-overlay">
+        <div class="nc-cat">TRANSFER · AUGUST 2025</div>
+        <div class="nc-title">Knowledge Musona joins Billiat at Scottland — highest earner in Zim football</div>
+        <div class="nc-meta">August 2025</div>
+        <span class="nc-read-btn">Read Story →</span>
+      </div>
+    </div>
+    <div class="nc reveal" onclick="openArticle(2)">
+      <img src="https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=600&q=75&auto=format&fit=crop" alt="">
+      <div class="nc-overlay">
+        <div class="nc-cat">2026 SEASON</div>
+        <div class="nc-title">Mapeza lifts Challenge Cup in Scottland debut — 5–0 mauling of Dynamos</div>
+        <div class="nc-meta">March 2026</div>
+        <span class="nc-read-btn">Read Story →</span>
+      </div>
+    </div>
+    <div class="nc reveal" onclick="openArticle(3)">
+      <img src="https://images.unsplash.com/photo-1624880357913-a8539238245b?w=600&q=75&auto=format&fit=crop" alt="">
+      <div class="nc-overlay">
+        <div class="nc-cat">CLUB HISTORY</div>
+        <div class="nc-title">From Mabvuku streets to national champions — the Scottland FC story</div>
+        <div class="nc-meta">Feature · 8 min read</div>
+        <span class="nc-read-btn">Read Story →</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-col reveal">
+      <div class="stat-big" id="stat1">0</div>
+      <div class="stat-name">PSL GOALS 2025</div>
+      <div class="stat-note">Top scorer: Machope (16)</div>
+    </div>
+    <div class="stat-col reveal">
+      <div class="stat-big" id="stat2">0</div>
+      <div class="stat-name">2025 SEASON POINTS</div>
+      <div class="stat-note">7 clear of 2nd place</div>
+    </div>
+    <div class="stat-col reveal">
+      <div class="stat-big" id="stat3">0</div>
+      <div class="stat-name">SPONSORSHIP SECURED</div>
+      <div class="stat-note">R50m+ pre-season 2025</div>
+    </div>
+    <div class="stat-col reveal">
+      <div class="stat-big" id="stat4">0</div>
+      <div class="stat-name">TROPHIES IN 2 SEASONS</div>
+      <div class="stat-note">NRSL 2024 + PSL 2025 + Castle Cup 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- MATCH CENTRE -->
+<div id="match-centre" class="match-centre">
+  <div class="mc-inner">
+    <!-- STANDINGS -->
+    <div>
+      <div class="section-head" style="margin-bottom:1.5rem">
+        <div class="sh-left"><div class="eyebrow">2026 SEASON</div><div class="section-title">Castle Lager PSL</div></div>
+        <a href="#" class="sh-link" onclick="showToast('📊 Full table on PSL website')">Full Table →</a>
+      </div>
+      <div class="tab-row">
+        <div class="tab active" onclick="switchTab(this,'tab-standings')">League Table</div>
+        <div class="tab" onclick="switchTab(this,'tab-scorers')">Top Scorers</div>
+      </div>
+      <div id="tab-standings">
+        <table class="stab">
+          <thead>
+            <tr><th>#</th><th style="text-align:left">Club</th><th>P</th><th>W</th><th>D</th><th>GD</th><th>Pts</th><th>Form</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="pos-num top">1</span></td><td>Ngezi Platinum</td><td>7</td><td>3</td><td>2</td><td>+5</td><td><span class="pts">11</span></td><td><div class="form-dots"><div class="fd w"></div><div class="fd d"></div><div class="fd w"></div><div class="fd w"></div><div class="fd d"></div></div></td></tr>
+            <tr><td><span class="pos-num top">2</span></td><td>Dynamos FC</td><td>7</td><td>3</td><td>2</td><td>+3</td><td><span class="pts">11</span></td><td><div class="form-dots"><div class="fd w"></div><div class="fd w"></div><div class="fd d"></div><div class="fd w"></div><div class="fd d"></div></div></td></tr>
+            <tr class="us"><td><span class="pos-num top">3</span></td><td>★ Scottland FC</td><td>8</td><td>2</td><td>4</td><td>+2</td><td><span class="pts gold">10</span></td><td><div class="form-dots"><div class="fd d"></div><div class="fd d"></div><div class="fd w"></div><div class="fd w"></div><div class="fd d"></div></div></td></tr>
+            <tr><td><span class="pos-num">4</span></td><td>CAPS United</td><td>7</td><td>2</td><td>3</td><td>+4</td><td><span class="pts">9</span></td><td><div class="form-dots"><div class="fd w"></div><div class="fd d"></div><div class="fd l"></div><div class="fd w"></div><div class="fd w"></div></div></td></tr>
+            <tr><td><span class="pos-num">5</span></td><td>FC Platinum</td><td>7</td><td>2</td><td>3</td><td>+1</td><td><span class="pts">9</span></td><td><div class="form-dots"><div class="fd d"></div><div class="fd w"></div><div class="fd d"></div><div class="fd l"></div><div class="fd w"></div></div></td></tr>
+            <tr><td><span class="pos-num">6</span></td><td>Simba Bhora</td><td>7</td><td>2</td><td>2</td><td>-1</td><td><span class="pts">8</span></td><td><div class="form-dots"><div class="fd w"></div><div class="fd l"></div><div class="fd d"></div><div class="fd w"></div><div class="fd l"></div></div></td></tr>
+            <tr><td><span class="pos-num">7</span></td><td>Highlanders</td><td>7</td><td>2</td><td>2</td><td>-2</td><td><span class="pts">8</span></td><td><div class="form-dots"><div class="fd l"></div><div class="fd w"></div><div class="fd d"></div><div class="fd d"></div><div class="fd w"></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="tab-scorers" style="display:none">
+        <table class="stab">
+          <thead><tr><th>#</th><th style="text-align:left">Player</th><th style="text-align:left">Club</th><th>Goals</th></tr></thead>
+          <tbody>
+            <tr class="us"><td><span class="pos-num top">1</span></td><td>Tymon Machope</td><td>Scottland FC</td><td><span class="pts gold">16*</span></td></tr>
+            <tr><td><span class="pos-num">2</span></td><td>Lynoth Chikuhwa</td><td>Highlanders</td><td><span class="pts">13</span></td></tr>
+            <tr class="us"><td><span class="pos-num">3</span></td><td>Khama Billiat</td><td>Scottland FC</td><td><span class="pts">9</span></td></tr>
+            <tr class="us"><td><span class="pos-num">4</span></td><td>Walter Musona</td><td>Scottland FC</td><td><span class="pts">8</span></td></tr>
+            <tr><td><span class="pos-num">5</span></td><td>Elvis Chipezeze</td><td>Dynamos FC</td><td><span class="pts">7</span></td></tr>
+          </tbody>
+        </table>
+        <div style="font-size:10px;color:var(--muted);margin-top:.5rem">* 2025 PSL season tally</div>
+      </div>
+    </div>
+
+    <!-- FIXTURES -->
+    <div>
+      <div class="section-head" style="margin-bottom:1.5rem">
+        <div class="sh-left"><div class="eyebrow">2026 PSL SEASON</div><div class="section-title">Fixtures</div></div>
+        <a href="#" class="sh-link" onclick="showToast('📅 Full fixture list coming soon')">All Fixtures →</a>
+      </div>
+      <div class="tab-row">
+        <div class="tab active" onclick="switchTab(this,'tab-upcoming')">Upcoming</div>
+        <div class="tab" onclick="switchTab(this,'tab-results')">Results</div>
+      </div>
+      <div id="tab-upcoming" class="fix-list">
+        <div class="fix-item" onclick="showToast('📅 Adding CAPS Utd vs Scottland to calendar!')">
+          <div class="fix-date"><div class="fix-day">22</div><div class="fix-mon">APR</div></div>
+          <div><div class="fix-vs">Scottland FC vs Dynamos FC</div><div class="fix-info">Rufaro Stadium · 15:00 CAT · Matchday 8</div></div>
+          <div class="fix-comp">PSL 2026</div>
+        </div>
+        <div class="fix-item" onclick="showToast('📅 Adding Scottland vs Simba to calendar!')">
+          <div class="fix-date"><div class="fix-day">3</div><div class="fix-mon">MAY</div></div>
+          <div><div class="fix-vs">Scottland FC vs Simba Bhora</div><div class="fix-info">Rufaro Stadium · 15:00 CAT · Matchday 9</div></div>
+          <div class="fix-comp">PSL 2026</div>
+        </div>
+        <div class="fix-item" onclick="showToast('📅 Adding to calendar!')">
+          <div class="fix-date"><div class="fix-day">10</div><div class="fix-mon">MAY</div></div>
+          <div><div class="fix-vs">FC Platinum vs Scottland FC</div><div class="fix-info">Mandava Stadium · 15:00 CAT · Matchday 10</div></div>
+          <div class="fix-comp">PSL 2026</div>
+        </div>
+        <div class="fix-item" onclick="showToast('📅 Adding to calendar!')">
+          <div class="fix-date"><div class="fix-day">17</div><div class="fix-mon">MAY</div></div>
+          <div><div class="fix-vs">Scottland FC vs Ngezi Platinum</div><div class="fix-info">Rufaro Stadium · 15:00 CAT · Matchday 11</div></div>
+          <div class="fix-comp">PSL 2026</div>
+        </div>
+      </div>
+      <div id="tab-results" class="fix-list" style="display:none">
+        <div class="fix-item">
+          <div class="fix-date"><div class="fix-day">1</div><div class="fix-mon">MAR</div></div>
+          <div><div class="fix-vs">Scottland FC 5–0 Dynamos</div><div class="fix-info">Rufaro · Castle Challenge Cup</div></div>
+          <div class="ms-result w" style="padding:5px 12px;font-family:var(--F);font-size:12px">W</div>
+        </div>
+        <div class="fix-item">
+          <div class="fix-date"><div class="fix-day">8</div><div class="fix-mon">MAR</div></div>
+          <div><div class="fix-vs">Hardrock FC 0–0 Scottland</div><div class="fix-info">Chahwanda Stadium · PSL MD1</div></div>
+          <div class="ms-result d" style="padding:5px 12px;font-family:var(--F);font-size:12px">D</div>
+        </div>
+        <div class="fix-item">
+          <div class="fix-date"><div class="fix-day">14</div><div class="fix-mon">MAR</div></div>
+          <div><div class="fix-vs">Scottland 1–1 Ngezi Platinum</div><div class="fix-info">Rufaro · PSL MD2 · Musona pen 76'</div></div>
+          <div class="ms-result d" style="padding:5px 12px;font-family:var(--F);font-size:12px">D</div>
+        </div>
+        <div class="fix-item">
+          <div class="fix-date"><div class="fix-day">APR</div><div class="fix-mon">2026</div></div>
+          <div><div class="fix-vs">Scottland 1–0 Highlanders</div><div class="fix-info">Rufaro · Independence Cup</div></div>
+          <div class="ms-result w" style="padding:5px 12px;font-family:var(--F);font-size:12px">W</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOCIAL FEED SECTION -->
+<div id="social-section" class="wrap" style="padding-bottom:0">
+  <div class="section-head">
+    <div class="sh-left">
+      <div class="eyebrow">LIVE FROM THE CLAN</div>
+      <div class="section-title">Social Feed</div>
+    </div>
+    <div class="live-badge-sm" style="margin:0"><div class="live-dot"></div>UPDATING LIVE</div>
+  </div>
+  <div class="social-scroll" id="social-feed">
+    <div class="sc tw reveal">
+      <div class="sc-head"><div class="sc-ico tw">𝕏</div><div class="sc-handle">@ScottlandFC</div><div class="sc-time">just now</div></div>
+      <p class="sc-body">🔵 <strong>MABVIRAVIRA!</strong> Scottland FC are the 2025 Castle Lager Premier Soccer League Champions. History. Made. #Mabviravira #ScottlandFC 🏆🇿🇼</p>
+      <div class="sc-engage"><span class="se">♥ 18.4k</span><span class="se">↺ 9.2k</span></div>
+    </div>
+    <div class="sc ig reveal">
+      <div class="sc-head"><div class="sc-ico ig">▶</div><div class="sc-handle">@scottland.fc</div><div class="sc-time">2h ago</div></div>
+      <img class="sc-img" src="https://images.unsplash.com/photo-1551958219-acbc8a1c0efc?w=400&q=70&auto=format&fit=crop" alt="">
+      <p class="sc-body">The trophy. The team. The moment. 🏆 One season. One mission. Achieved. #Mabviravira</p>
+      <div class="sc-engage"><span class="se">♥ 24.1k</span><span class="se">💬 1.2k</span></div>
+    </div>
+    <div class="sc fb reveal">
+      <div class="sc-head"><div class="sc-ico fb">f</div><div class="sc-handle">Scottland FC Official</div><div class="sc-time">5h ago</div></div>
+      <p class="sc-body">🎽 <strong>2026 Season kits are here!</strong> The Adidas strip that will carry us into CAF competition. Limited pre-order open now — link in bio.</p>
+      <div class="sc-engage"><span class="se">👍 5.3k</span><span class="se">🔁 2.1k</span><span class="se">💬 440</span></div>
+    </div>
+    <div class="sc yt reveal">
+      <div class="sc-head"><div class="sc-ico yt">▶</div><div class="sc-handle">Scottland FC TV</div><div class="sc-time">8h ago</div></div>
+      <img class="sc-img" src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&q=70&auto=format&fit=crop" alt="">
+      <p class="sc-body">🎬 <strong>FULL MATCH: Scottland FC 5–0 Dynamos FC</strong> · Castle Challenge Cup 2026 · All goals + highlights</p>
+      <div class="sc-engage"><span class="se">▶ 96k views</span><span class="se">👍 5.8k</span></div>
+    </div>
+    <div class="sc tw reveal">
+      <div class="sc-head"><div class="sc-ico tw">𝕏</div><div class="sc-handle">@ScottlandFC</div><div class="sc-time">1d ago</div></div>
+      <p class="sc-body">🤝 Matchday 8 tomorrow. Scottland vs Dynamos. Rufaro Stadium. 15:00 CAT. Both unbeaten in PSL 2026. The Harare Derby everyone is waiting for. 🔵 <strong>#MabviraviraDerby</strong></p>
+      <div class="sc-engage"><span class="se">♥ 8.7k</span><span class="se">↺ 4.3k</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- FAN WALL -->
+<div class="wrap tight" style="padding-top:1.5rem">
+  <div class="section-head">
+    <div class="sh-left"><div class="eyebrow">FROM THE STANDS</div><div class="section-title">Clan Wall</div></div>
+    <button class="sh-link" onclick="openFanWallForm()" style="background:none;border:none;color:var(--gold);cursor:none;font-family:var(--F);font-size:11px;font-weight:800;letter-spacing:.14em;border-bottom:1px solid rgba(255,200,0,.35)">+ Add Message</button>
+  </div>
+  <div style="overflow:hidden;height:130px;position:relative">
+    <div style="position:absolute;top:0;bottom:0;left:0;width:80px;background:linear-gradient(to right,var(--ink),transparent);z-index:2;pointer-events:none"></div>
+    <div style="position:absolute;top:0;bottom:0;right:0;width:80px;background:linear-gradient(to left,var(--ink),transparent);z-index:2;pointer-events:none"></div>
+    <div class="fan-wall-track" id="fan-track">
+      <div class="fw-item"><div class="fw-name">🇿🇼 Tendai M. · Harare</div><div class="fw-msg">"First debut-season champions since 1984. We are not a small team!"</div></div>
+      <div class="fw-item"><div class="fw-name">🇿🇼 Rudo C. · Mabvuku</div><div class="fw-msg">"Scott built something special here. Sakupwanya for life. 🔵"</div></div>
+      <div class="fw-item"><div class="fw-name">🇿🇼 Brighton N. · Harare</div><div class="fw-msg">"Billiat + Musona brothers + Machope. What a squad!"</div></div>
+      <div class="fw-item"><div class="fw-name">🇿🇼 Macdonald T. · Bulawayo</div><div class="fw-msg">"Watching Scottland vs Dynamos live was the best day of my life."</div></div>
+      <div class="fw-item"><div class="fw-name">🇿🇼 Rutendo P. · Mutare</div><div class="fw-msg">"Mapeza is building something even bigger in 2026. CAF here we come!"</div></div>
+      <div class="fw-item"><div class="fw-name">🇿🇼 Farai S. · Harare</div><div class="fw-msg">"Mabviravira — those who never tire. We never stop. 🏆"</div></div>
+      <div class="fw-item"><div class="fw-name">🇿🇼 Simba P. · Gweru</div><div class="fw-msg">"Ndiraya built the machine, Mapeza is tuning it. 2026 PSL is ours."</div></div>
+      <div class="fw-item"><div class="fw-name">🇿🇼 Knowledge J. · Chitungwiza</div><div class="fw-msg">"Knowledge Musona signing was the moment I knew we were serious."</div></div>
+      <!-- duplicates -->
+      <div class="fw-item"><div class="fw-name">🇿🇼 Tendai M. · Harare</div><div class="fw-msg">"First debut-season champions since 1984. We are not a small team!"</div></div>
+      <div class="fw-item"><div class="fw-name">🇿🇼 Rudo C. · Mabvuku</div><div class="fw-msg">"Scott built something special here. Sakupwanya for life. 🔵"</div></div>
+      <div class="fw-item"><div class="fw-name">🇿🇼 Brighton N. · Harare</div><div class="fw-msg">"Billiat + Musona brothers + Machope. What a squad!"</div></div>
+      <div class="fw-item"><div class="fw-name">🇿🇼 Macdonald T. · Bulawayo</div><div class="fw-msg">"Watching Scottland vs Dynamos live was the best day of my life."</div></div>
+      <div class="fw-item"><div class="fw-name">🇿🇼 Rutendo P. · Mutare</div><div class="fw-msg">"Mapeza is building something even bigger in 2026. CAF here we come!"</div></div>
+      <div class="fw-item"><div class="fw-name">🇿🇼 Farai S. · Harare</div><div class="fw-msg">"Mabviravira — those who never tire. We never stop. 🏆"</div></div>
+      <div class="fw-item"><div class="fw-name">🇿🇼 Simba P. · Gweru</div><div class="fw-msg">"Ndiraya built the machine, Mapeza is tuning it. 2026 PSL is ours."</div></div>
+      <div class="fw-item"><div class="fw-name">🇿🇼 Knowledge J. · Chitungwiza</div><div class="fw-msg">"Knowledge Musona signing was the moment I knew we were serious."</div></div>
+    </div>
+  </div>
+  <!-- Fan Wall Submit Form -->
+  <div id="fan-form" style="display:none;margin-top:1rem;display:none;gap:8px;flex-wrap:wrap;align-items:flex-end">
+    <div style="flex:1;min-width:160px">
+      <label class="input-label">YOUR NAME & CITY</label>
+      <input class="inp" id="fan-name" type="text" placeholder="e.g. Tendai M. · Harare">
+    </div>
+    <div style="flex:2;min-width:220px">
+      <label class="input-label">YOUR MESSAGE</label>
+      <input class="inp" id="fan-msg" type="text" placeholder="Write your message to Mabviravira...">
+    </div>
+    <button class="btn-adm primary" onclick="submitFanMessage()" style="align-self:flex-end;margin-bottom:1px">POST</button>
+  </div>
+</div>
+
+<!-- SQUAD SECTION -->
+<div id="squad-section" class="wrap tight" style="padding-top:0">
+  <div class="section-head">
+    <div class="sh-left"><div class="eyebrow">2025/26 FIRST TEAM</div><div class="section-title">The Squad</div></div>
+    <a href="#" class="sh-link" onclick="showToast('👥 Full squad page coming soon')">Full Squad →</a>
+  </div>
+  <div class="squad-grid">
+    <div class="pc feat">
+      <div class="pc-num">11</div>
+      <img src="https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?w=700&q=80&auto=format&fit=crop&crop=top" alt="Khama Billiat">
+      <div class="pc-grad"></div>
+      <div class="pc-stats">
+        <div class="pc-stat"><div class="pc-stat-val">9</div><div class="pc-stat-lbl">GOALS</div></div>
+        <div class="pc-stat"><div class="pc-stat-val">35</div><div class="pc-stat-lbl">AGE</div></div>
+      </div>
+      <div class="pc-info">
+        <div class="pc-pos">⭐ FORWARD · KEY PLAYER</div>
+        <div class="pc-name">Khama Billiat</div>
+        <div class="pc-flag">🇿🇼 · Ex-Kaizer Chiefs, Sundowns</div>
+      </div>
+    </div>
+    <div class="pc">
+      <div class="pc-num">8</div>
+      <img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=400&q=80&auto=format&fit=crop&crop=top" alt="Knowledge Musona">
+      <div class="pc-grad"></div>
+      <div class="pc-stats">
+        <div class="pc-stat"><div class="pc-stat-val">35</div><div class="pc-stat-lbl">AGE</div></div>
+      </div>
+      <div class="pc-info"><div class="pc-pos">FORWARD</div><div class="pc-name">Knowledge Musona</div><div class="pc-flag">🇿🇼 · 'The Smiling Assassin'</div></div>
+    </div>
+    <div class="pc">
+      <div class="pc-num">9</div>
+      <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400&q=80&auto=format&fit=crop&crop=top" alt="Tymon Machope">
+      <div class="pc-grad"></div>
+      <div class="pc-stats">
+        <div class="pc-stat"><div class="pc-stat-val">16</div><div class="pc-stat-lbl">GOALS '25</div></div>
+      </div>
+      <div class="pc-info"><div class="pc-pos">FORWARD · TOP SCORER 2025</div><div class="pc-name">Tymon Machope</div><div class="pc-flag">🇿🇼</div></div>
+    </div>
+    <div class="pc">
+      <div class="pc-num">10</div>
+      <img src="https://images.unsplash.com/photo-1552072092-7f9b8d63efcb?w=400&q=80&auto=format&fit=crop&crop=top" alt="Walter Musona">
+      <div class="pc-grad"></div>
+      <div class="pc-stats">
+        <div class="pc-stat"><div class="pc-stat-val">8</div><div class="pc-stat-lbl">GOALS '25</div></div>
+      </div>
+      <div class="pc-info"><div class="pc-pos">FORWARD / WINGER</div><div class="pc-name">Walter Musona</div><div class="pc-flag">🇿🇼 · Soccer Star of the Year '24</div></div>
+    </div>
+    <div class="pc">
+      <div class="pc-num">5</div>
+      <img src="https://images.unsplash.com/photo-1515238152791-8216bfdf89a7?w=400&q=80&auto=format&fit=crop&crop=top" alt="Ronald Pfumbidzai">
+      <div class="pc-grad"></div>
+      <div class="pc-info"><div class="pc-pos">DEFENDER</div><div class="pc-name">Ronald Pfumbidzai</div><div class="pc-flag">🇿🇼 · Ex-SuperSport, Chippa</div></div>
+    </div>
+    <div class="pc">
+      <div class="pc-num">9</div>
+      <img src="https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=400&q=80&auto=format&fit=crop&crop=top" alt="Terrence Dzvukamanja">
+      <div class="pc-grad"></div>
+      <div class="pc-info"><div class="pc-pos">FORWARD</div><div class="pc-name">Terrence Dzvukamanja</div><div class="pc-flag">🇿🇼 · Highest earner '25</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBERSHIP CTA -->
+<div id="membership-cta" class="stadium-cta">
+  <img src="https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=1600&q=60&auto=format&fit=crop" alt="Rufaro Stadium">
+  <div class="cta-inner">
+    <div class="cta-left">
+      <div class="eyebrow">JOIN MABVIRAVIRA · 2026</div>
+      <h2>Be Part of<br>Zimbabwe's<br>Champions</h2>
+      <p>From Mabvuku streets to national champions. Scottland FC is the fastest-rising club in Zimbabwe. Join us as we take on CAF competition.</p>
+      <button class="btn-lg primary" onclick="showMembershipInfo()">View All Memberships</button>
+    </div>
+    <div class="mem-grid">
+      <div class="mem-card" onclick="joinMembership('Supporter')">
+        <div class="mem-tier">SUPPORTER</div>
+        <div class="mem-price"><sup>$</sup>15</div>
+        <div class="mem-cur">USD / season</div>
+        <div class="mem-perks">Digital card, newsletter, priority fixture news</div>
+      </div>
+      <div class="mem-card feat" onclick="joinMembership('Clan Member')">
+        <div class="mem-tier">CLAN MEMBER</div>
+        <div class="mem-price"><sup>$</sup>45</div>
+        <div class="mem-cur">USD / season</div>
+        <div class="mem-perks">Priority tickets, scarf, matchday programme</div>
+      </div>
+      <div class="mem-card" onclick="joinMembership('Junior Clan')">
+        <div class="mem-tier">JUNIOR CLAN</div>
+        <div class="mem-price"><sup>$</sup>10</div>
+        <div class="mem-cur">USD / season · Ages 5–16</div>
+        <div class="mem-perks">Tours, kit discount, player sessions</div>
+      </div>
+      <div class="mem-card" onclick="joinMembership('Platinum')">
+        <div class="mem-tier">PLATINUM</div>
+        <div class="mem-price"><sup>$</sup>120</div>
+        <div class="mem-cur">USD / season</div>
+        <div class="mem-perks">VIP lounge, season seat, club dinner</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GALLERY SECTION (admin-injected) -->
+<div id="gallery-section">
+  <div class="wrap tight">
+    <div class="section-head">
+      <div class="sh-left"><div class="eyebrow" id="gallery-cat-label">PHOTO GALLERY</div><div class="section-title">Club Photos</div></div>
+    </div>
+    <div id="gallery-grid"></div>
+  </div>
+</div>
+
+<!-- PARTNERS -->
+<div class="partners">
+  <div class="partners-inner">
+    <span class="p-lbl">CLUB PARTNERS</span>
+    <div class="p-div"></div>
+    <span class="p-logo">CASTLE LAGER</span>
+    <span class="p-logo">ECONET</span>
+    <span class="p-logo">ADIDAS</span>
+    <span class="p-logo">CBZ BANK</span>
+    <span class="p-logo">DELTA BEVERAGES</span>
+    <span class="p-logo">OK ZIMBABWE</span>
+    <span class="p-logo">ZIMNAT</span>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer id="footer-main">
+  <div class="footer-inner">
+    <div>
+      <div class="fb-name">Scottland FC</div>
+      <div class="fb-sub">Mabviravira · Harare · Founded 2023</div>
+      <p class="fb-p">Zimbabwe's fastest-rising football club. 2024 Northern Region champions. 2025 Castle Lager Premier Soccer League champions. Owned by Scott Sakupwanya, built in Mabvuku, for Zimbabwe. 🔵🏆🇿🇼</p>
+      <div class="fb-social">
+        <a class="fs-icon" href="https://twitter.com/ScottlandFC" target="_blank" title="X / Twitter" onclick="showToast('Opening Twitter/X...')">𝕏</a>
+        <a class="fs-icon" href="#" title="Instagram" onclick="showToast('Opening Instagram...');return false">▶</a>
+        <a class="fs-icon" href="#" title="Facebook" onclick="showToast('Opening Facebook...');return false">f</a>
+        <a class="fs-icon" href="#" title="YouTube" onclick="showToast('Opening YouTube...');return false">▷</a>
+      </div>
+    </div>
+    <div class="fc"><h4>THE CLUB</h4><ul>
+      <li><a href="#" onclick="openArticle(3);return false">Our History</a></li>
+      <li><a href="#" onclick="showToast('👔 Coach Norman Mapeza — ex-FC Platinum');return false">Management</a></li>
+      <li><a href="#" onclick="showToast('🏟 Home: Rufaro Stadium, Harare');return false">Stadium Guide</a></li>
+      <li><a href="#" onclick="showToast('👶 Academy info coming soon');return false">Academy</a></li>
+      <li><a href="#" onclick="showToast('📧 careers@scottlandfc.co.zw');return false">Careers</a></li>
+    </ul></div>
+    <div class="fc"><h4>FOOTBALL</h4><ul>
+      <li><a href="#" onclick="scrollToSection(null,'squad-section');return false">First Team</a></li>
+      <li><a href="#" onclick="showToast('👩 Women\'s team page coming soon');return false">Women's Team</a></li>
+      <li><a href="#" onclick="showToast('🏟 Academy page coming soon');return false">Academy</a></li>
+      <li><a href="#" onclick="scrollToSection(null,'match-centre');return false">Fixtures</a></li>
+      <li><a href="#" onclick="scrollToSection(null,'stats-bar');return false">Results & Stats</a></li>
+    </ul></div>
+    <div class="fc"><h4>FANS</h4><ul>
+      <li><a href="#" onclick="scrollToSection(null,'membership-cta');return false">Membership</a></li>
+      <li><a href="#" onclick="showToast('🎟 Ticket sales via ZIFA & club offices');return false">Tickets</a></li>
+      <li><a href="#" onclick="scrollToSection(null,'social-section');return false">Social Feed</a></li>
+      <li><a href="#" onclick="showToast('🛒 Club shop coming soon');return false">Shop</a></li>
+      <li><a href="#" onclick="scrollToSection(null,'fan-wall');return false">Fan Wall</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Scottland FC Zimbabwe. All rights reserved. Affiliated with ZIFA.</p>
+    <div class="zp">🇿🇼 MABVIRAVIRA — PROUDLY ZIMBABWEAN</div>
+    <p>Privacy · Terms · Accessibility</p>
+  </div>
+</footer>
+
+<!-- ARTICLE MODAL -->
+<div id="article-modal">
+  <div class="am-box">
+    <button class="am-close" onclick="closeArticle()">×</button>
+    <div id="am-eyebrow"></div>
+    <h2 id="am-title"></h2>
+    <div id="am-meta"></div>
+    <img id="am-img" src="" alt="">
+    <div id="am-body"></div>
+    <div class="share-row">
+      <button class="share-btn x" onclick="shareArticle('x')">SHARE ON 𝕏</button>
+      <button class="share-btn fb" onclick="shareArticle('fb')">SHARE ON FACEBOOK</button>
+      <button class="share-btn wa" onclick="shareArticle('wa')">SHARE ON WHATSAPP</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button id="lb-close" onclick="closeLightbox()">×</button>
+  <button id="lb-prev" onclick="lbNav(-1)">‹</button>
+  <button id="lb-next" onclick="lbNav(1)">›</button>
+  <img id="lb-img" src="" alt="">
+  <div id="lb-caption"></div>
+  <div id="lb-counter"></div>
+</div>
+
+<!-- SEARCH OVERLAY -->
+<div id="search-ov" onclick="if(event.target===this)closeSearch()">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <span>🔍</span>
+      <input id="search-input" type="text" placeholder="Search news, players, fixtures…" oninput="runSearch(this.value)" onkeydown="if(event.key==='Escape')closeSearch()">
+      <kbd style="background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--muted2);padding:3px 8px;font-family:var(--B);font-size:11px;border-radius:2px">ESC</kbd>
+    </div>
+    <div id="search-results"></div>
+  </div>
+</div>
+
+<!-- ADMIN BUTTON -->
+<button id="admin-btn" onclick="toggleAdmin()" title="Admin Panel">⚙</button>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel">
+  <div class="admin-box">
+    <div class="admin-wrap">
+      <!-- LOGIN -->
+      <div id="admin-login">
+        <div class="admin-header" style="border:none;margin:0;padding:0">
+          <div><div class="admin-title">ADMIN LOGIN</div><div class="admin-sub">Scottland FC · Content Management</div></div>
+        </div>
+        <div style="max-width:360px;margin-top:2rem">
+          <label class="input-label">PASSWORD</label>
+          <input class="inp" id="admin-pass" type="password" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')checkPass()" style="margin-bottom:1rem">
+          <button class="btn-adm primary" onclick="checkPass()" style="width:100%">ACCESS DASHBOARD</button>
+          <div id="admin-err" style="display:none;color:var(--red);font-size:12px;margin-top:.75rem">Wrong password. Hint: <code style="color:var(--gold)">clan2026</code></div>
+        </div>
+      </div>
+
+      <!-- DASHBOARD -->
+      <div id="admin-dash" style="display:none">
+        <div class="admin-header">
+          <div><div class="admin-title">DASHBOARD</div><div class="admin-sub">Scottland FC Zimbabwe · CMS</div></div>
+          <button class="btn-adm ghost" onclick="adminLogout()">LOG OUT</button>
+        </div>
+        <!-- Tabs -->
+        <div style="display:flex;border-bottom:1px solid var(--border);margin-bottom:2rem">
+          <button class="adm-tab active" data-tab="tab-photos" onclick="switchAdminTab(this)">📸 Photos</button>
+          <button class="adm-tab" data-tab="tab-breaking" onclick="switchAdminTab(this)">🔴 Breaking News</button>
+          <button class="adm-tab" data-tab="tab-social-post" onclick="switchAdminTab(this)">📡 Social Post</button>
+          <button class="adm-tab" data-tab="tab-ticker-mgmt" onclick="switchAdminTab(this)">🏷 Ticker</button>
+        </div>
+
+        <!-- PHOTOS TAB -->
+        <div id="tab-photos" class="adm-content active">
+          <div style="font-size:11px;color:var(--muted2);margin-bottom:1.5rem;letter-spacing:.08em">Upload club photos — they auto-fit into a gallery section on the homepage</div>
+          <div class="drop-zone" id="drop-zone" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="handleDrop(event)">
+            <div style="font-size:2rem;margin-bottom:.5rem">📸</div>
+            <div style="font-family:var(--F);font-size:1.2rem;font-weight:800;letter-spacing:.08em;color:var(--gold);margin-bottom:.4rem">DRAG & DROP PHOTOS</div>
+            <div style="font-size:12px;color:var(--muted2);margin-bottom:1rem">or click to browse · JPG, PNG, WEBP · Max 10MB</div>
+            <input id="file-input" type="file" accept="image/*" multiple style="display:none" onchange="handleFiles(event)">
+            <button class="btn-adm primary" onclick="document.getElementById('file-input').click()">BROWSE</button>
+          </div>
+          <div id="upload-form-wrap" style="display:none;margin-top:1rem">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+              <div><label class="input-label">CAPTION</label><input class="inp" id="img-caption" type="text" placeholder="e.g. Billiat scores vs Dynamos"></div>
+              <div><label class="input-label">CATEGORY</label>
+                <select class="inp inp-select" id="img-cat">
+                  <option>MATCH PHOTOS</option><option>TRAINING</option><option>FAN MOMENTS</option>
+                  <option>BEHIND THE SCENES</option><option>SQUAD</option><option>ACADEMY</option>
+                </select>
+              </div>
+            </div>
+            <div id="upload-previews" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem"></div>
+            <button class="btn-adm primary" onclick="publishPhotos()">PUBLISH TO WEBSITE</button>
+          </div>
+          <div style="margin-top:1.5rem">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.16em;color:var(--gold);margin-bottom:.75rem">PUBLISHED GALLERY <span id="gallery-count" style="color:var(--muted2)">(0)</span></div>
+            <div class="admin-gallery-grid" id="admin-gallery"></div>
+          </div>
+        </div>
+
+        <!-- BREAKING NEWS TAB -->
+        <div id="tab-breaking" class="adm-content">
+          <div style="font-size:11px;color:var(--muted2);margin-bottom:1.5rem;letter-spacing:.08em">Post a breaking news headline — shows as a pinned red bar at the top of the page</div>
+          <label class="input-label">HEADLINE</label>
+          <input class="inp" id="bn-input" type="text" placeholder="e.g. ⚽ GOAL — Billiat 23' Scottland FC 1–0 Dynamos" style="margin-bottom:1rem">
+          <div style="display:flex;gap:8px;margin-bottom:1.5rem">
+            <button class="btn-adm primary" onclick="publishBreaking()">PUBLISH BREAKING NEWS</button>
+            <button class="btn-adm ghost" onclick="clearBreaking()">CLEAR BANNER</button>
+          </div>
+          <div style="font-size:10px;color:var(--gold);letter-spacing:.14em;margin-bottom:.75rem">QUICK TEMPLATES</div>
+          <div style="display:flex;flex-direction:column;gap:6px" id="bn-templates"></div>
+        </div>
+
+        <!-- SOCIAL POST TAB -->
+        <div id="tab-social-post" class="adm-content">
+          <div style="font-size:11px;color:var(--muted2);margin-bottom:1.5rem">Post directly to the social feed on the website</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+            <div><label class="input-label">PLATFORM</label>
+              <select class="inp inp-select" id="sp-platform">
+                <option value="tw">𝕏 / Twitter</option><option value="ig">Instagram</option>
+                <option value="fb">Facebook</option><option value="yt">YouTube</option>
+              </select>
+            </div>
+            <div><label class="input-label">HANDLE</label><input class="inp" id="sp-handle" type="text" value="@ScottlandFC"></div>
+          </div>
+          <label class="input-label">POST TEXT</label>
+          <textarea class="inp" id="sp-text" rows="4" placeholder="Write your post here..." style="resize:vertical;margin-bottom:1rem"></textarea>
+          <button class="btn-adm primary" onclick="publishSocialPost()">POST TO FEED</button>
+        </div>
+
+        <!-- TICKER MANAGEMENT -->
+        <div id="tab-ticker-mgmt" class="adm-content">
+          <div style="font-size:11px;color:var(--muted2);margin-bottom:1.5rem">Add or remove items from the scrolling news ticker at the top of the page</div>
+          <div style="display:flex;gap:8px;margin-bottom:1rem">
+            <input class="inp" id="tk-label" type="text" placeholder="LABEL" maxlength="12" style="width:90px;font-family:var(--F);color:var(--gold)">
+            <input class="inp" id="tk-text" type="text" placeholder="Ticker message text..." style="flex:1">
+            <button class="btn-adm primary" onclick="addTicker()">ADD</button>
+          </div>
+          <div id="ticker-items-list" style="display:flex;flex-direction:column;gap:5px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+/* ════════════════════════════════════
+   CURSOR
+════════════════════════════════════ */
+const curEl = document.getElementById('cur');
+const trailEl = document.getElementById('cur-trail');
+let mx=0,my=0,tx=0,ty=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  curEl.style.left=mx+'px'; curEl.style.top=my+'px';
+});
+function animTrail(){
+  tx+=(mx-tx)*.12; ty+=(my-ty)*.12;
+  trailEl.style.left=tx+'px'; trailEl.style.top=ty+'px';
+  requestAnimationFrame(animTrail);
+}
+animTrail();
+function bindHoverCursor(){
+  document.querySelectorAll('a,button,.nc,.pc,.sc,.fix-item,.ms-cell,.mem-card,.fw-item,.gi,.bn-template,.ticker-item-row,.sr-item').forEach(el=>{
+    if(el._cursorBound) return;
+    el._cursorBound=true;
+    el.addEventListener('mouseenter',()=>curEl.classList.add('link'));
+    el.addEventListener('mouseleave',()=>curEl.classList.remove('link'));
+  });
+}
+bindHoverCursor();
+
+/* ════════════════════════════════════
+   COUNTDOWN — next match vs Simba Bhora May 3 2026
+════════════════════════════════════ */
+function updateCountdown(){
+  const target=new Date('2026-05-03T13:00:00Z');
+  const diff=target-new Date();
+  if(diff<=0){['cd-d','cd-h','cd-m','cd-s'].forEach(i=>document.getElementById(i).textContent='00');return}
+  document.getElementById('cd-d').textContent=String(Math.floor(diff/864e5)).padStart(2,'0');
+  document.getElementById('cd-h').textContent=String(Math.floor(diff%864e5/36e5)).padStart(2,'0');
+  document.getElementById('cd-m').textContent=String(Math.floor(diff%36e5/6e4)).padStart(2,'0');
+  document.getElementById('cd-s').textContent=String(Math.floor(diff%6e4/1e3)).padStart(2,'0');
+}
+updateCountdown(); setInterval(updateCountdown,1000);
+
+/* ════════════════════════════════════
+   STAT COUNTERS
+════════════════════════════════════ */
+const statTargets=[{id:'stat1',val:72,sfx:''},{id:'stat2',val:65,sfx:''},{id:'stat3',val:50,sfx:'M+'},{id:'stat4',val:3,sfx:''}];
+let statsFired=false;
+function animCount(id,target,dur,sfx=''){
+  let v=0;const step=target/(dur/16);
+  const t=setInterval(()=>{v=Math.min(v+step,target);document.getElementById(id).textContent=Math.round(v)+(sfx||'');if(v>=target)clearInterval(t)},16);
+}
+const statObserver=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting&&!statsFired){
+      statsFired=true;
+      statTargets.forEach(s=>animCount(s.id,s.val,1800,s.sfx));
+    }
+  });
+},{threshold:.3});
+const statsEl=document.querySelector('.stats-bar');
+if(statsEl)statObserver.observe(statsEl);
+
+/* ════════════════════════════════════
+   NAV SCROLL
+════════════════════════════════════ */
+window.addEventListener('scroll',()=>{
+  document.getElementById('main-nav').classList.toggle('scrolled',window.scrollY>60);
+},{passive:true});
+
+/* ════════════════════════════════════
+   SCROLL REVEAL
+════════════════════════════════════ */
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')});
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+/* ════════════════════════════════════
+   SECTION TABS
+════════════════════════════════════ */
+function switchTab(btn,targetId){
+  const row=btn.closest('.tab-row');
+  row.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  // find sibling content divs
+  const parent=row.parentElement;
+  parent.querySelectorAll('[id^="tab-"],[id^="tab-upcoming"],[id^="tab-results"],[id^="tab-standings"],[id^="tab-scorers"]').forEach(d=>{d.style.display='none'});
+  const t=document.getElementById(targetId);
+  if(t)t.style.display='';
+}
+
+/* ════════════════════════════════════
+   SMOOTH SCROLL
+════════════════════════════════════ */
+function scrollToSection(e,id){
+  if(e)e.preventDefault();
+  const el=document.getElementById(id);
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ════════════════════════════════════
+   TOAST
+════════════════════════════════════ */
+function showToast(msg,color='var(--gold)'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.style.borderLeftColor=color;
+  t.style.opacity='1'; t.style.transform='translateY(0)'; t.style.pointerEvents='auto';
+  clearTimeout(t._tid);
+  t._tid=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(16px)';t.style.pointerEvents='none'},3500);
+}
+
+/* ════════════════════════════════════
+   ARTICLES DATA
+════════════════════════════════════ */
+const ARTICLES=[
+  {
+    cat:'CASTLE LAGER PSL · 2 NOVEMBER 2025',
+    title:'Scottland FC crowned 2025 PSL Champions — history made in debut season',
+    meta:'Staff Reporter · 6 min read · Ascot Stadium, Gweru',
+    img:'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=900&q=75&auto=format&fit=crop',
+    body:`<p>Scottland FC have written their name into Zimbabwean football folklore, becoming the <strong>2025 Castle Lager Premier Soccer League champions</strong> — and doing it in their very first season in the top flight.</p>
+<p>An emphatic 5–1 victory over Kwekwe United at Ascot Stadium in Gweru sealed the title with two matches to spare, leaving Scottland sitting on an unassailable <strong>65 points — seven clear of second-placed MWOS FC</strong>.</p>
+<p>Head coach <strong>Tonderai Ndiraya</strong> masterminded the historic triumph, becoming the first coach to win back-to-back PSL titles with two different clubs (Simba Bhora in 2024, Scottland in 2025). Goals in the title-clinching match came from <strong>Tymon Machope (2), Khama Billiat, Ronald Pfumbidzai, and Tadiwa Chakuchichi</strong>.</p>
+<p>The club, founded in 2023 by businessman and MP <strong>Scott Sakupwanya</strong>, had made headlines before a ball was kicked — securing close to <strong>R50 million in sponsorship</strong> and signing household names including Khama Billiat, Walter Musona, and later Knowledge Musona — earning them the nickname <em>"the Mamelodi Sundowns of Zimbabwe."</em></p>
+<p>Scottland become only the <strong>second club in Zimbabwean football history</strong> to win the title in their debut top-flight campaign — matching Black Rhinos' feat from 1984. Social media erupted across the country, with supporters proclaiming a new era for Zimbabwean football.</p>`
+  },
+  {
+    cat:'TRANSFER NEWS · AUGUST 2025',
+    title:'Knowledge Musona joins Billiat at Scottland — becomes highest earner in Zimbabwe PSL',
+    meta:'Terry Madyauta · 4 min read · Rufaro Stadium, Harare',
+    img:'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=700&q=75&auto=format&fit=crop',
+    body:`<p>Scottland FC sent shockwaves through Zimbabwean football in August 2025 when they announced the signing of <strong>Knowledge Musona</strong> — making the former Kaizer Chiefs star the highest earner in the Zimbabwe Premier Soccer League.</p>
+<p>The 35-year-old forward joined as a free agent after his release from Saudi Pro League side Al-Okhdood, where he had scored five goals in 30 appearances. His arrival completed a remarkable trio — alongside brother <strong>Walter Musona</strong> and boyhood teammate <strong>Khama Billiat</strong>, both already at the club.</p>
+<p>"The Smiling Assassin" was unveiled at half-time during Scottland's clash against Yadah FC at Rufaro Stadium in Harare, to thunderous applause. Coach Ndiraya noted that Knowledge's experience — including PSL Golden Boot, AFCON appearances, and stints at Anderlecht — would be invaluable.</p>
+<p>The signing cemented Scottland's status as <strong>the richest and most ambitious club in Zimbabwe</strong>, with the three forwards forming an attacking line previously unimaginable in the domestic league. Statistically, Billiat and Knowledge Musona are among the greatest Zimbabwean footballers of their generation.</p>`
+  },
+  {
+    cat:'2026 SEASON · 1 MARCH 2026',
+    title:"Mapeza's Scottland open 2026 campaign with devastating 5–0 demolition of Dynamos",
+    meta:'Staff Reporter · 4 min read · Rufaro Stadium, Harare',
+    img:'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=700&q=75&auto=format&fit=crop',
+    body:`<p>New head coach <strong>Norman Mapeza</strong> could not have wished for a better start. In front of a packed Rufaro Stadium, Scottland FC obliterated fierce rivals Dynamos FC 5–0 in the <strong>2026 Castle Challenge Cup</strong> — the traditional season curtain-raiser between the PSL champions and the Chibuku Super Cup holders.</p>
+<p>The scoring began in the <strong>17th minute through Emmanuel Ziocha</strong>, before Tymon Machope doubled the lead five minutes before half-time. Walter Musona added a third in the 67th minute, and Knowledge Musona made it four in the 75th. Dynamos' misery was compounded by a red card for Collins Mujuru in the 84th minute, before substitute <strong>Khama Billiat sealed a 5–0 victory in the 90th</strong>.</p>
+<p>Mapeza, who guided FC Platinum to three league titles in a decade, spoke calmly after the rout: <em>"It was a good game. I don't want to take anything from Dynamos — they played well. I am more than happy with our performance."</em></p>
+<p>The triumph — Mapeza's first silverware with the club — served notice that the champions intend to defend their title vigorously, and are already targeting CAF competition as their ambitions grow.</p>`
+  },
+  {
+    cat:'CLUB STORY · FEATURE',
+    title:"From Mabvuku streets to national champions — the Scottland FC story",
+    meta:'Special Feature · 8 min read',
+    img:'https://images.unsplash.com/photo-1624880357913-a8539238245b?w=700&q=75&auto=format&fit=crop',
+    body:`<p>It started not in a boardroom, but in <strong>Mabvuku</strong> — one of Harare's most vibrant townships. When Member of Parliament and businessman <strong>Pedzisayi "Scott" Sakupwanya</strong> founded Scottland FC in 2023, his vision was clear: to give young people in Mabvuku a reason to dream.</p>
+<p>The name "Scottland" comes not from the European nation, but from Scott himself — and the double 'tt' is a deliberate branding choice. The club has <strong>no connection to Scotland, the country</strong>. This is a purely Zimbabwean story.</p>
+<p>In their inaugural season (2024), the club won the <strong>Northern Region Soccer League</strong>, earning promotion to the top flight. Pre-season 2025 saw Sakupwanya go big — close to <strong>R50 million in sponsorship</strong> was secured, and a transfer strategy that shocked Zimbabwe football was executed.</p>
+<p>Khama Billiat, just coming off 13 goals and 11 assists with Yadah Stars, was signed first. Walter Musona — the 2024 Soccer Star of the Year — followed. The squad was further bolstered by players from reigning champions Simba Bhora. The nickname "Mamelodi Sundowns of Zimbabwe" stuck almost immediately.</p>
+<p>Under Tonderai Ndiraya, Scottland swept through the 2025 PSL season with remarkable consistency, ultimately lifting the title on Matchday 32 — two games to spare — with 65 points and a +18 goal difference. They became only the second side since <strong>Black Rhinos in 1984</strong> to win the PSL in their debut campaign.</p>
+<p>Their nickname: <strong>Mabviravira</strong> — a Shona word meaning "those who never tire." Two seasons in, it already feels prophetic.</p>`
+  }
+];
+
+function openArticle(i){
+  const a=ARTICLES[i];if(!a)return;
+  document.getElementById('am-eyebrow').textContent=a.cat;
+  document.getElementById('am-title').textContent=a.title;
+  document.getElementById('am-meta').textContent=a.meta;
+  document.getElementById('am-img').src=a.img;
+  document.getElementById('am-body').innerHTML=a.body;
+  document.getElementById('article-modal').style.display='block';
+  document.body.style.overflow='hidden';
+}
+function closeArticle(){
+  document.getElementById('article-modal').style.display='none';
+  document.body.style.overflow='';
+}
+document.getElementById('article-modal').addEventListener('click',e=>{
+  if(e.target===document.getElementById('article-modal'))closeArticle();
+});
+function shareArticle(platform){
+  const title=encodeURIComponent(document.getElementById('am-title').textContent);
+  const url=encodeURIComponent(location.href);
+  const links={x:`https://twitter.com/intent/tweet?text=${title}%20${url}`,fb:`https://www.facebook.com/sharer/sharer.php?u=${url}`,wa:`https://api.whatsapp.com/send?text=${title}%20${url}`};
+  window.open(links[platform],'_blank','width=600,height=420');
+  showToast('Opening share dialog…');
+}
+
+/* ════════════════════════════════════
+   LIGHTBOX
+════════════════════════════════════ */
+let lbImages=[],lbIdx=0;
+function openLightbox(imgs,i){
+  lbImages=imgs;lbIdx=i;renderLb();
+  document.getElementById('lightbox').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){document.getElementById('lightbox').style.display='none';document.body.style.overflow='';}
+function lbNav(d){lbIdx=(lbIdx+d+lbImages.length)%lbImages.length;renderLb();}
+function renderLb(){
+  document.getElementById('lb-img').src=lbImages[lbIdx].src;
+  document.getElementById('lb-caption').textContent=lbImages[lbIdx].cap||'';
+  document.getElementById('lb-counter').textContent=`${lbIdx+1} / ${lbImages.length}`;
+}
+document.getElementById('lightbox').addEventListener('click',e=>{if(e.target===document.getElementById('lightbox'))closeLightbox()});
+
+/* ════════════════════════════════════
+   SEARCH
+════════════════════════════════════ */
+const SEARCH_DATA=[
+  ...ARTICLES.map((a,i)=>({type:'NEWS',title:a.title,fn:()=>openArticle(i)})),
+  {type:'FIXTURE',title:'Scottland FC vs Simba Bhora · 3 May 2026',fn:()=>scrollToSection(null,'match-centre')},
+  {type:'FIXTURE',title:'Scottland FC vs Dynamos · 22 April 2026',fn:()=>scrollToSection(null,'match-centre')},
+  {type:'PLAYER',title:'Khama Billiat — Forward · Key Player',fn:()=>scrollToSection(null,'squad-section')},
+  {type:'PLAYER',title:'Knowledge Musona — Forward · Highest earner',fn:()=>scrollToSection(null,'squad-section')},
+  {type:'PLAYER',title:'Walter Musona — Forward · Soccer Star 2024',fn:()=>scrollToSection(null,'squad-section')},
+  {type:'PLAYER',title:'Tymon Machope — Top Scorer 2025 (16 goals)',fn:()=>scrollToSection(null,'squad-section')},
+  {type:'CLUB',title:'About Scottland FC Zimbabwe — founded 2023',fn:()=>openArticle(3)},
+  {type:'MEMBERSHIP',title:'Join Mabviravira — from $10/season',fn:()=>scrollToSection(null,'membership-cta')},
+];
+function openSearch(){
+  const ov=document.getElementById('search-ov');
+  ov.style.display='flex'; document.body.style.overflow='hidden';
+  setTimeout(()=>document.getElementById('search-input').focus(),50);
+}
+function closeSearch(){
+  document.getElementById('search-ov').style.display='none';
+  document.body.style.overflow='';
+  document.getElementById('search-input').value='';
+  document.getElementById('search-results').innerHTML='';
+}
+function runSearch(q){
+  const r=document.getElementById('search-results');
+  if(!q.trim()){r.innerHTML='';return}
+  const hits=SEARCH_DATA.filter(d=>d.title.toLowerCase().includes(q.toLowerCase()));
+  r.innerHTML=hits.length?hits.map(h=>`<div class="sr-item" onclick="h${hits.indexOf(h)}_fn(this)"><span class="sr-type">${h.type}</span><span class="sr-title">${h.title}</span></div>`).join(''):'<div style="padding:1.5rem;text-align:center;font-size:13px;color:var(--muted)">No results found</div>';
+  r.querySelectorAll('.sr-item').forEach((el,i)=>{
+    el.onclick=()=>{hits[i].fn();closeSearch()};
+  });
+}
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openSearch();}
+  if(e.key==='Escape'){
+    closeSearch();
+    closeArticle();
+    closeLightbox();
+    if(document.getElementById('admin-panel').style.display!=='none')document.getElementById('admin-panel').style.display='none';
+  }
+});
+
+/* ════════════════════════════════════
+   MEMBERSHIP
+════════════════════════════════════ */
+function joinMembership(tier){
+  showToast(`✅ ${tier} membership — redirecting to sign-up form!`);
+  setTimeout(()=>showToast('📧 membership@scottlandfc.co.zw for enquiries'),2500);
+}
+function showMembershipInfo(){
+  showToast('🎽 Membership tiers: Supporter $15 · Clan $45 · Junior $10 · Platinum $120');
+  scrollToSection(null,'membership-cta');
+}
+function showModal(type){
+  if(type==='sign-in')showToast('🔐 Member sign-in portal — launching soon!');
+}
+
+/* ════════════════════════════════════
+   FAN WALL
+════════════════════════════════════ */
+function openFanWallForm(){
+  const form=document.getElementById('fan-form');
+  form.style.display=form.style.display==='flex'?'none':'flex';
+  if(form.style.display==='flex')document.getElementById('fan-name').focus();
+}
+function submitFanMessage(){
+  const name=document.getElementById('fan-name').value.trim();
+  const msg=document.getElementById('fan-msg').value.trim();
+  if(!name||!msg){showToast('⚠️ Enter your name and message','var(--red)');return}
+  const track=document.getElementById('fan-track');
+  const el=document.createElement('div');
+  el.className='fw-item';
+  el.style.borderColor='var(--gold)';
+  el.innerHTML=`<div class="fw-name">🇿🇼 ${name}</div><div class="fw-msg">"${msg}"</div>`;
+  const clone=el.cloneNode(true);
+  track.prepend(el); track.appendChild(clone);
+  document.getElementById('fan-name').value='';
+  document.getElementById('fan-msg').value='';
+  document.getElementById('fan-form').style.display='none';
+  showToast('💙 Message added to the Clan Wall!');
+}
+
+/* ════════════════════════════════════
+   ADMIN PANEL
+════════════════════════════════════ */
+let adminLoggedIn=false;
+let uploadedFiles=[];
+let galleryItems=[];
+let tickerItems=[
+  {label:'🏆',text:'2025 Castle Lager PSL Champions — first debut-season title since Black Rhinos 1984'},
+  {label:'⚽',text:'Tymon Machope — 16 goals in 2025 season'},
+  {label:'🌟',text:'Knowledge Musona signed August 2025 — highest earner in Zim PSL'},
+  {label:'🔵',text:'Castle Challenge Cup winners 2026 — Scottland 5–0 Dynamos'},
+  {label:'📅',text:'Next: Scottland FC vs Simba Bhora · Castle Lager PSL 2026'},
+  {label:'👔',text:'Head Coach: Norman Mapeza'},
+];
+
+function toggleAdmin(){
+  const p=document.getElementById('admin-panel');
+  p.style.display=p.style.display==='none'||p.style.display===''?'block':'none';
+  if(adminLoggedIn)showAdminDash();
+}
+function checkPass(){
+  const v=document.getElementById('admin-pass').value;
+  if(v==='clan2026'){
+    adminLoggedIn=true;showAdminDash();
+    document.getElementById('admin-err').style.display='none';
+    showToast('✅ Admin access granted');
+  } else {
+    document.getElementById('admin-err').style.display='block';
+    document.getElementById('admin-pass').style.borderColor='var(--red)';
+    setTimeout(()=>document.getElementById('admin-pass').style.borderColor='',1500);
+  }
+}
+function showAdminDash(){
+  document.getElementById('admin-login').style.display='none';
+  document.getElementById('admin-dash').style.display='block';
+  renderBNTemplates(); renderTickerList(); renderAdminGallery();
+}
+function adminLogout(){
+  adminLoggedIn=false;
+  document.getElementById('admin-login').style.display='block';
+  document.getElementById('admin-dash').style.display='none';
+  document.getElementById('admin-pass').value='';
+}
+function switchAdminTab(btn){
+  document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.adm-content').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(btn.dataset.tab).classList.add('active');
+}
+
+/* PHOTOS */
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('over');
+  processFiles([...e.dataTransfer.files]);
+}
+function handleFiles(e){processFiles([...e.target.files]);}
+function processFiles(files){
+  files.filter(f=>f.type.startsWith('image/')).forEach(f=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      uploadedFiles.push({src:ev.target.result,name:f.name});
+      renderPreviews();
+      document.getElementById('upload-form-wrap').style.display='block';
+    };
+    reader.readAsDataURL(f);
+  });
+}
+function renderPreviews(){
+  const c=document.getElementById('upload-previews');
+  c.innerHTML=uploadedFiles.map((f,i)=>`<div class="up-prev"><img src="${f.src}" alt=""><button class="up-prev-del" onclick="removeUpload(${i})">×</button></div>`).join('');
+}
+function removeUpload(i){uploadedFiles.splice(i,1);renderPreviews();if(!uploadedFiles.length)document.getElementById('upload-form-wrap').style.display='none';}
+function publishPhotos(){
+  if(!uploadedFiles.length){showToast('⚠️ No files selected','var(--red)');return}
+  const cap=document.getElementById('img-caption').value||'Club photo';
+  const cat=document.getElementById('img-cat').value;
+  uploadedFiles.forEach(f=>galleryItems.push({src:f.src,cap,cat}));
+  uploadedFiles=[];
+  document.getElementById('img-caption').value='';
+  document.getElementById('upload-form-wrap').style.display='none';
+  document.getElementById('file-input').value='';
+  renderPublicGallery(); renderAdminGallery();
+  showToast(`✅ ${galleryItems.length} photo(s) published to gallery!`);
+  document.getElementById('admin-panel').style.display='none';
+}
+function renderAdminGallery(){
+  const g=document.getElementById('admin-gallery');
+  document.getElementById('gallery-count').textContent=`(${galleryItems.length})`;
+  g.innerHTML=galleryItems.map((item,i)=>`<div class="agg-item"><img src="${item.src}" alt=""><div class="agg-del"><button class="btn-adm ghost" style="padding:5px 10px;font-size:10px" onclick="deletePhoto(${i})">DEL</button></div></div>`).join('');
+}
+function deletePhoto(i){galleryItems.splice(i,1);renderPublicGallery();renderAdminGallery();showToast('🗑 Photo removed');}
+function renderPublicGallery(){
+  const section=document.getElementById('gallery-section');
+  const grid=document.getElementById('gallery-grid');
+  if(!galleryItems.length){section.style.display='none';return}
+  section.style.display='block';
+  grid.innerHTML=galleryItems.map((item,i)=>`<div class="gi" onclick="openGalleryLightbox(${i})"><img src="${item.src}" alt="${item.cap}" loading="lazy"><div class="gi-ov"><div class="gi-cat">${item.cat}</div><div class="gi-cap">${item.cap}</div></div></div>`).join('');
+  grid.querySelectorAll('.gi').forEach(el=>revObs.observe(el));
+  bindHoverCursor();
+}
+function openGalleryLightbox(i){
+  openLightbox(galleryItems.map(g=>({src:g.src,cap:g.cap})),i);
+}
+
+/* BREAKING NEWS */
+const BN_TEMPLATES=[
+  '⚽ GOAL — Machope 23\' · Scottland FC 1–0 Dynamos',
+  '🔴 RED CARD — Dynamos down to 10 men (54\')',
+  '📣 TEAM NEWS — Billiat starts vs Simba Bhora',
+  '🏆 TROPHY — Scottland lift Castle Challenge Cup 5–0',
+  '✍️ NEW SIGNING — Scottland announce first 2026 transfer',
+  '🎟 TICKETS — Sold out for next Harare Derby',
+];
+function renderBNTemplates(){
+  document.getElementById('bn-templates').innerHTML=BN_TEMPLATES.map(t=>`<div class="bn-template" onclick="document.getElementById('bn-input').value='${t.replace(/'/g,"\\'")}'">${t}</div>`).join('');
+}
+function publishBreaking(){
+  const txt=document.getElementById('bn-input').value.trim();
+  if(!txt){showToast('⚠️ Enter a headline','var(--red)');return}
+  const bar=document.getElementById('breaking-bar');
+  document.getElementById('br-text').textContent=txt;
+  bar.classList.remove('hidden');
+  showToast('📣 Breaking news published!');
+  document.getElementById('admin-panel').style.display='none';
+}
+function clearBreaking(){
+  document.getElementById('breaking-bar').classList.add('hidden');
+  document.getElementById('bn-input').value='';
+  showToast('✅ Breaking banner cleared');
+}
+
+/* SOCIAL POST */
+const PLAT_ICONS={tw:'𝕏',ig:'▶',fb:'f',yt:'▶'};
+const PLAT_BG={tw:'#1DA1F2',ig:'linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)',fb:'#1877F2',yt:'#FF0000'};
+const PLAT_BORDER={tw:'#1DA1F2',ig:'#E1306C',fb:'#1877F2',yt:'#FF0000'};
+function publishSocialPost(){
+  const platform=document.getElementById('sp-platform').value;
+  const handle=document.getElementById('sp-handle').value||'@ScottlandFC';
+  const text=document.getElementById('sp-text').value.trim();
+  if(!text){showToast('⚠️ Enter post text','var(--red)');return}
+  injectPost(platform,handle,text,'just now');
+  document.getElementById('sp-text').value='';
+  showToast('📡 Post added to social feed!');
+  document.getElementById('admin-panel').style.display='none';
+}
+function injectPost(platform,handle,text,time){
+  const feed=document.getElementById('social-feed');
+  const card=document.createElement('div');
+  card.className=`sc ${platform}`;
+  card.style.cssText=`border-top-color:${PLAT_BORDER[platform]};opacity:0;transform:translateY(12px);transition:opacity .4s,transform .4s`;
+  card.innerHTML=`
+    <div class="sc-head">
+      <div class="sc-ico ${platform}" style="background:${PLAT_BG[platform]}">${PLAT_ICONS[platform]}</div>
+      <div class="sc-handle">${handle}</div>
+      <div class="live-badge-sm" style="margin:0"><div class="live-dot"></div>LIVE</div>
+      <div class="sc-time" style="margin-left:8px">${time}</div>
+    </div>
+    <p class="sc-body">${text}</p>
+    <div class="sc-engage"><span class="se">♥ 0</span><span class="se">💬 0</span></div>`;
+  feed.prepend(card);
+  requestAnimationFrame(()=>{card.style.opacity='1';card.style.transform='translateY(0)'});
+  bindHoverCursor();
+  // organic engagement simulation
+  let h=0;
+  const t=setInterval(()=>{h+=Math.floor(Math.random()*15)+3;card.querySelector('.se').textContent=`♥ ${h}`;if(h>300)clearInterval(t)},2500);
+}
+
+/* TICKER MANAGEMENT */
+function renderTickerList(){
+  const list=document.getElementById('ticker-items-list');
+  if(!list)return;
+  list.innerHTML=tickerItems.map((item,i)=>`<div class="ticker-item-row"><span style="font-family:var(--F);font-size:13px;color:var(--gold);min-width:50px">${item.label}</span><span style="font-size:13px;color:rgba(255,255,255,.7);flex:1">${item.text}</span><button class="btn-adm ghost" style="padding:5px 12px;font-size:10px" onclick="removeTicker(${i})">×</button></div>`).join('');
+}
+function addTicker(){
+  const label=document.getElementById('tk-label').value.trim();
+  const text=document.getElementById('tk-text').value.trim();
+  if(!label||!text){showToast('⚠️ Fill both fields','var(--red)');return}
+  tickerItems.unshift({label,text});
+  renderTickerList(); rebuildTicker();
+  document.getElementById('tk-label').value='';
+  document.getElementById('tk-text').value='';
+  showToast('✅ Ticker item added!');
+}
+function removeTicker(i){tickerItems.splice(i,1);renderTickerList();rebuildTicker();showToast('🗑 Removed');}
+function rebuildTicker(){
+  const track=document.getElementById('ticker-track');
+  const doubled=[...tickerItems,...tickerItems];
+  track.innerHTML=doubled.map(item=>`<span class="ticker-item">${item.label} ${item.text}</span>`).join('');
+}
+
+/* ════════════════════════════════════
+   LIVE SOCIAL SIMULATION (every 60s)
+════════════════════════════════════ */
+const AUTO_POSTS=[
+  {p:'tw',h:'@ScottlandFC',t:'🔵 #Mabviravira never sleep. Training done. Ready for the Derby. #ScottlandFC #ZimPSL'},
+  {p:'ig',h:'@scottland.fc',t:'Behind the scenes at Rufaro ahead of the Harare Derby 👀🔵 Who is coming? #Mabviravira'},
+  {p:'fb',h:'Scottland FC Official',t:'🏆 Last season we made history. This season, we defend it. The Harare Derby is tomorrow. 🔵 #ScottlandFC'},
+  {p:'tw',h:'@ScottlandFC',t:'📊 Did you know? Scottland FC have the best away record in the 2026 PSL so far. #Mabviravira'},
+];
+let autoIdx=0;
+setInterval(()=>{
+  const post=AUTO_POSTS[autoIdx%AUTO_POSTS.length];
+  injectPost(post.p,post.h,post.t,`${Math.floor(Math.random()*5)+1}m ago`);
+  autoIdx++;
+},60000);
+
+/* ════════════════════════════════════
+   WELCOME TOAST
+════════════════════════════════════ */
+setTimeout(()=>showToast('🔵 Mabviravira! Welcome to Scottland FC Zimbabwe — 2025 PSL Champions'),1000);
+
+/* ════════════════════════════════════
+   KEYBOARD SHORTCUT NAV
+════════════════════════════════════ */
+document.addEventListener('keydown',e=>{
+  if(e.key==='/'&&e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'){
+    e.preventDefault(); openSearch();
+  }
+});
+</script>
+</body>
+</html>
