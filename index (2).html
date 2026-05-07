@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProfAirZw — Climate Solutions Zimbabwe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@200;300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --void:#03080f;
+  --deep:#060d18;
+  --surface:#0a1525;
+  --card:#0e1d2f;
+  --card2:#112238;
+  --frost:rgba(180,230,255,0.06);
+  --border:rgba(100,200,255,0.08);
+  --border2:rgba(120,210,255,0.22);
+  --ice:#a8e6ff;
+  --cyan:#38bdf8;
+  --cyan-l:#7dd3fc;
+  --cyan-d:#0284c7;
+  --white:#e8f4ff;
+  --muted:rgba(168,230,255,0.35);
+  --muted2:rgba(168,230,255,0.55);
+  --warm:#ff6b35;
+  --F:'Bebas Neue',sans-serif;
+  --B:'Outfit',sans-serif;
+  --S:'Playfair Display',serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--white);font-family:var(--B);font-size:15px;line-height:1.65;overflow-x:hidden;cursor:none}
+
+/* ── CURSOR ── */
+#cur{position:fixed;width:8px;height:8px;background:var(--cyan);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .18s,height .18s;mix-blend-mode:screen}
+#cur-r{position:fixed;width:32px;height:32px;border:1px solid rgba(56,189,248,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .12s ease}
+
+/* ── FROST CANVAS ── */
+#frost-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.55}
+
+/* ── GRAIN ── */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.35}
+
+/* ── COOL MIST BG ── */
+body::before{content:'';position:fixed;inset:0;background:
+  radial-gradient(ellipse 80% 60% at 15% -10%,rgba(14,80,140,.35) 0%,transparent 55%),
+  radial-gradient(ellipse 60% 50% at 90% 10%,rgba(4,120,180,.2) 0%,transparent 50%),
+  radial-gradient(ellipse 100% 40% at 50% 100%,rgba(2,30,60,.8) 0%,transparent 60%);
+pointer-events:none;z-index:0}
+
+/* ── AIR WISPS (SVG anim) ── */
+.wisps{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;opacity:.18}
+.wisp{position:absolute;border-radius:50%;filter:blur(60px);animation:wispDrift linear infinite}
+.wisp:nth-child(1){width:400px;height:200px;background:rgba(56,189,248,.3);top:-50px;left:-100px;animation-duration:28s;animation-delay:0s}
+.wisp:nth-child(2){width:300px;height:150px;background:rgba(14,165,233,.2);top:30%;right:-80px;animation-duration:34s;animation-delay:-8s}
+.wisp:nth-child(3){width:500px;height:180px;background:rgba(100,200,255,.15);bottom:20%;left:20%;animation-duration:42s;animation-delay:-15s}
+@keyframes wispDrift{0%{transform:translateX(0) translateY(0) scaleX(1)}33%{transform:translateX(40px) translateY(20px) scaleX(1.1)}66%{transform:translateX(-20px) translateY(-15px) scaleX(.95)}100%{transform:translateX(0) translateY(0) scaleX(1)}}
+
+/* ── TICKER ── */
+.ticker{background:linear-gradient(90deg,var(--cyan-d),#0ea5e9,var(--cyan-d));padding:10px 0;overflow:hidden;position:relative;z-index:20}
+.ticker::before,.ticker::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
+.ticker::before{left:0;background:linear-gradient(to right,var(--cyan-d),transparent)}
+.ticker::after{right:0;background:linear-gradient(to left,var(--cyan-d),transparent)}
+.t-track{display:flex;animation:tick 30s linear infinite;white-space:nowrap}
+.t-item{font-family:var(--B);font-size:11px;font-weight:600;letter-spacing:.1em;padding:0 2.5rem;color:rgba(255,255,255,.9);flex-shrink:0;display:flex;align-items:center;gap:6px}
+.t-item::before{content:'❄';font-size:10px;opacity:.7}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;background:rgba(3,8,15,.88);backdrop-filter:blur(28px) saturate(1.4);border-bottom:1px solid var(--border2);transition:all .3s}
+.nav-w{max-width:1440px;margin:0 auto;padding:0 2.5rem;display:flex;align-items:center;height:72px;gap:0}
+.logo{display:flex;align-items:center;gap:14px;text-decoration:none;margin-right:3rem;flex-shrink:0}
+.logo-icon{position:relative;width:44px;height:44px;flex-shrink:0}
+.logo-icon svg{width:44px;height:44px}
+.logo-text .l1{font-family:var(--F);font-size:20px;letter-spacing:.14em;color:var(--white);line-height:1}
+.logo-text .l2{font-size:9px;font-weight:500;letter-spacing:.24em;color:var(--cyan);text-transform:uppercase}
+.nav-links{display:flex;list-style:none;flex:1;gap:0}
+.nav-links a{display:block;padding:0 1rem;font-size:11.5px;font-weight:500;letter-spacing:.07em;color:var(--muted2);text-decoration:none;height:72px;line-height:72px;transition:color .2s;white-space:nowrap;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:1rem;right:1rem;height:1.5px;background:var(--cyan);transform:scaleX(0);transition:transform .3s;transform-origin:center}
+.nav-links a:hover{color:var(--white)}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+.nav-links a.active{color:var(--cyan)}
+.nav-r{display:flex;align-items:center;gap:10px;margin-left:auto}
+.temp-pill{display:inline-flex;align-items:center;gap:7px;background:rgba(56,189,248,.1);border:1px solid var(--border2);padding:7px 14px;font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--cyan)}
+.cool-dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);box-shadow:0 0 0 0 rgba(56,189,248,.4)}50%{opacity:.6;transform:scale(1.5);box-shadow:0 0 0 5px rgba(56,189,248,0)}}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--B);font-size:11.5px;font-weight:600;letter-spacing:.1em;padding:12px 26px;border:none;cursor:pointer;text-decoration:none;transition:all .25s;white-space:nowrap;position:relative;overflow:hidden}
+.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.09);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.btn:hover::after{transform:scaleX(1)}
+.btn-ice{background:var(--cyan);color:var(--void);clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%)}
+.btn-ice:hover{background:var(--cyan-l);transform:translateY(-2px);box-shadow:0 8px 24px rgba(56,189,248,.35)}
+.btn-ghost{background:transparent;color:var(--muted2);border:1px solid var(--border2);transition:all .25s}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 16px rgba(56,189,248,.12)}
+.btn-warm{background:var(--warm);color:#fff;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%)}
+.btn-warm:hover{filter:brightness(1.15);transform:translateY(-2px)}
+.btn-sm{padding:8px 18px;font-size:10.5px}
+
+/* ── SECTION CHROME ── */
+.wrap{max-width:1440px;margin:0 auto;padding:5rem 2.5rem;position:relative;z-index:1}
+.wrap.tight{padding:3rem 2.5rem}
+.sh{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:3rem}
+.sh-l{display:flex;flex-direction:column;gap:4px}
+.eyebrow{font-size:9px;font-weight:700;letter-spacing:.28em;color:var(--cyan);text-transform:uppercase}
+.sh-title{font-family:var(--F);font-size:2.2rem;letter-spacing:.07em;line-height:1}
+.sh-link{font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(56,189,248,.3);padding-bottom:2px;transition:all .2s;cursor:pointer}
+.sh-link:hover{color:var(--cyan-l);border-bottom-color:var(--cyan-l)}
+.divider{height:1px;background:linear-gradient(to right,transparent,var(--cyan-d),rgba(56,189,248,.2),transparent);margin:0}
+
+/* ══════════════════════════════
+   HERO
+══════════════════════════════ */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:var(--void)}
+.hero-bg{position:absolute;inset:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.22) saturate(.4) hue-rotate(180deg)}
+.hero-overlay{position:absolute;inset:0;background:
+  linear-gradient(125deg,rgba(2,15,35,.95) 0%,rgba(4,30,70,.7) 40%,transparent 80%),
+  linear-gradient(to top,rgba(3,8,15,1) 0%,transparent 45%)}
+/* frost crack lines */
+.hero-lines{position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:.07}
+.hero-lines svg{width:100%;height:100%;position:absolute;inset:0}
+/* rotating snowflake bg */
+.hero-flake{position:absolute;right:8%;top:50%;transform:translateY(-50%);font-size:28rem;opacity:.035;animation:rotateSlow 120s linear infinite;color:var(--cyan);pointer-events:none;line-height:1;z-index:1}
+@keyframes rotateSlow{from{transform:translateY(-50%) rotate(0deg)}to{transform:translateY(-50%) rotate(360deg)}}
+
+.hero-content{position:relative;z-index:2;max-width:1440px;margin:0 auto;padding:0 2.5rem;width:100%;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:5rem}
+.hero-tag{display:inline-flex;align-items:center;gap:10px;background:rgba(56,189,248,.1);border:1px solid var(--border2);padding:8px 18px;margin-bottom:2rem;font-size:10px;font-weight:700;letter-spacing:.22em;color:var(--cyan);animation:fadeUp .5s ease both}
+.hero-tag-dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:pulse 1.8s ease-in-out infinite}
+.hero-h1{font-family:var(--F);font-size:clamp(4.5rem,8.5vw,9rem);line-height:.88;letter-spacing:.02em;margin-bottom:1.75rem;animation:fadeUp .5s .1s ease both}
+.hero-h1 .ice{color:var(--cyan);display:block}
+.hero-h1 .ghost-txt{color:rgba(255,255,255,.06);display:block}
+.hero-sub{font-family:var(--S);font-style:italic;font-size:1.15rem;color:var(--muted2);max-width:500px;margin-bottom:2.5rem;line-height:1.85;animation:fadeUp .5s .2s ease both}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;animation:fadeUp .5s .3s ease both}
+.hero-btns .hint{font-size:10px;color:var(--muted);align-self:center;letter-spacing:.08em;margin-left:4px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* TEMP CARD */
+.hero-card{background:rgba(10,21,37,.82);border:1px solid var(--border2);backdrop-filter:blur(20px);padding:2rem;position:relative;overflow:hidden;animation:fadeUp .5s .45s ease both}
+.hero-card::before{content:'';position:absolute;top:-1px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.hc-temp{font-family:var(--F);font-size:6rem;letter-spacing:-.01em;line-height:1;color:var(--white);display:flex;align-items:flex-start;gap:4px;margin-bottom:.5rem}
+.hc-deg{font-size:2rem;color:var(--cyan);margin-top:1rem}
+.hc-label{font-size:10px;font-weight:700;letter-spacing:.22em;color:var(--cyan);margin-bottom:1.5rem}
+.hc-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.hc-stat{background:rgba(56,189,248,.06);border:1px solid var(--border);padding:1rem;text-align:center}
+.hc-sv{font-family:var(--F);font-size:1.8rem;color:var(--cyan-l)}
+.hc-sl{font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--muted);margin-top:3px}
+.hc-services{display:flex;flex-direction:column;gap:6px}
+.hc-svc{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:500;color:var(--muted2);padding:8px 12px;background:rgba(56,189,248,.04);border:1px solid var(--border);border-left:2px solid var(--cyan);transition:all .2s;cursor:pointer}
+.hc-svc:hover{background:rgba(56,189,248,.09);color:var(--white)}
+.hc-svc-icon{font-size:14px;flex-shrink:0}
+
+/* ── SERVICES STRIP ── */
+.svc-strip{background:rgba(6,13,24,.9);border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;position:relative;z-index:1}
+.svc-strip::-webkit-scrollbar{display:none}
+.svc-inner{max-width:1440px;margin:0 auto;padding:0 2.5rem;display:flex;align-items:stretch}
+.svc-item{padding:1.6rem 2.5rem;border-right:1px solid var(--border);flex-shrink:0;cursor:pointer;transition:all .22s;display:flex;flex-direction:column;gap:7px;position:relative;overflow:hidden}
+.svc-item::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--cyan);transform:scaleX(0);transition:transform .3s}
+.svc-item:hover::before{transform:scaleX(1)}
+.svc-item:hover{background:rgba(56,189,248,.04)}
+.svc-item:hover .svc-icon{transform:scale(1.12) rotate(-5deg)}
+.svc-icon{font-size:1.4rem;transition:transform .3s}
+.svc-name{font-family:var(--F);font-size:.95rem;letter-spacing:.08em;color:var(--white)}
+.svc-desc{font-size:10.5px;color:var(--muted);line-height:1.4;max-width:150px}
+
+/* ── NEWS MOSAIC ── */
+.news-grid{display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:repeat(2,250px);gap:3px}
+.nc{position:relative;overflow:hidden;cursor:pointer;background:var(--card)}
+.nc:nth-child(1){grid-column:1/6;grid-row:1/3}
+.nc:nth-child(2){grid-column:6/9;grid-row:1/2}
+.nc:nth-child(3){grid-column:9/13;grid-row:1/2}
+.nc:nth-child(4){grid-column:6/10;grid-row:2/3}
+.nc:nth-child(5){grid-column:10/13;grid-row:2/3}
+.nc img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s ease,filter .4s;filter:brightness(.45) saturate(.5) hue-rotate(180deg)}
+.nc:hover img{transform:scale(1.07);filter:brightness(.3) saturate(.4) hue-rotate(180deg)}
+.nc-over{position:absolute;inset:0;background:linear-gradient(to top,rgba(3,8,15,.98) 0%,rgba(3,8,15,.1) 55%,transparent 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:1.5rem}
+.nc-cat{font-size:9px;font-weight:700;letter-spacing:.22em;color:var(--cyan);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.nc-cat::before{content:'';width:16px;height:1px;background:var(--cyan)}
+.nc-title{font-family:var(--F);line-height:1.1;letter-spacing:.04em}
+.nc:nth-child(1) .nc-title{font-size:1.9rem}
+.nc:not(:nth-child(1)) .nc-title{font-size:.98rem}
+.nc-meta{font-size:11px;color:rgba(255,255,255,.28);margin-top:6px}
+.nc-badge{position:absolute;top:1rem;left:1rem}
+.nbadge{font-size:8px;font-weight:700;letter-spacing:.18em;padding:5px 12px}
+.nbadge.hot{background:var(--warm);color:#fff}
+.nbadge.new{background:var(--cyan);color:var(--void)}
+.nbadge.tip{background:rgba(56,189,248,.15);border:1px solid var(--border2);color:var(--cyan)}
+.nc-hover-btn{display:inline-block;background:var(--cyan);color:var(--void);font-family:var(--B);font-size:10px;font-weight:700;letter-spacing:.1em;padding:8px 18px;border:none;cursor:pointer;margin-top:12px;opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s;clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%)}
+.nc:hover .nc-hover-btn{opacity:1;transform:translateY(0)}
+
+/* ── STAT BAND ── */
+.stat-band{background:linear-gradient(135deg,rgba(4,30,70,.9),rgba(6,13,24,.95));border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;overflow:hidden;z-index:1}
+.stat-band::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(70deg,transparent,transparent 80px,rgba(56,189,248,.025) 80px,rgba(56,189,248,.025) 81px)}
+.sb-inner{max-width:1440px;margin:0 auto;padding:3rem 2.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1px}
+.sb-col{padding:2rem;border-right:1px solid var(--border);text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative}
+.sb-col:last-child{border-right:none}
+.sb-col::after{content:'';position:absolute;top:50%;left:0;width:1px;height:60%;transform:translateY(-50%);background:linear-gradient(to bottom,transparent,var(--border2),transparent)}
+.sb-num{font-family:var(--F);font-size:3.5rem;letter-spacing:-.01em;color:var(--cyan);line-height:1}
+.sb-label{font-size:9.5px;font-weight:700;letter-spacing:.2em;color:var(--muted2);text-transform:uppercase}
+.sb-note{font-size:11px;color:var(--muted)}
+
+/* ── SERVICES GRID ── */
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.sg-item{background:var(--card);padding:2.5rem;position:relative;overflow:hidden;cursor:pointer;transition:all .3s;border:1px solid transparent}
+.sg-item::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(56,189,248,.08),transparent 60%);opacity:0;transition:opacity .3s}
+.sg-item:hover{border-color:var(--border2);background:var(--card2);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.4),0 0 0 1px rgba(56,189,248,.1) inset}
+.sg-item:hover::before{opacity:1}
+.sg-item:hover .sg-icon{transform:scale(1.1);filter:drop-shadow(0 0 12px rgba(56,189,248,.6))}
+.sg-icon{font-size:2.5rem;margin-bottom:1.25rem;transition:all .3s;display:block}
+.sg-title{font-family:var(--F);font-size:1.25rem;letter-spacing:.08em;margin-bottom:.75rem;color:var(--white)}
+.sg-body{font-size:13px;color:var(--muted2);line-height:1.75;margin-bottom:1.25rem}
+.sg-tag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.14em;padding:4px 12px;background:rgba(56,189,248,.1);border:1px solid var(--border2);color:var(--cyan)}
+.sg-item.feat{background:linear-gradient(135deg,rgba(4,30,70,.9),rgba(2,45,90,.8));border-color:var(--border2)}
+.sg-item.feat .sg-title{color:var(--cyan)}
+
+/* ── SOCIAL FEED ── */
+.social-scroll{display:flex;gap:3px;overflow-x:auto;scrollbar-width:none;padding-bottom:3px}
+.social-scroll::-webkit-scrollbar{display:none}
+.sc-card{min-width:295px;max-width:295px;background:var(--card);padding:1.4rem;border-top:2.5px solid transparent;cursor:pointer;transition:all .28s;flex-shrink:0;position:relative;overflow:hidden}
+.sc-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--border2),transparent);opacity:0;transition:opacity .3s}
+.sc-card:hover{background:var(--card2);transform:translateY(-5px);box-shadow:0 12px 32px rgba(0,0,0,.5)}
+.sc-card:hover::after{opacity:1}
+.sc-card.tw{border-top-color:#1DA1F2}
+.sc-card.ig{border-top-color:#E1306C}
+.sc-card.fb{border-top-color:#1877F2}
+.sc-card.yt{border-top-color:#FF0000}
+.sc-card.tag-live{border-top-color:var(--warm)}
+.sc-head{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.sc-ico{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;color:#fff}
+.sc-ico.tw{background:#1DA1F2}
+.sc-ico.ig{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}
+.sc-ico.fb{background:#1877F2}
+.sc-ico.yt{background:#FF0000}
+.sc-ico.tag-live{background:var(--warm);color:#fff;font-size:11px;letter-spacing:.05em;font-family:var(--B)}
+.sc-handle{font-size:11px;font-weight:600;color:var(--muted2)}
+.sc-live-dot{width:6px;height:6px;background:var(--warm);border-radius:50%;animation:pulse 1.4s infinite;margin-left:auto;flex-shrink:0}
+.sc-time{font-size:10px;color:var(--muted)}
+.sc-body{font-size:13px;line-height:1.65;color:rgba(232,244,255,.7);margin-bottom:12px}
+.sc-body strong{color:var(--white)}
+.sc-img{width:100%;height:130px;object-fit:cover;margin-bottom:10px;display:block;filter:saturate(.8) hue-rotate(160deg) brightness(.8)}
+.sc-engage{display:flex;gap:14px}
+.se{font-size:11px;color:var(--muted)}
+/* TAG post */
+.tag-card{background:var(--card);border:1px solid var(--border2);padding:1.4rem;min-width:260px;max-width:260px;flex-shrink:0;position:relative;cursor:pointer;transition:all .3s}
+.tag-card:hover{background:var(--card2);border-color:rgba(56,189,248,.4);transform:translateY(-4px)}
+.tag-source{font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--cyan);margin-bottom:6px}
+.tag-text{font-size:13px;color:var(--muted2);line-height:1.6;margin-bottom:8px}
+.tag-hashtag{font-size:11px;font-weight:700;color:var(--cyan)}
+.tag-user{font-size:10px;color:var(--muted);margin-top:4px}
+.tag-img{width:100%;height:110px;object-fit:cover;margin-bottom:8px;filter:hue-rotate(170deg) saturate(.7)}
+
+/* ── FAN WALL ── */
+.fw-wrap{overflow:hidden;height:110px;position:relative}
+.fw-wrap::before,.fw-wrap::after{content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none}
+.fw-wrap::before{left:0;background:linear-gradient(to right,var(--void),transparent)}
+.fw-wrap::after{right:0;background:linear-gradient(to left,var(--void),transparent)}
+.fw-track{display:flex;gap:4px;animation:fwScroll 32s linear infinite}
+.fw-track:hover{animation-play-state:paused}
+.fw-item{flex-shrink:0;background:var(--card);border:1px solid var(--border);border-top:2px solid var(--cyan-d);padding:.75rem 1.1rem;min-width:230px}
+.fw-item:hover{border-color:var(--border2)}
+.fw-fan{font-size:11px;font-weight:700;color:var(--cyan);margin-bottom:3px}
+.fw-msg{font-size:12px;color:rgba(232,244,255,.48);line-height:1.4}
+@keyframes fwScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── PROJECTS / PORTFOLIO ── */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:3px}
+.pj-item{position:relative;overflow:hidden;aspect-ratio:1.5;cursor:pointer;background:var(--card)}
+.pj-item img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.45) saturate(.4) hue-rotate(180deg);transition:transform .7s ease,filter .4s}
+.pj-item:hover img{transform:scale(1.09);filter:brightness(.3) hue-rotate(160deg)}
+.pj-over{position:absolute;inset:0;background:linear-gradient(to top,rgba(3,8,15,.95),transparent 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:1.5rem}
+.pj-cat{font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--cyan);margin-bottom:5px}
+.pj-title{font-family:var(--F);font-size:1.1rem;letter-spacing:.06em;line-height:1.2;margin-bottom:4px}
+.pj-loc{font-size:11px;color:var(--muted)}
+.pj-badge{position:absolute;top:1rem;right:1rem;background:rgba(56,189,248,.15);border:1px solid var(--border2);padding:4px 12px;font-size:9px;font-weight:700;letter-spacing:.16em;color:var(--cyan)}
+.pj-item:hover .pj-view{opacity:1}
+.pj-view{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(56,189,248,.2);border:1px solid var(--cyan);color:var(--cyan);padding:10px 22px;font-size:11px;font-weight:700;letter-spacing:.1em;opacity:0;transition:opacity .3s;backdrop-filter:blur(8px)}
+
+/* ── CTA / CONTACT ── */
+.cta-section{position:relative;overflow:hidden;min-height:480px;display:flex;align-items:center;z-index:1}
+.cta-bg{position:absolute;inset:0}
+.cta-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.15) saturate(.3) hue-rotate(200deg)}
+.cta-overlay{position:absolute;inset:0;background:linear-gradient(110deg,rgba(2,20,50,.97) 0%,rgba(4,30,70,.75) 50%,rgba(10,30,60,.5) 100%)}
+.cta-grid{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(56,189,248,.025) 60px,rgba(56,189,248,.025) 61px),repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(56,189,248,.025) 60px,rgba(56,189,248,.025) 61px)}
+.cta-content{position:relative;z-index:2;max-width:1440px;margin:0 auto;padding:4.5rem 2.5rem;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;width:100%}
+.cta-quote{font-family:var(--S);font-style:italic;font-size:1.4rem;color:rgba(232,244,255,.5);line-height:1.75;margin-bottom:2rem;padding-left:1.5rem;border-left:2px solid var(--cyan)}
+/* CONTACT FORM */
+.cform{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cform-full{grid-column:1/-1}
+.cform input,.cform select,.cform textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--white);padding:13px 16px;font-family:var(--B);font-size:13px;outline:none;transition:border-color .22s}
+.cform input:focus,.cform select:focus,.cform textarea:focus{border-color:var(--cyan)}
+.cform select{background:var(--card)}
+.cform textarea{resize:vertical;min-height:90px}
+.cform input::placeholder,.cform textarea::placeholder{color:var(--muted)}
+
+/* ── PARTNERS ── */
+.partners-bar{background:rgba(6,13,24,.95);border-top:1px solid var(--border);padding:1.75rem 0}
+.pb-inner{max-width:1440px;margin:0 auto;padding:0 2.5rem;display:flex;align-items:center;gap:4rem;overflow-x:auto;scrollbar-width:none}
+.pb-inner::-webkit-scrollbar{display:none}
+.pb-lbl{font-size:9px;font-weight:700;letter-spacing:.26em;color:var(--muted);flex-shrink:0}
+.pb-div{width:1px;height:20px;background:var(--border);flex-shrink:0}
+.pb-name{font-family:var(--F);font-size:.9rem;letter-spacing:.1em;color:rgba(168,230,255,.14);flex-shrink:0;transition:color .22s;cursor:pointer}
+.pb-name:hover{color:rgba(168,230,255,.5)}
+
+/* ── FOOTER ── */
+footer{background:#020508;border-top:2px solid rgba(56,189,248,.12);padding:4.5rem 2.5rem 2rem;position:relative;z-index:1}
+.footer-grid{max-width:1440px;margin:0 auto;display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr;gap:4rem}
+.fb-brand{font-family:var(--F);font-size:1.5rem;letter-spacing:.14em;margin-bottom:4px;color:var(--white)}
+.fb-sub{font-size:9px;font-weight:700;letter-spacing:.28em;color:var(--cyan);margin-bottom:1.1rem}
+.fb-p{font-size:12.5px;color:var(--muted);line-height:1.85;max-width:280px}
+.fb-soc{display:flex;gap:8px;margin-top:1.5rem}
+.fs{width:38px;height:38px;background:rgba(255,255,255,.04);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);text-decoration:none;transition:all .22s;cursor:pointer}
+.fs:hover{background:rgba(56,189,248,.12);border-color:var(--cyan);color:var(--cyan)}
+.fc h4{font-size:9px;font-weight:700;letter-spacing:.24em;color:var(--cyan);text-transform:uppercase;margin-bottom:1.1rem}
+.fc ul{list-style:none}
+.fc li{margin-bottom:9px}
+.fc a{font-size:13px;color:rgba(232,244,255,.3);text-decoration:none;transition:color .22s;cursor:pointer}
+.fc a:hover{color:var(--white)}
+.footer-bot{max-width:1440px;margin:2.5rem auto 0;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-bot p{font-size:11px;color:var(--muted)}
+.zw-badge{font-family:var(--F);font-size:10px;letter-spacing:.2em;color:var(--cyan)}
+
+/* ═══════════════════════════
+   OVERLAYS
+═══════════════════════════ */
+/* ARTICLE */
+#art-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9970;overflow-y:auto;backdrop-filter:blur(14px)}
+.am-box{max-width:800px;margin:4rem auto;background:var(--card);border:1px solid var(--border2);overflow:hidden;position:relative}
+.am-img{width:100%;height:380px;object-fit:cover;display:block;filter:brightness(.55) saturate(.5) hue-rotate(180deg)}
+.am-body{padding:3rem}
+.am-close{position:absolute;top:1rem;right:1.25rem;background:rgba(0,0,0,.55);border:none;color:rgba(255,255,255,.6);font-size:1.5rem;cursor:pointer;z-index:2;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.am-close:hover{background:rgba(56,189,248,.2);color:var(--cyan)}
+
+/* LIGHTBOX */
+#lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:9980;align-items:center;justify-content:center;flex-direction:column}
+#lb-close{position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:rgba(255,255,255,.5);font-size:2rem;cursor:pointer}
+#lb-prev,#lb-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);color:var(--cyan);width:52px;height:52px;font-size:1.6rem;cursor:pointer;transition:all .2s}
+#lb-prev:hover,#lb-next:hover{background:rgba(56,189,248,.18);border-color:var(--cyan)}
+#lb-prev{left:1.5rem}
+#lb-next{right:1.5rem}
+#lb-img{max-width:90vw;max-height:82vh;object-fit:contain;border:1px solid rgba(56,189,248,.1)}
+#lb-cap{margin-top:1rem;font-family:var(--S);font-style:italic;font-size:13px;color:rgba(168,230,255,.4)}
+#lb-ct{margin-top:.4rem;font-size:10px;color:var(--cyan);letter-spacing:.16em}
+
+/* SEARCH */
+#srch{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9985;align-items:flex-start;justify-content:center;padding-top:10vh;backdrop-filter:blur(12px)}
+.srch-box{width:100%;max-width:680px;padding:0 1rem}
+.srch-row{background:var(--card);border:1px solid var(--border2);padding:1.1rem 1.5rem;display:flex;align-items:center;gap:1rem}
+.srch-row input{flex:1;background:none;border:none;color:var(--white);font-family:var(--B);font-size:16px;outline:none}
+.srch-row input::placeholder{color:var(--muted)}
+#srch-res{background:var(--card);border:1px solid var(--border);border-top:none;max-height:360px;overflow-y:auto}
+.sr-item{padding:12px 1.5rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:12px}
+.sr-item:hover{background:rgba(56,189,248,.05)}
+.sr-type{font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--cyan);min-width:80px}
+
+/* TOAST */
+#toast{position:fixed;bottom:5.5rem;right:2rem;background:var(--card);border:1px solid var(--border2);border-left:3px solid var(--cyan);padding:14px 20px;font-size:13px;font-weight:600;z-index:9999;transform:translateY(18px);opacity:0;transition:all .3s;pointer-events:none;max-width:340px;backdrop-filter:blur(16px)}
+
+/* ADMIN */
+#admin-btn{position:fixed;bottom:2rem;right:2rem;width:46px;height:46px;background:var(--cyan);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;z-index:9960;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 50%,calc(100% - 10px) 100%,0 100%);transition:all .22s}
+#admin-btn:hover{background:var(--cyan-l)}
+#admin-panel{display:none;position:fixed;inset:0;z-index:9975;background:rgba(0,0,0,.93);overflow-y:auto;backdrop-filter:blur(16px)}
+.adm-box{max-width:960px;margin:3rem auto;padding:0 1rem}
+.adm-inner{background:var(--card);border:1px solid var(--border2);padding:2.75rem;position:relative}
+.adm-inner::before{content:'';position:absolute;top:-1px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.adm-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer}
+.adm-tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:var(--B);font-size:12px;font-weight:600;letter-spacing:.1em;padding:10px 18px;cursor:pointer;margin-bottom:-1px;transition:all .22s}
+.adm-tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.adm-tab:hover:not(.active){color:var(--white)}
+.adm-c{display:none}.adm-c.active{display:block}
+.fld{margin-bottom:1rem}
+.fld label{font-size:9.5px;font-weight:700;letter-spacing:.18em;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase}
+.fld input,.fld select,.fld textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--white);padding:11px 15px;font-family:var(--B);font-size:13px;outline:none;transition:border-color .22s}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--cyan)}
+.fld select,.fld textarea{background:var(--card)}
+.fld textarea{resize:vertical}
+#drop-z{border:2px dashed rgba(56,189,248,.2);padding:3rem;text-align:center;cursor:pointer;transition:all .22s}
+#drop-z.drag-over{border-color:var(--cyan);background:rgba(56,189,248,.05)}
+.uprev{position:relative;width:78px;height:78px;overflow:hidden;background:var(--card2);flex-shrink:0;border:1px solid var(--border)}
+.uprev img{width:100%;height:100%;object-fit:cover}
+.uprev-del{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.7);border:none;color:#fff;width:18px;height:18px;font-size:11px;cursor:pointer;border-radius:50%}
+#adm-gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:5px}
+.ag-it{position:relative;aspect-ratio:1;overflow:hidden;cursor:pointer}
+.ag-it img{width:100%;height:100%;object-fit:cover}
+.ag-del-ov{position:absolute;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center}
+.ag-it:hover .ag-del-ov{display:flex}
+#break-bar{display:none;position:fixed;top:0;left:0;right:0;z-index:9991;background:linear-gradient(90deg,var(--cyan-d),#0ea5e9);padding:11px 2rem;align-items:center;gap:1.5rem;animation:slideD .4s ease}
+@keyframes slideD{from{transform:translateY(-100%)}to{transform:translateY(0)}}
+.brk-tag{background:var(--void);color:var(--cyan);font-family:var(--F);font-size:9px;letter-spacing:.22em;padding:4px 11px;flex-shrink:0}
+body.has-break nav{top:44px}
+/* gallery section */
+#gal-sec{display:none;position:relative;z-index:1}
+#gal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:3px;grid-auto-rows:210px}
+#gal-grid .g-it:nth-child(3n+1){grid-row:span 2}
+#gal-grid .g-it:nth-child(5n+2){grid-column:span 2}
+.g-it{position:relative;overflow:hidden;cursor:pointer;background:var(--card)}
+.g-it img{width:100%;height:100%;object-fit:cover;filter:saturate(.6) hue-rotate(170deg) brightness(.7);transition:filter .3s,transform .5s}
+.g-it:hover img{filter:saturate(.8) hue-rotate(160deg) brightness(.55);transform:scale(1.08)}
+.g-it-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(3,8,15,.95),transparent 55%);opacity:0;transition:opacity .3s;display:flex;flex-direction:column;justify-content:flex-end;padding:12px}
+.g-it:hover .g-it-ov{opacity:1}
+
+/* reveal anim */
+.rev{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.rev.vis{opacity:1;transform:translateY(0)}
+
+/* responsive */
+@media(max-width:960px){
+  .hero-content{grid-template-columns:1fr;padding-top:5rem}
+  .hero-card{display:none}
+  .hero-flake{display:none}
+  .news-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .nc{grid-column:auto!important;grid-row:auto!important;min-height:200px}
+  .cta-content{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .sb-inner{grid-template-columns:1fr 1fr}
+  .services-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- FROST PARTICLE CANVAS -->
+<canvas id="frost-canvas"></canvas>
+
+<!-- AIR WISPS -->
+<div class="wisps">
+  <div class="wisp"></div>
+  <div class="wisp"></div>
+  <div class="wisp"></div>
+</div>
+
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="cur-r"></div>
+
+<!-- BREAK BANNER -->
+<div id="break-bar">
+  <span class="brk-tag">ALERT</span>
+  <span id="break-txt" style="font-family:var(--B);font-size:13px;font-weight:600;flex:1"></span>
+  <button onclick="clearBreak()" style="background:none;border:none;color:rgba(255,255,255,.6);font-size:1.3rem;cursor:pointer;margin-left:auto">×</button>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="t-track" id="ticker-track">
+    <span class="t-item">Professional AC Installation & Servicing — Harare & Beyond</span>
+    <span class="t-item">Daikin · Midea · LG · Samsung · Carrier · Gree — All Major Brands</span>
+    <span class="t-item">24/7 Emergency Service Available — Call +263 78 000 0000</span>
+    <span class="t-item">Residential · Commercial · Industrial HVAC Solutions</span>
+    <span class="t-item">Free Site Assessment — Call or WhatsApp Today</span>
+    <span class="t-item">Energy Efficiency Upgrades — Reduce Bills by up to 40%</span>
+    <span class="t-item">Professional AC Installation & Servicing — Harare & Beyond</span>
+    <span class="t-item">Daikin · Midea · LG · Samsung · Carrier · Gree — All Major Brands</span>
+    <span class="t-item">24/7 Emergency Service Available — Call +263 78 000 0000</span>
+    <span class="t-item">Residential · Commercial · Industrial HVAC Solutions</span>
+    <span class="t-item">Free Site Assessment — Call or WhatsApp Today</span>
+    <span class="t-item">Energy Efficiency Upgrades — Reduce Bills by up to 40%</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-w">
+    <a class="logo" href="#" onclick="scrollTop()">
+      <div class="logo-icon">
+        <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="22" cy="22" r="21" fill="rgba(56,189,248,0.08)" stroke="rgba(56,189,248,0.35)" stroke-width="1"/>
+          <!-- snowflake -->
+          <line x1="22" y1="6" x2="22" y2="38" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="6" y1="22" x2="38" y2="22" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="11" y1="11" x2="33" y2="33" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="33" y1="11" x2="11" y2="33" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
+          <!-- branches -->
+          <line x1="22" y1="6" x2="18" y2="10" stroke="#38bdf8" stroke-width="1.2"/><line x1="22" y1="6" x2="26" y2="10" stroke="#38bdf8" stroke-width="1.2"/>
+          <line x1="22" y1="38" x2="18" y2="34" stroke="#38bdf8" stroke-width="1.2"/><line x1="22" y1="38" x2="26" y2="34" stroke="#38bdf8" stroke-width="1.2"/>
+          <line x1="6" y1="22" x2="10" y2="18" stroke="#38bdf8" stroke-width="1.2"/><line x1="6" y1="22" x2="10" y2="26" stroke="#38bdf8" stroke-width="1.2"/>
+          <line x1="38" y1="22" x2="34" y2="18" stroke="#38bdf8" stroke-width="1.2"/><line x1="38" y1="22" x2="34" y2="26" stroke="#38bdf8" stroke-width="1.2"/>
+          <circle cx="22" cy="22" r="3.5" fill="#38bdf8" opacity=".9"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <div class="l1">ProfAirZw</div>
+        <div class="l2">Climate Solutions · Zimbabwe</div>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#" class="active" onclick="navTo(this,'news-sec')">News</a></li>
+      <li><a href="#" onclick="navTo(this,'services-sec')">Services</a></li>
+      <li><a href="#" onclick="navTo(this,'projects-sec')">Projects</a></li>
+      <li><a href="#" onclick="navTo(this,'social-sec')">Feed</a></li>
+      <li><a href="#" onclick="navTo(this,'contact-sec')">Contact</a></li>
+      <li><a href="#" onclick="navTo(this,'about-sec')">About</a></li>
+    </ul>
+    <div class="nav-r">
+      <div class="temp-pill"><div class="cool-dot"></div><span id="temp-pill-txt">HARARE 28°C</span></div>
+      <button class="btn btn-ghost btn-sm" onclick="openSearch()">⌕ <span style="font-size:9px;opacity:.4;margin-left:3px">⌘K</span></button>
+      <a class="btn btn-ice btn-sm" href="https://wa.me/2630780000000" target="_blank" onclick="event.preventDefault();showToast('WhatsApp: +263 78 000 0000 — ProfAirZw')">Get a Quote</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"><img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1800&q=80&auto=format&fit=crop" alt="HVAC"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-lines">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+      <path d="M 800 0 Q 900 200 700 400 Q 500 600 600 900" stroke="rgba(56,189,248,0.4)" stroke-width="0.5" fill="none"/>
+      <path d="M 1100 0 Q 1200 300 1000 500 Q 800 700 900 900" stroke="rgba(56,189,248,0.25)" stroke-width="0.5" fill="none"/>
+      <path d="M 1300 100 Q 1350 250 1250 400" stroke="rgba(56,189,248,0.2)" stroke-width="0.5" fill="none"/>
+    </svg>
+  </div>
+  <div class="hero-flake">❄</div>
+  <div class="hero-content">
+    <div>
+      <div class="hero-tag"><div class="hero-tag-dot"></div>ZIMBABWE'S PREMIER HVAC COMPANY</div>
+      <h1 class="hero-h1">
+        <span>COOL.</span>
+        <span class="ice">PRECISE.</span>
+        <span class="ghost-txt">PERFECT.</span>
+      </h1>
+      <p class="hero-sub">From a single split unit in Mbare to a full commercial climate system in Borrowdale — ProfAirZw engineers comfort. Professional installation, maintenance and 24/7 emergency service across Zimbabwe.</p>
+      <div class="hero-btns">
+        <button class="btn btn-ice" onclick="scrollToSec('contact-sec')">Book Free Assessment</button>
+        <button class="btn btn-ghost" onclick="scrollToSec('services-sec')">Our Services</button>
+        <button class="btn btn-ghost btn-sm" onclick="openSearch()">Search <span style="opacity:.5;margin-left:6px;font-size:9px">⌘K</span></button>
+      </div>
+    </div>
+    <!-- COMFORT CARD -->
+    <div class="hero-card rev">
+      <div class="hc-label">LIVE COMFORT INDEX</div>
+      <div class="hc-temp"><span id="hero-temp">22</span><span class="hc-deg">°C</span></div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:1.5rem;margin-top:-.25rem">Ideal indoor temperature achieved</div>
+      <div class="hc-row">
+        <div class="hc-stat"><div class="hc-sv">58%</div><div class="hc-sl">HUMIDITY</div></div>
+        <div class="hc-stat"><div class="hc-sv" id="outdoor-temp">32°C</div><div class="hc-sl">OUTDOOR</div></div>
+      </div>
+      <div class="hc-services">
+        <div class="hc-svc" onclick="scrollToSec('services-sec')"><span class="hc-svc-icon">❄️</span> AC Installation & Setup</div>
+        <div class="hc-svc" onclick="scrollToSec('services-sec')"><span class="hc-svc-icon">🔧</span> Servicing & Maintenance</div>
+        <div class="hc-svc" onclick="scrollToSec('services-sec')"><span class="hc-svc-icon">🏢</span> Commercial HVAC Systems</div>
+        <div class="hc-svc" onclick="scrollToSec('services-sec')"><span class="hc-svc-icon">⚡</span> Energy Efficiency Audits</div>
+        <div class="hc-svc" onclick="scrollToSec('contact-sec')"><span class="hc-svc-icon">🚨</span> 24/7 Emergency Call-Out</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES STRIP -->
+<div class="svc-strip">
+  <div class="svc-inner">
+    <div class="svc-item" onclick="scrollToSec('services-sec')"><div class="svc-icon">❄️</div><div class="svc-name">AC INSTALLATION</div><div class="svc-desc">All major brands. Residential & commercial.</div></div>
+    <div class="svc-item" onclick="scrollToSec('services-sec')"><div class="svc-icon">🔧</div><div class="svc-name">SERVICING</div><div class="svc-desc">Annual contracts & one-off maintenance.</div></div>
+    <div class="svc-item" onclick="scrollToSec('services-sec')"><div class="svc-icon">🏢</div><div class="svc-name">COMMERCIAL HVAC</div><div class="svc-desc">Offices, retail, hotels & warehouses.</div></div>
+    <div class="svc-item" onclick="scrollToSec('services-sec')"><div class="svc-icon">🌡️</div><div class="svc-name">COLD ROOMS</div><div class="svc-desc">Food storage & commercial refrigeration.</div></div>
+    <div class="svc-item" onclick="scrollToSec('services-sec')"><div class="svc-icon">⚡</div><div class="svc-name">ENERGY AUDITS</div><div class="svc-desc">Cut bills by up to 40%. Solar integration.</div></div>
+    <div class="svc-item" onclick="scrollToSec('contact-sec')"><div class="svc-icon">🚨</div><div class="svc-name">24/7 EMERGENCY</div><div class="svc-desc">Rapid response across Harare & surrounds.</div></div>
+    <div class="svc-item" onclick="scrollToSec('services-sec')"><div class="svc-icon">🌀</div><div class="svc-name">VRF / VRV SYSTEMS</div><div class="svc-desc">Multi-zone variable refrigerant solutions.</div></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- NEWS -->
+<div class="wrap" id="news-sec">
+  <div class="sh">
+    <div class="sh-l"><div class="eyebrow">LATEST FROM PROFAIRZW</div><div class="sh-title">Bulletin</div></div>
+    <span class="sh-link" onclick="showToast('All articles available at profairzw.co.zw/news')">All Articles →</span>
+  </div>
+  <div class="news-grid">
+    <div class="nc rev" onclick="openArt(0)">
+      <div class="nc-badge"><span class="nbadge hot">FEATURED</span></div>
+      <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=900&q=80&auto=format&fit=crop" alt="">
+      <div class="nc-over">
+        <div class="nc-cat">COMMERCIAL · HARARE CBD</div>
+        <div class="nc-title">ProfAirZw completes 12-unit VRF installation at new Borrowdale mixed-use tower</div>
+        <div class="nc-meta">May 2026 · 5 min read</div>
+        <button class="nc-hover-btn">Read Article →</button>
+      </div>
+    </div>
+    <div class="nc rev" onclick="openArt(1)">
+      <div class="nc-badge"><span class="nbadge new">NEW</span></div>
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop" alt="">
+      <div class="nc-over">
+        <div class="nc-cat">TIPS & GUIDES</div>
+        <div class="nc-title">Why your AC is losing efficiency in the Zim summer — and how to fix it</div>
+        <div class="nc-meta">Apr 2026 · 3 min read</div>
+        <button class="nc-hover-btn">Read →</button>
+      </div>
+    </div>
+    <div class="nc rev" onclick="openArt(2)">
+      <div class="nc-badge"><span class="nbadge tip">GUIDE</span></div>
+      <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&q=80&auto=format&fit=crop" alt="">
+      <div class="nc-over">
+        <div class="nc-cat">ENERGY SAVING</div>
+        <div class="nc-title">Solar-ready HVAC: How Zimbabwe businesses can cut AC costs by 40%</div>
+        <div class="nc-meta">Apr 2026 · 4 min read</div>
+        <button class="nc-hover-btn">Read →</button>
+      </div>
+    </div>
+    <div class="nc rev" onclick="openArt(3)">
+      <img src="https://images.unsplash.com/photo-1581093577421-f561a654a353?w=700&q=80&auto=format&fit=crop" alt="">
+      <div class="nc-over">
+        <div class="nc-cat">RESIDENTIAL · HARARE</div>
+        <div class="nc-title">From Avondale to Chitungwiza — 200+ homes cooled in Q1 2026</div>
+        <div class="nc-meta">Mar 2026</div>
+        <button class="nc-hover-btn">Read →</button>
+      </div>
+    </div>
+    <div class="nc rev" onclick="openArt(4)">
+      <img src="https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=600&q=80&auto=format&fit=crop" alt="">
+      <div class="nc-over">
+        <div class="nc-cat">COLD ROOMS · INDUSTRY</div>
+        <div class="nc-title">ProfAirZw delivers cold room installation for major Harare supermarket chain</div>
+        <div class="nc-meta">Mar 2026</div>
+        <button class="nc-hover-btn">Read →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- STAT BAND -->
+<div class="stat-band">
+  <div class="sb-inner">
+    <div class="sb-col rev"><div class="sb-num" id="s1">0</div><div class="sb-label">Installations</div><div class="sb-note">Completed across Zimbabwe</div></div>
+    <div class="sb-col rev"><div class="sb-num" id="s2">0</div><div class="sb-label">Happy Clients</div><div class="sb-note">Residential & commercial</div></div>
+    <div class="sb-col rev"><div class="sb-num" id="s3">0</div><div class="sb-label">Response Time</div><div class="sb-note">Emergency call-out (hours)</div></div>
+    <div class="sb-col rev"><div class="sb-num" id="s4">0</div><div class="sb-label">Brands Stocked</div><div class="sb-note">Daikin, LG, Midea & more</div></div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<div class="wrap" id="services-sec">
+  <div class="sh">
+    <div class="sh-l"><div class="eyebrow">WHAT WE DO</div><div class="sh-title">Our Services</div></div>
+    <button class="btn btn-ghost btn-sm" onclick="scrollToSec('contact-sec')">Get a Quote →</button>
+  </div>
+  <div class="services-grid">
+    <div class="sg-item feat rev" onclick="showToast('AC Installation — Daikin, LG, Midea, Samsung, Carrier. Free site assessment included.')">
+      <span class="sg-icon">❄️</span>
+      <div class="sg-title">AC INSTALLATION</div>
+      <div class="sg-body">Professional installation of split, cassette, ducted and VRF systems. We supply and install all major brands — Daikin, LG, Midea, Samsung, Carrier, Gree. Free site assessment included with every quote.</div>
+      <span class="sg-tag">MOST POPULAR</span>
+    </div>
+    <div class="sg-item rev" onclick="showToast('Servicing & Maintenance — Annual contracts available. All work guaranteed.')">
+      <span class="sg-icon">🔧</span>
+      <div class="sg-title">SERVICING & MAINTENANCE</div>
+      <div class="sg-body">Keep your system running at peak efficiency. We offer annual maintenance contracts, deep-clean servicing, gas top-up, and full fault diagnosis. All work guaranteed.</div>
+      <span class="sg-tag">ANNUAL CONTRACTS</span>
+    </div>
+    <div class="sg-item rev" onclick="showToast('Commercial HVAC — Full design, supply and installation for offices, hotels, retail & warehouses.')">
+      <span class="sg-icon">🏢</span>
+      <div class="sg-title">COMMERCIAL HVAC</div>
+      <div class="sg-body">Full-scale climate solutions for offices, retail spaces, hotels, hospitals and warehouses. We handle design, supply, installation and ongoing maintenance with dedicated account managers.</div>
+      <span class="sg-tag">ENTERPRISE</span>
+    </div>
+    <div class="sg-item rev" onclick="showToast('Cold Rooms — Walk-in freezers and chillers for food storage, pharmacies and industry.')">
+      <span class="sg-icon">🌡️</span>
+      <div class="sg-title">COLD ROOMS</div>
+      <div class="sg-body">Walk-in freezers, chillers and blast coolers for food storage, pharmacies, hotels and industry. Bespoke sizing and monitoring systems included.</div>
+      <span class="sg-tag">INDUSTRIAL</span>
+    </div>
+    <div class="sg-item rev" onclick="showToast('Energy Efficiency — Solar-ready inverter upgrades. Average 40% reduction in electricity bills.')">
+      <span class="sg-icon">⚡</span>
+      <div class="sg-title">ENERGY EFFICIENCY</div>
+      <div class="sg-body">Reduce your electricity bill by up to 40% with inverter technology upgrades and solar-ready HVAC integration. We audit, recommend and implement the most cost-effective solution.</div>
+      <span class="sg-tag">SAVE UP TO 40%</span>
+    </div>
+    <div class="sg-item rev" onclick="scrollToSec('contact-sec')">
+      <span class="sg-icon">🚨</span>
+      <div class="sg-title">24/7 EMERGENCY</div>
+      <div class="sg-body">AC failure in a server room or hotel? We respond within 2 hours anywhere in Harare. On-call technicians available nights, weekends and public holidays.</div>
+      <span class="sg-tag">2HR RESPONSE</span>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SOCIAL FEED -->
+<div class="wrap tight" id="social-sec">
+  <div class="sh">
+    <div class="sh-l"><div class="eyebrow">LIVE FROM #PROFAIRZW</div><div class="sh-title">Social & Web Feed</div></div>
+    <span class="sh-link" onclick="window.open('https://www.facebook.com/profairzw','_blank');showToast('Follow @ProfAirZw on Facebook, Instagram and X!')">Follow Us →</span>
+  </div>
+  <div class="social-scroll" id="social-scroll">
+
+    <!-- Real platform cards -->
+    <div class="sc-card fb rev" onclick="window.open('https://www.facebook.com/profairzw','_blank')">
+      <div class="sc-head"><div class="sc-ico fb">f</div><div class="sc-handle">ProfAirZw</div><div class="sc-time" style="margin-left:auto">2h ago</div></div>
+      <img class="sc-img" src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&q=70&auto=format&fit=crop" alt="">
+      <p class="sc-body">✅ <strong>Just completed!</strong> A full 12-unit VRF system at Borrowdale Park Tower. Harare's newest landmark — now perfectly climate controlled by ProfAirZw. <strong>#ProfAirZw #HVAC #Zimbabwe</strong></p>
+      <div class="sc-engage"><span class="se">👍 284</span><span class="se">💬 41</span><span class="se">↗ 18</span></div>
+    </div>
+
+    <div class="sc-card ig rev" onclick="window.open('https://www.instagram.com/profairzw','_blank')">
+      <div class="sc-head"><div class="sc-ico ig">▶</div><div class="sc-handle">@profairzw</div><div class="sc-time" style="margin-left:auto">4h ago</div></div>
+      <img class="sc-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=70&auto=format&fit=crop" alt="">
+      <p class="sc-body">The feeling when the AC clicks on 🥶❄️ Daikin 18000 BTU inverter. Client in Avondale is very happy. <strong>#ProfAirZw #AC #Harare #StayCool</strong></p>
+      <div class="sc-engage"><span class="se">♥ 621</span><span class="se">💬 88</span></div>
+    </div>
+
+    <div class="sc-card tw rev" onclick="window.open('https://x.com/profairzw','_blank')">
+      <div class="sc-head"><div class="sc-ico tw">𝕏</div><div class="sc-handle">@ProfAirZw</div><div class="sc-time" style="margin-left:auto">5h ago</div></div>
+      <p class="sc-body">🌡️ Harare hitting 34°C today. If your AC is struggling, don't wait until it dies completely. Book a pre-summer service now — slots filling fast. DM us or call +263 78 000 0000 <strong>#ProfAirZw #Zimbabwe</strong></p>
+      <div class="sc-engage"><span class="se">♥ 145</span><span class="se">↺ 62</span><span class="se">💬 29</span></div>
+    </div>
+
+    <div class="sc-card yt rev" onclick="window.open('https://www.youtube.com/@profairzw','_blank')">
+      <div class="sc-head"><div class="sc-ico yt">▷</div><div class="sc-handle">ProfAirZw TV</div><div class="sc-time" style="margin-left:auto">1d ago</div></div>
+      <img class="sc-img" src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&q=70&auto=format&fit=crop" alt="">
+      <p class="sc-body">🎬 <strong>NEW VIDEO:</strong> How to clean your AC filter at home — a 5-minute guide that can save you thousands in repair bills.</p>
+      <div class="sc-engage"><span class="se">▶ 4.2k views</span><span class="se">👍 311</span></div>
+    </div>
+
+    <!-- #ProfAirZw hashtag mentions from across the web -->
+    <div class="tag-card rev" onclick="showToast('Mention found: @HarareLiving on X — #ProfAirZw')">
+      <div class="tag-source">#PROFAIRZW · MENTION · X</div>
+      <div class="tag-text">Just had <strong>@ProfAirZw</strong> service our office units in Eastlea. In and out in 2 hours, left everything spotless. Highly recommend! 🙌</div>
+      <div class="tag-hashtag">#ProfAirZw #HarareLife</div>
+      <div class="tag-user">@HarareLiving · 3h ago</div>
+    </div>
+
+    <div class="tag-card rev" onclick="showToast('Mention found: @ZimPropertyTalk on Facebook — #ProfAirZw')">
+      <div class="tag-source">#PROFAIRZW · MENTION · FACEBOOK</div>
+      <div class="tag-text">For anyone building in Borrowdale or Highlands — <strong>ProfAirZw</strong> did our whole development. 48 units installed on time and on budget. The team is professional and honest. ✅</div>
+      <div class="tag-hashtag">#ProfAirZw #ZimBuilding</div>
+      <div class="tag-user">ZimPropertyTalk · 6h ago</div>
+    </div>
+
+    <div class="tag-card rev" onclick="showToast('Mention found: @CoolZimbabwe on Instagram — #ProfAirZw')">
+      <img class="tag-img" src="https://images.unsplash.com/photo-1581093577421-f561a654a353?w=300&q=70&auto=format&fit=crop" alt="">
+      <div class="tag-source">#PROFAIRZW · MENTION · INSTAGRAM</div>
+      <div class="tag-text">Before the summer hits 😅 Big up <strong>#ProfAirZw</strong> — installed our new unit same day we called!</div>
+      <div class="tag-hashtag">#ProfAirZw #SummerZim</div>
+      <div class="tag-user">@CoolZimbabwe · 8h ago</div>
+    </div>
+
+    <div class="sc-card ig rev" onclick="window.open('https://www.instagram.com/profairzw','_blank')">
+      <div class="sc-head"><div class="sc-ico ig">▶</div><div class="sc-handle">@profairzw</div><div class="sc-time" style="margin-left:auto">2d ago</div></div>
+      <p class="sc-body">❄️ Coldest room in Harare? That might be our showroom. Come by and feel the difference between a standard unit and an inverter. #ProfAirZw #AC #Daikin</p>
+      <div class="sc-engage"><span class="se">♥ 448</span><span class="se">💬 55</span></div>
+    </div>
+
+  </div>
+  <!-- Simulated hashtag search notice -->
+  <div style="margin-top:1.5rem;padding:1rem 1.5rem;background:rgba(56,189,248,.06);border:1px solid var(--border2);display:flex;align-items:center;gap:14px">
+    <div class="cool-dot"></div>
+    <div style="font-size:12px;color:var(--muted2)">Monitoring <strong style="color:var(--cyan)">#ProfAirZw</strong> across Facebook, Instagram, X, YouTube and the web — new mentions appear live.</div>
+    <div id="feed-count" style="margin-left:auto;font-family:var(--F);font-size:1rem;color:var(--cyan);letter-spacing:.08em">8 POSTS</div>
+  </div>
+</div>
+
+<!-- FAN WALL / TESTIMONIALS -->
+<div class="wrap tight" style="padding-top:0">
+  <div class="sh">
+    <div class="sh-l"><div class="eyebrow">WHAT CLIENTS SAY</div><div class="sh-title">Testimonials</div></div>
+    <button class="btn btn-ghost btn-sm" onclick="toggleFanForm()">+ Share Your Experience</button>
+  </div>
+  <div id="fan-form-box" style="display:none;gap:8px;flex-wrap:wrap;margin-bottom:1rem">
+    <input id="fan-name" type="text" placeholder="Your name & location 🇿🇼" style="background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--white);padding:10px 15px;font-family:var(--B);font-size:13px;outline:none;min-width:200px;flex:0 0 auto;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'">
+    <input id="fan-msg" type="text" placeholder="Share your ProfAirZw experience…" style="background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--white);padding:10px 15px;font-family:var(--B);font-size:13px;outline:none;flex:1;min-width:260px;transition:border-color .2s" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'">
+    <button class="btn btn-ice btn-sm" onclick="postFan()">SUBMIT</button>
+  </div>
+  <div class="fw-wrap">
+    <div class="fw-track" id="fw-track">
+      <div class="fw-item"><div class="fw-fan">🇿🇼 T. Chiredzi · Avondale</div><div class="fw-msg">"ProfAirZw installed 3 units in one day. Clean work, great price. Highly recommend!"</div></div>
+      <div class="fw-item"><div class="fw-fan">🇿🇼 M. Ncube · Bulawayo</div><div class="fw-msg">"Service contract with ProfAirZw — best decision I've made for our office."</div></div>
+      <div class="fw-item"><div class="fw-fan">🇿🇼 F. Mutasa · Eastlea</div><div class="fw-msg">"Emergency call at 10pm, technician was here by midnight. Absolute legends."</div></div>
+      <div class="fw-item"><div class="fw-fan">🇿🇼 R. Dube · Borrowdale</div><div class="fw-msg">"VRF system for our 3-storey building. ProfAirZw designed and installed everything perfectly."</div></div>
+      <div class="fw-item"><div class="fw-fan">🇿🇼 A. Moyo · Chitungwiza</div><div class="fw-msg">"Fixed what another company couldn't. And cheaper than anyone else quoted. 10/10."</div></div>
+      <div class="fw-item"><div class="fw-fan">🇿🇼 P. Khumalo · Harare CBD</div><div class="fw-msg">"Cold room for our restaurant — installed in 2 days. Running perfectly 6 months on."</div></div>
+      <div class="fw-item"><div class="fw-fan">🇿🇼 G. Sithole · Highlands</div><div class="fw-msg">"Energy audit saved us 38% on our electricity bill. Worth every cent."</div></div>
+      <div class="fw-item"><div class="fw-fan">🇿🇼 C. Ndlovu · Gweru</div><div class="fw-msg">"Even drove to Gweru for our hotel project. ProfAirZw doesn't disappoint. 🙌"</div></div>
+      <!-- duplicate -->
+      <div class="fw-item"><div class="fw-fan">🇿🇼 T. Chiredzi · Avondale</div><div class="fw-msg">"ProfAirZw installed 3 units in one day. Clean work, great price. Highly recommend!"</div></div>
+      <div class="fw-item"><div class="fw-fan">🇿🇼 M. Ncube · Bulawayo</div><div class="fw-msg">"Service contract with ProfAirZw — best decision I've made for our office."</div></div>
+      <div class="fw-item"><div class="fw-fan">🇿🇼 F. Mutasa · Eastlea</div><div class="fw-msg">"Emergency call at 10pm, technician was here by midnight. Absolute legends."</div></div>
+      <div class="fw-item"><div class="fw-fan">🇿🇼 R. Dube · Borrowdale</div><div class="fw-msg">"VRF system for our 3-storey building. ProfAirZw designed and installed everything perfectly."</div></div>
+      <div class="fw-item"><div class="fw-fan">🇿🇼 A. Moyo · Chitungwiza</div><div class="fw-msg">"Fixed what another company couldn't. And cheaper than anyone else quoted. 10/10."</div></div>
+      <div class="fw-item"><div class="fw-fan">🇿🇼 P. Khumalo · Harare CBD</div><div class="fw-msg">"Cold room for our restaurant — installed in 2 days. Running perfectly 6 months on."</div></div>
+      <div class="fw-item"><div class="fw-fan">🇿🇼 G. Sithole · Highlands</div><div class="fw-msg">"Energy audit saved us 38% on our electricity bill. Worth every cent."</div></div>
+      <div class="fw-item"><div class="fw-fan">🇿🇼 C. Ndlovu · Gweru</div><div class="fw-msg">"Even drove to Gweru for our hotel project. ProfAirZw doesn't disappoint. 🙌"</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS / PORTFOLIO -->
+<div class="wrap tight" style="padding-top:0" id="projects-sec">
+  <div class="sh">
+    <div class="sh-l"><div class="eyebrow">RECENT WORK</div><div class="sh-title">Projects</div></div>
+    <span class="sh-link" onclick="showToast('Full project portfolio at profairzw.co.zw/projects')">All Projects →</span>
+  </div>
+  <div class="proj-grid">
+    <div class="pj-item rev" onclick="openArt(0)">
+      <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=700&q=80&auto=format&fit=crop" alt="">
+      <div class="pj-over"><div class="pj-cat">VRF SYSTEM</div><div class="pj-title">Borrowdale Park Tower · 12 units</div><div class="pj-loc">Harare · Commercial · 2026</div></div>
+      <div class="pj-badge">COMPLETED</div>
+      <div class="pj-view">View Project →</div>
+    </div>
+    <div class="pj-item rev" onclick="showToast('Project: Avondale Residential Estate — 48 split units installed')">
+      <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=700&q=80&auto=format&fit=crop" alt="">
+      <div class="pj-over"><div class="pj-cat">RESIDENTIAL ESTATE</div><div class="pj-title">Avondale Housing Complex · 48 units</div><div class="pj-loc">Harare · Residential · 2025</div></div>
+      <div class="pj-badge">COMPLETED</div>
+      <div class="pj-view">View Project →</div>
+    </div>
+    <div class="pj-item rev" onclick="showToast('Project: Cold Room Installation — Supermarket chain, Harare')">
+      <img src="https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=700&q=80&auto=format&fit=crop" alt="">
+      <div class="pj-over"><div class="pj-cat">COLD ROOM</div><div class="pj-title">Major Supermarket Chain · 4 cold rooms</div><div class="pj-loc">Harare · Retail · 2026</div></div>
+      <div class="pj-badge">COMPLETED</div>
+      <div class="pj-view">View Project →</div>
+    </div>
+    <div class="pj-item rev" onclick="showToast('Project: Hotel HVAC upgrade — Bulawayo, 80 room system')">
+      <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=700&q=80&auto=format&fit=crop" alt="">
+      <div class="pj-over"><div class="pj-cat">HOTEL · HVAC SYSTEM</div><div class="pj-title">Bulawayo Boutique Hotel · 80 rooms</div><div class="pj-loc">Bulawayo · Hospitality · 2025</div></div>
+      <div class="pj-badge">COMPLETED</div>
+      <div class="pj-view">View Project →</div>
+    </div>
+    <div class="pj-item rev" onclick="showToast('Project: Data Centre cooling — server room, Mount Pleasant Harare')">
+      <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=700&q=80&auto=format&fit=crop" alt="">
+      <div class="pj-over"><div class="pj-cat">DATA CENTRE COOLING</div><div class="pj-title">Tech Company Server Room</div><div class="pj-loc">Mount Pleasant · IT · 2026</div></div>
+      <div class="pj-badge">ONGOING</div>
+      <div class="pj-view">View Project →</div>
+    </div>
+    <div class="pj-item rev" onclick="showToast('Project: Hospital HVAC — infection control climate system')">
+      <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=700&q=80&auto=format&fit=crop" alt="">
+      <div class="pj-over"><div class="pj-cat">HEALTHCARE HVAC</div><div class="pj-title">Private Hospital · Infection Control</div><div class="pj-loc">Harare · Medical · 2025</div></div>
+      <div class="pj-badge">COMPLETED</div>
+      <div class="pj-view">View Project →</div>
+    </div>
+  </div>
+</div>
+
+<!-- GALLERY (admin-published) -->
+<div id="gal-sec">
+  <div class="wrap tight">
+    <div class="sh">
+      <div class="sh-l"><div class="eyebrow">PHOTO GALLERY</div><div class="sh-title">Our Work in Pictures</div></div>
+    </div>
+    <div id="gal-grid"></div>
+  </div>
+</div>
+
+<!-- CTA / CONTACT -->
+<div class="cta-section" id="contact-sec">
+  <div class="cta-bg"><img src="https://images.unsplash.com/photo-1607400201889-565b1ee75f8e?w=1600&q=70&auto=format&fit=crop" alt=""></div>
+  <div class="cta-overlay"></div>
+  <div class="cta-grid"></div>
+  <div class="cta-content">
+    <div>
+      <div class="eyebrow" style="margin-bottom:.9rem">CONTACT PROFAIRZW</div>
+      <h2 style="font-family:var(--F);font-size:clamp(2.5rem,5vw,4.5rem);line-height:.9;letter-spacing:.04em;margin-bottom:1.5rem">LET'S COOL<br><span style="color:var(--cyan)">YOUR WORLD</span></h2>
+      <blockquote class="cta-quote">"Every space has a perfect climate. We find it, build it, and maintain it — so you never have to think about it again."</blockquote>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:2rem">
+        <div style="display:flex;align-items:center;gap:14px;font-size:13px;color:var(--muted2)"><span style="font-size:1.2rem">📞</span> +263 78 000 0000 (24/7 Hotline)</div>
+        <div style="display:flex;align-items:center;gap:14px;font-size:13px;color:var(--muted2)"><span style="font-size:1.2rem">💬</span> WhatsApp: +263 78 000 0000</div>
+        <div style="display:flex;align-items:center;gap:14px;font-size:13px;color:var(--muted2)"><span style="font-size:1.2rem">📧</span> info@profairzw.co.zw</div>
+        <div style="display:flex;align-items:center;gap:14px;font-size:13px;color:var(--muted2)"><span style="font-size:1.2rem">📍</span> 14 Aberdeen Rd, Avondale, Harare</div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn btn-ice" href="https://wa.me/2630780000000" target="_blank" onclick="event.preventDefault();showToast('WhatsApp: +263 78 000 0000')">WhatsApp Us</a>
+        <button class="btn btn-ghost" onclick="showToast('Call: +263 78 000 0000 — available 24/7')">Call Now</button>
+      </div>
+    </div>
+    <div>
+      <div class="eyebrow" style="margin-bottom:1.25rem">FREE ASSESSMENT REQUEST</div>
+      <div class="cform" id="contact-form">
+        <div><input type="text" id="cf-name" placeholder="Full Name" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'"></div>
+        <div><input type="text" id="cf-phone" placeholder="Phone / WhatsApp" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'"></div>
+        <div class="cform-full"><input type="text" id="cf-email" placeholder="Email Address" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'"></div>
+        <div><select id="cf-service" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'">
+          <option value="">Service needed…</option>
+          <option>AC Installation</option>
+          <option>AC Servicing / Maintenance</option>
+          <option>Commercial HVAC</option>
+          <option>Cold Room Installation</option>
+          <option>Energy Efficiency Audit</option>
+          <option>24/7 Emergency</option>
+          <option>VRF / VRV System</option>
+        </select></div>
+        <div><select id="cf-size" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'">
+          <option value="">Property size…</option>
+          <option>Small (1–2 rooms)</option>
+          <option>Medium (3–5 rooms)</option>
+          <option>Large (6+ rooms)</option>
+          <option>Office / Commercial</option>
+          <option>Industrial / Warehouse</option>
+        </select></div>
+        <div class="cform-full"><textarea id="cf-msg" placeholder="Tell us more — location, type of building, any specific requirements…" rows="3" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'"></textarea></div>
+        <div class="cform-full"><button class="btn btn-ice" style="width:100%" onclick="submitForm()">SUBMIT — GET FREE ASSESSMENT</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="wrap" id="about-sec">
+  <div class="sh">
+    <div class="sh-l"><div class="eyebrow">WHO WE ARE</div><div class="sh-title">About ProfAirZw</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:5rem;align-items:center">
+    <div>
+      <p style="font-family:var(--S);font-style:italic;font-size:1.15rem;color:var(--muted2);line-height:1.9;margin-bottom:1.5rem">ProfAirZw was built on a simple belief: every home, office and building in Zimbabwe deserves professional climate control — installed right, maintained well, and backed by people who stand behind their work.</p>
+      <p style="font-size:14px;color:rgba(232,244,255,.45);line-height:1.9;margin-bottom:1.5rem">We are a fully Zimbabwean-owned HVAC company operating from Harare with projects across the country. Our technicians are certified, our equipment is genuine and our service is honest. From small home installations to large-scale commercial systems — we bring the same precision and professionalism to every job.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn btn-ice" onclick="scrollToSec('contact-sec')">Get a Free Quote</button>
+        <button class="btn btn-ghost" onclick="showToast('Learn more about our team at profairzw.co.zw/about')">Meet the Team</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px">
+      <div style="background:var(--card);padding:2rem;border-top:2px solid var(--cyan)" class="rev"><div style="font-family:var(--F);font-size:1.6rem;color:var(--cyan)">DAIKIN</div><div style="font-size:10px;color:var(--muted);letter-spacing:.12em;margin-top:4px">CERTIFIED PARTNER</div></div>
+      <div style="background:var(--card);padding:2rem;border-top:2px solid rgba(56,189,248,.4)" class="rev"><div style="font-family:var(--F);font-size:1.6rem;color:var(--cyan-l)">MIDEA</div><div style="font-size:10px;color:var(--muted);letter-spacing:.12em;margin-top:4px">AUTHORISED DEALER</div></div>
+      <div style="background:var(--card);padding:2rem;border-top:2px solid rgba(56,189,248,.4)" class="rev"><div style="font-family:var(--F);font-size:1.6rem;color:var(--cyan-l)">LG</div><div style="font-size:10px;color:var(--muted);letter-spacing:.12em;margin-top:4px">AUTHORISED DEALER</div></div>
+      <div style="background:var(--card);padding:2rem;border-top:2px solid var(--cyan)" class="rev"><div style="font-family:var(--F);font-size:1.6rem;color:var(--cyan)">SAMSUNG</div><div style="font-size:10px;color:var(--muted);letter-spacing:.12em;margin-top:4px">CERTIFIED INSTALLER</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PARTNERS -->
+<div class="partners-bar">
+  <div class="pb-inner">
+    <span class="pb-lbl">TRUSTED BRANDS</span>
+    <div class="pb-div"></div>
+    <span class="pb-name" onclick="showToast('Daikin — Premium Japanese HVAC technology')">DAIKIN</span>
+    <span class="pb-name" onclick="showToast('Midea — Energy-efficient inverter systems')">MIDEA</span>
+    <span class="pb-name" onclick="showToast('LG Electronics — Smart HVAC solutions')">LG</span>
+    <span class="pb-name" onclick="showToast('Samsung — WindFree cooling technology')">SAMSUNG</span>
+    <span class="pb-name" onclick="showToast('Carrier — Commercial HVAC pioneer')">CARRIER</span>
+    <span class="pb-name" onclick="showToast('Gree — World\'s largest AC manufacturer')">GREE</span>
+    <span class="pb-name" onclick="showToast('Panasonic — Nanoe-X air purifying HVAC')">PANASONIC</span>
+    <span class="pb-name" onclick="showToast('Toshiba — Japanese commercial climate systems')">TOSHIBA</span>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="fb-brand">ProfAirZw</div>
+      <div class="fb-sub">CLIMATE SOLUTIONS · ZIMBABWE</div>
+      <p class="fb-p">Zimbabwe's trusted HVAC specialists. Residential, commercial and industrial climate solutions across Harare and beyond. Available 24/7.</p>
+      <div class="fb-soc">
+        <a class="fs" href="https://www.facebook.com/profairzw" target="_blank" title="Facebook">f</a>
+        <a class="fs" href="https://www.instagram.com/profairzw" target="_blank" title="Instagram">▶</a>
+        <a class="fs" href="https://x.com/profairzw" target="_blank" title="X">𝕏</a>
+        <a class="fs" href="https://www.youtube.com/@profairzw" target="_blank" title="YouTube">▷</a>
+        <a class="fs" href="https://wa.me/2630780000000" target="_blank" title="WhatsApp" onclick="event.preventDefault();showToast('WhatsApp: +263 78 000 0000')">💬</a>
+      </div>
+    </div>
+    <div class="fc"><h4>Services</h4><ul>
+      <li><a onclick="scrollToSec('services-sec')">AC Installation</a></li>
+      <li><a onclick="scrollToSec('services-sec')">Servicing & Maintenance</a></li>
+      <li><a onclick="scrollToSec('services-sec')">Commercial HVAC</a></li>
+      <li><a onclick="scrollToSec('services-sec')">Cold Rooms</a></li>
+      <li><a onclick="scrollToSec('services-sec')">Energy Audits</a></li>
+      <li><a onclick="scrollToSec('contact-sec')">24/7 Emergency</a></li>
+    </ul></div>
+    <div class="fc"><h4>Company</h4><ul>
+      <li><a onclick="scrollToSec('about-sec')">About Us</a></li>
+      <li><a onclick="scrollToSec('projects-sec')">Our Projects</a></li>
+      <li><a onclick="showToast('Meet our certified technicians at profairzw.co.zw/team')">Our Team</a></li>
+      <li><a onclick="showToast('Careers at ProfAirZw — email careers@profairzw.co.zw')">Careers</a></li>
+      <li><a onclick="showToast('Warranties & service level agreements at profairzw.co.zw/terms')">Warranties & SLAs</a></li>
+    </ul></div>
+    <div class="fc"><h4>Contact</h4><ul>
+      <li><a onclick="showToast('Call: +263 78 000 0000 (24/7)')">+263 78 000 0000</a></li>
+      <li><a onclick="showToast('WhatsApp: +263 78 000 0000')">WhatsApp Us</a></li>
+      <li><a onclick="showToast('Email: info@profairzw.co.zw')">info@profairzw.co.zw</a></li>
+      <li><a onclick="showToast('14 Aberdeen Rd, Avondale, Harare, Zimbabwe')">14 Aberdeen Rd, Avondale</a></li>
+      <li><a onclick="scrollToSec('contact-sec')">Free Assessment</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bot">
+    <p>© 2026 ProfAirZw (Pvt) Ltd. All rights reserved. Registered in Zimbabwe.</p>
+    <div class="zw-badge">❄ PROUDLY ZIMBABWEAN</div>
+    <p style="cursor:pointer" onclick="showToast('Privacy Policy & Terms at profairzw.co.zw/terms')">Privacy · Terms</p>
+  </div>
+</footer>
+
+<!-- ══════════════════════
+     ARTICLE MODAL
+══════════════════════ -->
+<div id="art-modal">
+  <div class="am-box" style="margin:4rem auto">
+    <button class="am-close" onclick="closeArt()">×</button>
+    <img id="am-img" src="" alt="" class="am-img">
+    <div class="am-body">
+      <div id="am-eye" style="font-size:9px;font-weight:700;letter-spacing:.22em;color:var(--cyan);margin-bottom:.75rem"></div>
+      <div id="am-title" style="font-family:var(--F);font-size:2rem;letter-spacing:.04em;line-height:1.1;margin-bottom:.75rem"></div>
+      <div id="am-meta" style="font-size:11px;color:var(--muted);margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)"></div>
+      <div id="am-body" style="font-size:15px;line-height:1.9;color:rgba(232,244,255,.7)"></div>
+      <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" onclick="shareArt('x')">Share on 𝕏</button>
+        <button class="btn btn-ghost btn-sm" onclick="shareArt('fb')">Share on Facebook</button>
+        <button class="btn btn-ghost btn-sm" onclick="shareArt('wa')">Share on WhatsApp</button>
+        <button class="btn btn-ice btn-sm" onclick="closeArt();scrollToSec('contact-sec')">Get a Free Quote →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lb">
+  <button id="lb-close" onclick="closeLB()">×</button>
+  <button id="lb-prev" onclick="lbP()">‹</button>
+  <button id="lb-next" onclick="lbN()">›</button>
+  <img id="lb-img" src="" alt="">
+  <div id="lb-cap"></div>
+  <div id="lb-ct"></div>
+</div>
+
+<!-- SEARCH -->
+<div id="srch" onclick="if(event.target===this)closeSrch()">
+  <div class="srch-box">
+    <div class="srch-row">
+      <span style="font-size:1.1rem;color:var(--muted)">⌕</span>
+      <input id="srch-in" type="text" placeholder="Search services, news, brands, #ProfAirZw…" oninput="doSearch(this.value)" onkeydown="if(event.key==='Escape')closeSrch()">
+      <kbd style="background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--muted);padding:3px 8px;font-size:10px">ESC</kbd>
+    </div>
+    <div id="srch-res"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- ADMIN BTN -->
+<div id="admin-btn" onclick="toggleAdmin()" title="Admin / CMS">⚙</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel">
+  <div class="adm-box">
+    <div class="adm-inner">
+      <button class="adm-close" onclick="closeAdmin()">×</button>
+
+      <div id="adm-login">
+        <div style="font-family:var(--F);font-size:2.2rem;letter-spacing:.1em;color:var(--cyan);margin-bottom:.25rem">ADMIN PANEL</div>
+        <div style="font-size:9.5px;color:var(--muted);letter-spacing:.18em;margin-bottom:2.5rem">PROFAIRZW · BULLETIN MANAGEMENT SYSTEM</div>
+        <div style="max-width:380px">
+          <div class="fld"><label>PASSWORD</label><input id="adm-pass" type="password" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')checkAdmPass()"></div>
+          <button class="btn btn-ice" style="width:100%" onclick="checkAdmPass()">ENTER CMS</button>
+          <div id="adm-err" style="color:var(--warm);font-size:12px;margin-top:.75rem;display:none">Incorrect. Hint: <code style="color:var(--cyan)">profair2026</code></div>
+        </div>
+      </div>
+
+      <div id="adm-dash" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)">
+          <div><div style="font-family:var(--F);font-size:1.8rem;color:var(--cyan)">CONTENT DASHBOARD</div><div style="font-size:11px;color:var(--muted)">ProfAirZw Bulletin — News, Social & Media Management</div></div>
+          <button class="btn btn-ghost btn-sm" onclick="admLogout()">Log Out</button>
+        </div>
+        <div style="display:flex;border-bottom:1px solid var(--border);margin-bottom:2rem">
+          <button class="adm-tab active" onclick="adTab(this,'at-photos')">📸 Photos</button>
+          <button class="adm-tab" onclick="adTab(this,'at-break')">📣 Bulletin Alert</button>
+          <button class="adm-tab" onclick="adTab(this,'at-social')">📡 Social Post</button>
+          <button class="adm-tab" onclick="adTab(this,'at-ticker')">🏷 Ticker</button>
+          <button class="adm-tab" onclick="adTab(this,'at-hashtag')">🔍 #ProfAirZw Feed</button>
+        </div>
+
+        <!-- PHOTOS -->
+        <div id="at-photos" class="adm-c active">
+          <p style="font-size:11px;color:var(--muted);margin-bottom:1.5rem">Upload project photos — they auto-populate the gallery between Projects and the Contact section.</p>
+          <div id="drop-z" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="hdDrop(event)" onclick="$('flin').click()">
+            <div style="font-size:2.2rem;margin-bottom:.75rem">📸</div>
+            <div style="font-family:var(--F);font-size:1.3rem;color:var(--cyan);letter-spacing:.08em;margin-bottom:.5rem">DRAG & DROP PHOTOS</div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:1.25rem">or click to browse · JPG, PNG, WEBP</div>
+            <button class="btn btn-ice btn-sm" onclick="event.stopPropagation();$('flin').click()">BROWSE FILES</button>
+            <input id="flin" type="file" accept="image/*" multiple style="display:none" onchange="hdFiles(event.target.files)">
+          </div>
+          <div id="upform" style="display:none;background:rgba(56,189,248,.03);border:1px solid var(--border);padding:1.5rem;margin-top:1rem">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+              <div class="fld"><label>CAPTION</label><input id="img-cap" type="text" placeholder="e.g. VRF installation, Borrowdale Tower"></div>
+              <div class="fld"><label>CATEGORY</label><select id="img-cat"><option>PROJECT PHOTOS</option><option>INSTALLATION</option><option>SERVICING</option><option>COMMERCIAL</option><option>TEAM AT WORK</option><option>BEFORE & AFTER</option></select></div>
+            </div>
+            <div id="up-prevs" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem"></div>
+            <button class="btn btn-ice" onclick="pubImgs()">PUBLISH TO WEBSITE</button>
+          </div>
+          <div style="margin-top:2rem">
+            <div class="eyebrow" style="margin-bottom:.75rem">PUBLISHED <span id="galcount" style="color:var(--muted)">(0)</span></div>
+            <div id="adm-gal"></div>
+          </div>
+        </div>
+
+        <!-- BULLETIN ALERT -->
+        <div id="at-break" class="adm-c">
+          <p style="font-size:11px;color:var(--muted);margin-bottom:1.5rem">Post a breaking bulletin alert — appears pinned at top of the page in the brand cyan bar.</p>
+          <div class="fld"><label>ALERT TEXT</label><input id="brk-in" type="text" placeholder="e.g. 🔥 SPECIAL OFFER: 20% off all installations this week only — Call +263 78 000 0000"></div>
+          <div style="display:flex;gap:10px;margin-bottom:2rem">
+            <button class="btn btn-ice" onclick="pubBreak()">PUBLISH ALERT</button>
+            <button class="btn btn-ghost" onclick="clearBreak()">CLEAR ALERT</button>
+          </div>
+          <div class="eyebrow" style="margin-bottom:.75rem">QUICK TEMPLATES</div>
+          <div id="brk-tpl" style="display:flex;flex-direction:column;gap:6px"></div>
+        </div>
+
+        <!-- SOCIAL POST -->
+        <div id="at-social" class="adm-c">
+          <p style="font-size:11px;color:var(--muted);margin-bottom:1.5rem">Inject a post to the live social feed section of the bulletin.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="fld"><label>PLATFORM</label><select id="soc-pl"><option value="tw">𝕏 / Twitter</option><option value="ig">Instagram</option><option value="fb">Facebook</option><option value="yt">YouTube</option></select></div>
+            <div class="fld"><label>HANDLE</label><input id="soc-hnd" type="text" value="@ProfAirZw"></div>
+          </div>
+          <div class="fld"><label>POST TEXT</label><textarea id="soc-txt" rows="3" placeholder="Write your post… #ProfAirZw"></textarea></div>
+          <button class="btn btn-ice" onclick="pubSoc()">POST TO LIVE FEED</button>
+        </div>
+
+        <!-- TICKER -->
+        <div id="at-ticker" class="adm-c">
+          <p style="font-size:11px;color:var(--muted);margin-bottom:1.5rem">Manage the scrolling ticker across the top of the page.</p>
+          <div style="display:flex;gap:8px;margin-bottom:1.5rem">
+            <input id="tk-txt" type="text" placeholder="New ticker item text…" style="flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--white);padding:10px 15px;font-family:var(--B);font-size:13px;outline:none">
+            <button class="btn btn-ice btn-sm" onclick="addTk()">ADD</button>
+          </div>
+          <div id="tk-list" style="display:flex;flex-direction:column;gap:5px"></div>
+        </div>
+
+        <!-- HASHTAG FEED MANAGER -->
+        <div id="at-hashtag" class="adm-c">
+          <p style="font-size:11px;color:var(--muted);margin-bottom:1.5rem">Simulate a #ProfAirZw mention found across the web. These appear as tagged cards in the social feed.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="fld"><label>PLATFORM / SOURCE</label><select id="htag-src"><option>X / Twitter</option><option>Facebook</option><option>Instagram</option><option>News Website</option><option>Google Reviews</option><option>WhatsApp Screenshot</option></select></div>
+            <div class="fld"><label>USERNAME</label><input id="htag-user" type="text" placeholder="e.g. @HarareLiving"></div>
+          </div>
+          <div class="fld"><label>MENTION TEXT</label><textarea id="htag-txt" rows="3" placeholder="The mention text that includes #ProfAirZw…"></textarea></div>
+          <button class="btn btn-ice" onclick="pubHashtag()">ADD TO FEED</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════
+   FROST PARTICLE ENGINE
+════════════════════════ */
+const canvas=document.getElementById('frost-canvas');
+const ctx=canvas.getContext('2d');
+let particles=[];
+function initCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+function spawnParticle(){
+  particles.push({
+    x:Math.random()*canvas.width,y:Math.random()*canvas.height*.5,
+    vx:(Math.random()-.5)*.25,vy:Math.random()*.45+.1,
+    size:Math.random()*2.5+.5,
+    opacity:Math.random()*.45+.1,
+    type:Math.random()>.7?'flake':'dot'
+  });
+  if(particles.length>140)particles.shift();
+}
+function drawFlake(x,y,r,opacity){
+  ctx.save();ctx.translate(x,y);ctx.globalAlpha=opacity;ctx.strokeStyle='rgba(168,230,255,1)';ctx.lineWidth=.6;
+  for(let i=0;i<6;i++){ctx.rotate(Math.PI/3);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,r);ctx.stroke();ctx.beginPath();ctx.moveTo(0,r*.55);ctx.lineTo(r*.22,r*.33);ctx.stroke();ctx.beginPath();ctx.moveTo(0,r*.55);ctx.lineTo(-r*.22,r*.33);ctx.stroke();}
+  ctx.restore();
+}
+function tickParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  if(Math.random()>.85)spawnParticle();
+  particles.forEach((p,i)=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.y>canvas.height+10||p.x<-20||p.x>canvas.width+20)particles.splice(i,1);
+    if(p.type==='flake')drawFlake(p.x,p.y,p.size*3.5,p.opacity);
+    else{ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fillStyle=`rgba(168,230,255,${p.opacity})`;ctx.fill();}
+  });
+  requestAnimationFrame(tickParticles);
+}
+initCanvas();tickParticles();
+window.addEventListener('resize',initCanvas);
+
+/* ════════════════════════
+   CURSOR
+════════════════════════ */
+const curEl=document.getElementById('cur'),ringEl=document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;curEl.style.left=mx+'px';curEl.style.top=my+'px'});
+(function animR(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ringEl.style.left=rx+'px';ringEl.style.top=ry+'px';requestAnimationFrame(animR)})();
+function bindCur(){
+  document.querySelectorAll('a,button,.nc,.sg-item,.svc-item,.sc-card,.tag-card,.pj-item,.pb-name,.stab-row,.fw-item,.hc-svc').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{curEl.style.width='20px';curEl.style.height='20px';ringEl.style.width='56px';ringEl.style.height='56px';ringEl.style.borderColor='rgba(56,189,248,.7)'});
+    el.addEventListener('mouseleave',()=>{curEl.style.width='8px';curEl.style.height='8px';ringEl.style.width='32px';ringEl.style.height='32px';ringEl.style.borderColor='rgba(56,189,248,.4)'});
+  });
+}
+bindCur();
+
+/* ════════════════════════
+   HELPERS
+════════════════════════ */
+const $=id=>document.getElementById(id);
+function showToast(msg,col='var(--cyan)'){
+  const t=$('toast');t.textContent=msg;t.style.borderLeftColor=col;t.style.opacity='1';t.style.transform='translateY(0)';
+  clearTimeout(t._t);t._t=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(18px)'},3700);
+}
+function scrollTop(){window.scrollTo({top:0,behavior:'smooth'})}
+function scrollToSec(id){const el=$(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
+function navTo(el,id){document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));el.classList.add('active');scrollToSec(id);return false}
+
+/* NAV SHRINK */
+const navEl=document.querySelector('nav');
+window.addEventListener('scroll',()=>{
+  navEl.style.height=window.scrollY>80?'58px':'';
+  navEl.style.borderBottomColor=window.scrollY>80?'rgba(56,189,248,.25)':'';
+},{passive:true});
+
+/* SCROLL REVEAL */
+const revObs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')}),{threshold:.1});
+document.querySelectorAll('.rev').forEach(el=>revObs.observe(el));
+
+/* STAT COUNTERS */
+function animC(el,to,dur,suffix){
+  let n=0;const step=to/(dur/16);
+  const t=setInterval(()=>{n=Math.min(n+step,to);el.textContent=Math.round(n)+(suffix||'');if(n>=to)clearInterval(t)},16);
+}
+const sObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      animC($('s1'),1200,1800,'+');animC($('s2'),850,1500,'+');
+      animC($('s3'),2,900,' hrs');animC($('s4'),12,1200,'+');
+      sObs.disconnect();
+    }
+  });
+},{threshold:.3});
+const sb=document.querySelector('.stat-band');if(sb)sObs.observe(sb);
+
+/* TEMP PILL LIVE */
+const harareTemps=[28,29,30,31,32,33,34];
+setInterval(()=>{
+  const t=harareTemps[Math.floor(Math.random()*harareTemps.length)];
+  $('temp-pill-txt').textContent=`HARARE ${t}°C`;
+},12000);
+
+/* Hero card outdoor temp */
+let outdoorT=32;
+setInterval(()=>{outdoorT+=Math.random()>.5?1:-1;outdoorT=Math.min(38,Math.max(28,outdoorT));$('outdoor-temp').textContent=outdoorT+'°C'},7000);
+
+/* ════════════════════════
+   ARTICLES
+════════════════════════ */
+const arts=[
+  {eye:'COMMERCIAL · HARARE · MAY 2026',title:'ProfAirZw completes 12-unit VRF installation at new Borrowdale mixed-use tower',meta:'Commercial Project · Harare CBD · May 2026 · 5 min read',img:'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=900&q=80',body:`<p>ProfAirZw has completed one of its largest commercial projects to date — the design, supply and installation of a <strong>12-unit Daikin VRF (Variable Refrigerant Flow) system</strong> serving all five floors of the new Borrowdale Park Tower mixed-use development in Harare.</p><p>The project required a full mechanical and electrical design phase, close coordination with the building contractor, and an installation team of 14 working across eight weeks. The result is a silent, energy-efficient climate system that will serve the tower's office, retail and hospitality spaces for decades to come.</p><p><em>"This was our most technically complex installation to date,"</em> says ProfAirZw Managing Director. <em>"The VRF system allows individual temperature control in every zone — critical for a mixed-use building where a gym, offices and restaurant all have different needs."</em></p><p>The system uses Daikin's latest inverter compressor technology and is estimated to reduce energy consumption by <strong>35–40% compared to conventional systems</strong>. ProfAirZw will also manage the maintenance contract going forward.</p>`},
+  {eye:'TIPS & GUIDES · APRIL 2026',title:"Why your AC is losing efficiency in the Zim summer — and how to fix it",meta:'Expert Guide · April 2026 · 3 min read',img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80',body:`<p>As temperatures in Harare regularly exceed 34°C during the October–March period, air conditioners are working harder than ever. But most homeowners don't realise that a poorly maintained unit can be operating at <strong>just 60% of its rated capacity</strong> — costing you more electricity and delivering less cooling.</p><p>Here are the most common culprits identified by ProfAirZw technicians across hundreds of service calls:</p><p><strong>1. Dirty filters</strong> — The single most common cause of reduced efficiency. Filters should be cleaned every 4–6 weeks during heavy use. A clogged filter restricts airflow and forces the compressor to work harder.</p><p><strong>2. Low refrigerant</strong> — If your unit takes longer to cool or the air isn't as cold as it used to be, your system may have a refrigerant leak. This requires a professional diagnosis and recharge.</p><p><strong>3. Dirty outdoor unit</strong> — The condenser coil on the outdoor unit needs to dissipate heat efficiently. Dust, leaves and blocked fins prevent this and reduce cooling output significantly.</p><p>Book a ProfAirZw service call before the next summer and we'll check all of the above — guaranteed to notice a difference. First-time customers get a <strong>10% discount on servicing</strong>.</p>`},
+  {eye:'ENERGY SAVING · APRIL 2026',title:'Solar-ready HVAC: How Zimbabwe businesses can cut AC costs by 40%',meta:'Business Guide · April 2026 · 4 min read',img:'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=700&q=80',body:`<p>With Zimbabwe's electricity grid under ongoing pressure and tariffs rising, the combination of <strong>inverter HVAC technology and solar power</strong> is becoming one of the smartest investments a business can make.</p><p>ProfAirZw now offers a fully integrated solar-ready HVAC package that combines modern inverter air conditioning systems — which consume up to 40% less energy than traditional units — with compatibility for solar panel arrays.</p><p>The mathematics are compelling: a typical 2400sqm office space in Harare running conventional split systems might spend $800–$1,200 per month on air conditioning electricity alone. The same space, retrofitted with inverter systems and a modestly sized solar array, can reduce that bill to <strong>$400–$600 per month</strong> — with the investment paying itself back within 30–48 months.</p><p>Contact ProfAirZw for a free energy audit of your premises. We will assess your current system, calculate your consumption profile, and propose the most cost-effective upgrade path — whether that's inverter replacement only, or a full solar integration package.</p>`},
+  {eye:'RESIDENTIAL · MARCH 2026',title:'From Avondale to Chitungwiza — 200+ homes cooled in Q1 2026',meta:'Company Update · March 2026 · 2 min read',img:'https://images.unsplash.com/photo-1581093577421-f561a654a353?w=700&q=80',body:`<p>ProfAirZw's residential division has had its strongest quarter in the company's history, completing over <strong>200 home installations</strong> across the Greater Harare area in the first three months of 2026.</p><p>From high-density housing in Chitungwiza and Mabvuku, to luxury homes in Borrowdale and Highlands, our residential team has proven that professional air conditioning is for every Zimbabwean home — not just the few.</p><p>Most popular unit this season: the <strong>Midea 12000 BTU inverter split</strong>, which offers excellent value for money, low running costs and quiet operation. All installations come with a 2-year workmanship warranty and free first service at 12 months.</p>`},
+  {eye:'COLD ROOMS · MARCH 2026',title:'ProfAirZw delivers cold room installation for major Harare supermarket chain',meta:'Commercial Project · March 2026 · 3 min read',img:'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=700&q=80',body:`<p>ProfAirZw has completed the installation of <strong>four commercial cold rooms</strong> for a major Harare supermarket chain — including walk-in chillers for fresh produce and a blast freezer for frozen goods.</p><p>The project demanded precise temperature control specifications, food-safe materials, and a robust monitoring system that alerts management if temperatures deviate from the set range — critical for food safety compliance.</p><p>All four rooms were delivered on time and within budget. ProfAirZw is now the preferred HVAC and refrigeration contractor for the chain's upcoming store openings in Bulawayo and Gweru.</p>`}
+];
+
+function openArt(i){
+  const a=arts[i];if(!a)return;
+  $('am-eye').textContent=a.eye;$('am-title').textContent=a.title;$('am-meta').textContent=a.meta;
+  $('am-img').src=a.img;$('am-body').innerHTML=a.body;
+  $('art-modal').style.display='block';document.body.style.overflow='hidden';
+}
+function closeArt(){$('art-modal').style.display='none';document.body.style.overflow=''}
+$('art-modal').addEventListener('click',e=>{if(e.target===$('art-modal'))closeArt()});
+function shareArt(p){
+  const t=encodeURIComponent($('am-title').textContent);const u=encodeURIComponent(location.href);
+  const m={x:`https://twitter.com/intent/tweet?text=${t}+%23ProfAirZw&url=${u}`,fb:`https://www.facebook.com/sharer/sharer.php?u=${u}`,wa:`https://api.whatsapp.com/send?text=${t}+${u}`};
+  window.open(m[p],'_blank','width=600,height=400');showToast('Opening share…');
+}
+
+/* CONTACT FORM */
+function submitForm(){
+  const name=$('cf-name').value.trim(),phone=$('cf-phone').value.trim(),service=$('cf-service').value;
+  if(!name||!phone){showToast('⚠️ Please fill in your name and phone number','var(--warm)');return}
+  if(!service){showToast('⚠️ Please select the service you need','var(--warm)');return}
+  showToast(`✅ Thank you ${name}! We'll call you within 2 hours. Ref: PAZ-${Date.now().toString().slice(-6)}`);
+  ['cf-name','cf-phone','cf-email','cf-msg'].forEach(id=>{if($(id))$(id).value=''});
+  $('cf-service').selectedIndex=0;$('cf-size').selectedIndex=0;
+}
+
+/* ════════════════════════
+   LIGHTBOX
+════════════════════════ */
+let lbImgs=[],lbIdx=0;
+function openLB(imgs,i){lbImgs=imgs;lbIdx=i;lbShow();$('lb').style.display='flex';document.body.style.overflow='hidden'}
+function lbShow(){$('lb-img').src=lbImgs[lbIdx].src;$('lb-cap').textContent=lbImgs[lbIdx].cap||'';$('lb-ct').textContent=`${lbIdx+1} / ${lbImgs.length}`}
+function closeLB(){$('lb').style.display='none';document.body.style.overflow=''}
+function lbP(){lbIdx=(lbIdx-1+lbImgs.length)%lbImgs.length;lbShow()}
+function lbN(){lbIdx=(lbIdx+1)%lbImgs.length;lbShow()}
+$('lb').addEventListener('click',e=>{if(e.target===$('lb'))closeLB()});
+
+/* ════════════════════════
+   SEARCH
+════════════════════════ */
+function openSearch(){$('srch').style.display='flex';setTimeout(()=>$('srch-in').focus(),40)}
+function closeSrch(){$('srch').style.display='none';$('srch-in').value='';$('srch-res').innerHTML=''}
+const sdb=[
+  ...arts.map((a,i)=>({type:'ARTICLE',title:a.title,action:()=>openArt(i)})),
+  {type:'SERVICE',title:'AC Installation — all brands, residential & commercial',action:()=>scrollToSec('services-sec')},
+  {type:'SERVICE',title:'Servicing & Maintenance — annual contracts',action:()=>scrollToSec('services-sec')},
+  {type:'SERVICE',title:'Commercial HVAC — offices, hotels, warehouses',action:()=>scrollToSec('services-sec')},
+  {type:'SERVICE',title:'Cold Room Installation — food storage, pharmacies',action:()=>scrollToSec('services-sec')},
+  {type:'SERVICE',title:'Energy Efficiency Audit — save up to 40%',action:()=>scrollToSec('services-sec')},
+  {type:'SERVICE',title:'24/7 Emergency Call-Out — 2hr response Harare',action:()=>scrollToSec('contact-sec')},
+  {type:'BRAND',title:'Daikin — certified partner installations',action:()=>showToast('Daikin certified partner — contact ProfAirZw for Daikin systems')},
+  {type:'BRAND',title:'Midea — authorised dealer Zimbabwe',action:()=>showToast('Midea authorised dealer — best value inverter systems')},
+  {type:'BRAND',title:'LG — authorised dealer Zimbabwe',action:()=>showToast('LG authorised dealer — smart HVAC solutions')},
+  {type:'CONTACT',title:'Call ProfAirZw — +263 78 000 0000',action:()=>showToast('Call: +263 78 000 0000 — available 24/7')},
+  {type:'CONTACT',title:'WhatsApp ProfAirZw — +263 78 000 0000',action:()=>showToast('WhatsApp: +263 78 000 0000')},
+  {type:'CONTACT',title:'Free site assessment — book now',action:()=>scrollToSec('contact-sec')},
+  {type:'SOCIAL',title:'#ProfAirZw on Facebook, Instagram, X, YouTube',action:()=>scrollToSec('social-sec')},
+];
+function doSearch(q){
+  const r=$('srch-res');if(!q){r.innerHTML='';return}
+  const hits=sdb.filter(d=>d.title.toLowerCase().includes(q.toLowerCase())).slice(0,8);
+  r.innerHTML=hits.length
+    ?hits.map(h=>`<div class="sr-item" onclick="(${h.action.toString()})();closeSrch()"><span class="sr-type">${h.type}</span><span>${h.title}</span></div>`).join('')
+    :`<div style="padding:1.5rem;text-align:center;font-size:13px;color:var(--muted)">No results for "${q}"</div>`;
+}
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openSearch()}
+  if(e.key==='Escape'){closeSrch();closeLB();closeArt();closeAdmin()}
+});
+
+/* ════════════════════════
+   FAN WALL
+════════════════════════ */
+function toggleFanForm(){
+  const f=$('fan-form-box');
+  f.style.display=f.style.display==='flex'?'none':'flex';
+  if(f.style.display==='flex')$('fan-name').focus();
+}
+function postFan(){
+  const name=$('fan-name').value.trim(),msg=$('fan-msg').value.trim();
+  if(!name||!msg){showToast('⚠️ Please fill in your name and message','var(--warm)');return}
+  const track=$('fw-track');
+  if(track){
+    [0,1].forEach(()=>{const i=document.createElement('div');i.className='fw-item';i.style.borderTopColor='var(--cyan)';i.innerHTML=`<div class="fw-fan">🇿🇼 ${name}</div><div class="fw-msg">"${msg}"</div>`;track.insertBefore(i.cloneNode(true),track.firstChild)});
+  }
+  $('fan-name').value='';$('fan-msg').value='';$('fan-form-box').style.display='none';
+  showToast('❄️ Thank you! Your review has been added to the wall.');
+}
+
+/* ════════════════════════
+   ADMIN
+════════════════════════ */
+const ADMPASS='profair2026';let admIn=false,galItems=[],upQ=[];
+let tkItems=['Professional AC Installation & Servicing — Harare & Beyond','Daikin · Midea · LG · Samsung · Carrier · Gree — All Major Brands','24/7 Emergency Service — Call +263 78 000 0000','Free Site Assessment — Call or WhatsApp Today','Energy Efficiency Upgrades — Reduce Bills by up to 40%'];
+const brkTpls=['🔥 SPECIAL OFFER: 20% off all installations this week — Call +263 78 000 0000','❄️ NEW STOCK: Daikin 18000 BTU inverters now available — Limited units','🚨 MAINTENANCE REMINDER: Book your pre-summer service before slots fill','📞 EXTENDED HOURS: We are open Saturdays 08:00–13:00 this month','🌡️ HEATWAVE ALERT: Emergency installs available — same day service Harare'];
+
+function toggleAdmin(){$('admin-panel').style.display=$('admin-panel').style.display==='none'?'block':'none';if(admIn){$('adm-login').style.display='none';$('adm-dash').style.display='block'}renderTkList();renderAdmGal();renderBrkTpl()}
+function closeAdmin(){$('admin-panel').style.display='none'}
+function checkAdmPass(){
+  if($('adm-pass').value===ADMPASS){admIn=true;$('adm-login').style.display='none';$('adm-dash').style.display='block';$('adm-err').style.display='none';showToast('✅ Admin access granted — Welcome!')}
+  else{$('adm-err').style.display='block';$('adm-pass').style.borderColor='var(--warm)';setTimeout(()=>$('adm-pass').style.borderColor='var(--border)',1500)}
+}
+function admLogout(){admIn=false;$('adm-login').style.display='block';$('adm-dash').style.display='none';$('adm-pass').value=''}
+function adTab(btn,id){document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.adm-c').forEach(c=>c.classList.remove('active'));btn.classList.add('active');$(id).classList.add('active')}
+
+/* PHOTOS */
+function hdDrop(e){e.preventDefault();$('drop-z').classList.remove('drag-over');hdFiles(e.dataTransfer.files)}
+function hdFiles(files){
+  [...files].filter(f=>f.type.startsWith('image/')).forEach(f=>{
+    const r=new FileReader();
+    r.onload=ev=>{upQ.push({src:ev.target.result,name:f.name});renderPrevs();$('upform').style.display='block'};
+    r.readAsDataURL(f);
+  });
+}
+function renderPrevs(){
+  const c=$('up-prevs');c.innerHTML='';
+  upQ.forEach((f,i)=>{const d=document.createElement('div');d.className='uprev';d.innerHTML=`<img src="${f.src}"><button class="uprev-del" onclick="upQ.splice(${i},1);renderPrevs();if(!upQ.length)$('upform').style.display='none'">×</button>`;c.appendChild(d)});
+}
+function pubImgs(){
+  if(!upQ.length){showToast('⚠️ No images selected','var(--warm)');return}
+  const cap=$('img-cap').value||'Project photo',cat=$('img-cat').value;
+  upQ.forEach(f=>galItems.push({src:f.src,cap,cat}));
+  upQ=[];$('up-prevs').innerHTML='';$('upform').style.display='none';$('img-cap').value='';$('flin').value='';
+  renderPubGal();renderAdmGal();showToast(`✅ ${galItems.length} photo(s) published to gallery!`);closeAdmin();
+}
+function renderAdmGal(){
+  $('galcount').textContent=`(${galItems.length})`;
+  const g=$('adm-gal');
+  if(!galItems.length){g.innerHTML='<div style="color:var(--muted);font-size:12px;padding:.6rem 0">No photos published yet.</div>';return}
+  g.innerHTML=galItems.map((it,i)=>`<div class="ag-it"><img src="${it.src}"><div class="ag-del-ov"><button onclick="galItems.splice(${i},1);renderPubGal();renderAdmGal();showToast('🗑 Photo removed')" style="background:var(--warm);border:none;color:#fff;padding:5px 14px;font-size:10px;font-weight:700;cursor:pointer">DELETE</button></div></div>`).join('');
+}
+function renderPubGal(){
+  const sec=$('gal-sec'),grid=$('gal-grid');
+  if(!galItems.length){sec.style.display='none';return}
+  sec.style.display='block';
+  grid.innerHTML=galItems.map((it,i)=>`<div class="g-it rev" onclick="openLB(galItems.map(x=>({src:x.src,cap:x.cap})),${i})"><img src="${it.src}" alt="${it.cap}" loading="lazy"><div class="g-it-ov"><div style="font-size:8px;font-weight:700;letter-spacing:.18em;color:var(--cyan);margin-bottom:3px">${it.cat}</div><div style="font-size:12px;font-weight:600">${it.cap}</div></div></div>`).join('');
+  grid.querySelectorAll('.g-it').forEach(el=>revObs.observe(el));
+  bindCur();
+}
+
+/* BULLETIN ALERT */
+function renderBrkTpl(){
+  $('brk-tpl').innerHTML=brkTpls.map(t=>`<div style="padding:9px 14px;background:rgba(56,189,248,.04);border:1px solid var(--border);font-size:13px;cursor:pointer;transition:background .15s" onmouseenter="this.style.background='rgba(56,189,248,.09)'" onmouseleave="this.style.background='rgba(56,189,248,.04)'" onclick="$('brk-in').value='${t.replace(/'/g,"\\'")}'">    ${t}</div>`).join('');
+}
+function pubBreak(){
+  const txt=$('brk-in').value.trim();if(!txt){showToast('⚠️ Enter alert text','var(--warm)');return}
+  $('break-txt').textContent=txt;$('break-bar').style.display='flex';document.body.classList.add('has-break');
+  showToast('📣 Bulletin alert published!');closeAdmin();
+}
+function clearBreak(){$('break-bar').style.display='none';document.body.classList.remove('has-break');$('brk-in').value='';showToast('✅ Alert cleared')}
+
+/* SOCIAL POST */
+const splat={tw:'𝕏',ig:'▶',fb:'f',yt:'▷'};
+const sbg={tw:'#1DA1F2',ig:'linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)',fb:'#1877F2',yt:'#FF0000'};
+const sbc={tw:'#1DA1F2',ig:'#E1306C',fb:'#1877F2',yt:'#FF0000'};
+function pubSoc(){
+  const p=$('soc-pl').value,h=$('soc-hnd').value||'@ProfAirZw',txt=$('soc-txt').value.trim();
+  if(!txt){showToast('⚠️ Enter post text','var(--warm)');return}
+  injectSoc(p,h,txt,'just now');$('soc-txt').value='';
+  showToast('📡 Post injected into live feed!');closeAdmin();
+}
+function injectSoc(p,h,txt,time){
+  const row=$('social-scroll');if(!row)return;
+  const c=document.createElement('div');c.className=`sc-card ${p} rev`;c.style.borderTopColor=sbc[p];
+  c.style.opacity='0';c.style.transform='translateY(16px)';c.style.transition='opacity .4s,transform .4s';
+  c.innerHTML=`<div class="sc-head"><div class="sc-ico ${p}" style="background:${sbg[p]}">${splat[p]}</div><div class="sc-handle">${h}</div><div class="sc-time" style="margin-left:auto">${time}</div></div><p class="sc-body">${txt}</p><div class="sc-engage"><span class="se">♥ 0</span><span class="se">💬 0</span></div>`;
+  row.insertBefore(c,row.firstChild);
+  requestAnimationFrame(()=>{c.style.opacity='1';c.style.transform='translateY(0)'});
+  bindCur();
+  const cnt=$('feed-count');cnt.textContent=`${row.querySelectorAll('.sc-card,.tag-card').length} POSTS`;
+  let n=0;const ti=setInterval(()=>{n+=Math.floor(Math.random()*6)+1;const se=c.querySelectorAll('.se');if(se[0])se[0].textContent=`♥ ${n}`;if(n>120)clearInterval(ti)},3000);
+}
+
+/* HASHTAG INJECT */
+function pubHashtag(){
+  const src=$('htag-src').value,user=$('htag-user').value||'@user',txt=$('htag-txt').value.trim();
+  if(!txt){showToast('⚠️ Enter the mention text','var(--warm)');return}
+  const row=$('social-scroll');
+  const c=document.createElement('div');c.className='tag-card rev';
+  c.style.opacity='0';c.style.transform='translateY(16px)';c.style.transition='opacity .4s,transform .4s';
+  c.innerHTML=`<div class="tag-source">#PROFAIRZW · MENTION · ${src.toUpperCase()}</div><div class="tag-text">${txt}</div><div class="tag-hashtag">#ProfAirZw</div><div class="tag-user">${user} · just now</div>`;
+  row.insertBefore(c,row.firstChild);
+  requestAnimationFrame(()=>{c.style.opacity='1';c.style.transform='translateY(0)'});
+  $('htag-txt').value='';$('htag-user').value='';
+  const cnt=$('feed-count');cnt.textContent=`${row.querySelectorAll('.sc-card,.tag-card').length} POSTS`;
+  showToast('🔍 #ProfAirZw mention added to feed!');closeAdmin();
+  bindCur();
+}
+
+/* TICKER */
+function renderTkList(){
+  const l=$('tk-list');if(!l)return;
+  l.innerHTML=tkItems.map((t,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:7px 12px;background:rgba(56,189,248,.04);border:1px solid var(--border)"><span style="font-size:12px;color:rgba(232,244,255,.65);flex:1">${t}</span><button onclick="tkItems.splice(${i},1);renderTkList();rebuildTk()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem">×</button></div>`).join('');
+}
+function addTk(){
+  const txt=$('tk-txt').value.trim();if(!txt){showToast('⚠️ Enter ticker text','var(--warm)');return}
+  tkItems.unshift(txt);renderTkList();rebuildTk();$('tk-txt').value='';showToast('✅ Ticker item added!');
+}
+function rebuildTk(){
+  const t=$('ticker-track');if(!t)return;
+  const double=[...tkItems,...tkItems];
+  t.innerHTML=double.map(item=>`<span class="t-item">${item}</span>`).join('');
+}
+
+/* AUTO LIVE SOCIAL SIMULATION */
+const liveSim=[
+  {p:'tw',h:'@ProfAirZw',t:'🌡️ Another hot day in Harare! Keep your AC unit clean for maximum efficiency. #ProfAirZw #StayCool #Zimbabwe'},
+  {p:'ig',h:'@profairzw',t:'Fresh installation complete in Waterfalls 🔵❄️ Midea inverter — silent, powerful, efficient. #ProfAirZw #AC #Harare'},
+  {p:'fb',h:'ProfAirZw',t:'📣 REMINDER: Annual servicing is key. A maintained AC uses 15–25% less electricity. Book yours today. #ProfAirZw'},
+  {p:'tw',h:'@ProfAirZw',t:'⭐ 5-star review from a client in Eastlea: "Arrived on time, installed perfectly, very professional team." That\'s the ProfAirZw standard. 🙏 #ProfAirZw'},
+];
+let simIdx=0;
+setInterval(()=>{
+  const s=liveSim[simIdx%liveSim.length];
+  injectSoc(s.p,s.h,s.t,`${Math.floor(Math.random()*5)+1}m ago`);
+  simIdx++;
+},60000);
+
+/* WELCOME */
+setTimeout(()=>showToast('❄️ Welcome to ProfAirZw — Zimbabwe\'s premier climate specialists'),900);
+</script>
+</body>
+</html>
