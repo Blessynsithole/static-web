@@ -1464,6 +1464,778 @@ setInterval(()=>{
 
 /* WELCOME */
 setTimeout(()=>showToast('❄️ Welcome to ProfAirZw — Zimbabwe\'s premier climate specialists'),900);
+
+/* ════════════════════════════════════════════
+   FEATURE 1 — REAL-TIME TEMPERATURE via Open-Meteo
+   Free, no API key needed, Zimbabwe cities
+════════════════════════════════════════════ */
+const ZW_CITIES = {
+  'Harare':     {lat:-17.83,lon:31.05},
+  'Bulawayo':   {lat:-20.15,lon:28.58},
+  'Mutare':     {lat:-18.97,lon:32.67},
+  'Gweru':      {lat:-19.45,lon:29.82},
+  'Kwekwe':     {lat:-18.93,lon:29.82},
+  'Masvingo':   {lat:-20.07,lon:30.83},
+  'Chinhoyi':   {lat:-17.37,lon:30.20},
+  'Victoria Falls':{lat:-17.93,lon:25.83},
+};
+let currentCity = 'Harare';
+let liveTemps = {};
+let thermoTarget = 22; // user's desired temp
+let ambientReal = 28;  // what it actually is outside
+
+async function fetchCityTemp(city){
+  const c = ZW_CITIES[city];
+  if(!c) return null;
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current_weather=true&hourly=relativehumidity_2m&forecast_days=1`;
+    const r = await fetch(url);
+    const d = await r.json();
+    const t = d?.current_weather?.temperature;
+    const ws = d?.current_weather?.windspeed;
+    const hum = d?.hourly?.relativehumidity_2m?.[new Date().getHours()] || 55;
+    return {temp:Math.round(t), wind:Math.round(ws), humidity:hum, city};
+  } catch(e){ return null; }
+}
+
+async function loadAllTemps(){
+  const city = currentCity;
+  const data = await fetchCityTemp(city);
+  if(data){
+    ambientReal = data.temp;
+    liveTemps[city] = data;
+    updateTempDisplays(data);
+    applyClimateTheme(data.temp);
+  }
+}
+
+function updateTempDisplays(data){
+  // ticker pill
+  const pill = $('temp-pill-txt');
+  if(pill) pill.textContent = `${data.city.toUpperCase()} ${data.temp}°C`;
+  // hero card outdoor
+  const ot = $('outdoor-temp');
+  if(ot) ot.textContent = data.temp+'°C';
+  // climate control widget
+  const realTemp = $('cc-real-temp');
+  if(realTemp) realTemp.textContent = data.temp+'°C';
+  const realHum = $('cc-humidity');
+  if(realHum) realHum.textContent = data.humidity+'%';
+  const realWind = $('cc-wind');
+  if(realWind) realWind.textContent = data.wind+' km/h';
+  // city label
+  const cityLbl = $('cc-city-label');
+  if(cityLbl) cityLbl.textContent = data.city;
+  // update hero card hc-stat humidity
+  const humStat = document.querySelector('#hc-hum-val');
+  if(humStat) humStat.textContent = data.humidity+'%';
+}
+
+// Fetch every 10 minutes
+loadAllTemps();
+setInterval(loadAllTemps, 600000);
+
+/* ════════════════════════════════════════════
+   FEATURE 2 — CLIMATE THERMOSTAT + THEME ENGINE
+════════════════════════════════════════════ */
+const THEMES = {
+  arctic: {
+    name:'ARCTIC MODE',
+    emoji:'🧊',
+    range:[0,18],
+    '--void':'#01060e',
+    '--deep':'#030c1a',
+    '--surface':'#051020',
+    '--card':'#071528',
+    '--card2':'#091c32',
+    '--border':'rgba(150,230,255,0.10)',
+    '--border2':'rgba(150,230,255,0.30)',
+    '--cyan':'#a0e8ff',
+    '--cyan-l':'#c8f4ff',
+    '--cyan-d':'#0ea5e9',
+    '--white':'#e0f6ff',
+    '--muted':'rgba(200,244,255,0.35)',
+    '--muted2':'rgba(200,244,255,0.60)',
+    particleColor:'rgba(200,244,255,1)',
+    wispColors:['rgba(100,220,255,.4)','rgba(50,160,220,.25)','rgba(150,230,255,.2)'],
+    bg:'radial-gradient(ellipse 80% 60% at 20% -5%,rgba(0,80,160,.55) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 85% 15%,rgba(0,100,200,.3) 0%,transparent 50%)',
+    description:'Below 18°C — Arctic conditions',
+    tickerColor:'linear-gradient(90deg,#0284c7,#38bdf8,#0284c7)',
+    heroFilter:'brightness(.18) saturate(.3) hue-rotate(200deg)',
+    label:'❄️ Arctic Cool',
+  },
+  cool: {
+    name:'COOL MODE',
+    emoji:'❄️',
+    range:[18,24],
+    '--void':'#03080f',
+    '--deep':'#060d18',
+    '--surface':'#0a1525',
+    '--card':'#0e1d2f',
+    '--card2':'#112238',
+    '--border':'rgba(100,200,255,0.08)',
+    '--border2':'rgba(120,210,255,0.22)',
+    '--cyan':'#38bdf8',
+    '--cyan-l':'#7dd3fc',
+    '--cyan-d':'#0284c7',
+    '--white':'#e8f4ff',
+    '--muted':'rgba(168,230,255,0.35)',
+    '--muted2':'rgba(168,230,255,0.55)',
+    particleColor:'rgba(168,230,255,1)',
+    wispColors:['rgba(56,189,248,.3)','rgba(14,165,233,.2)','rgba(100,200,255,.15)'],
+    bg:'radial-gradient(ellipse 80% 60% at 15% -10%,rgba(14,80,140,.35) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 90% 10%,rgba(4,120,180,.2) 0%,transparent 50%)',
+    description:'18–24°C — Perfect comfort zone',
+    tickerColor:'linear-gradient(90deg,#0284c7,#0ea5e9,#0284c7)',
+    heroFilter:'brightness(.22) saturate(.4) hue-rotate(180deg)',
+    label:'❄️ Comfortable Cool',
+  },
+  mild: {
+    name:'MILD MODE',
+    emoji:'🌤',
+    range:[24,29],
+    '--void':'#080c08',
+    '--deep':'#0d140a',
+    '--surface':'#131c0e',
+    '--card':'#192410',
+    '--card2':'#1e2c12',
+    '--border':'rgba(180,230,120,0.10)',
+    '--border2':'rgba(160,220,80,0.28)',
+    '--cyan':'#a3e635',
+    '--cyan-l':'#bef264',
+    '--cyan-d':'#65a30d',
+    '--white':'#f0fde4',
+    '--muted':'rgba(180,230,120,0.35)',
+    '--muted2':'rgba(180,230,120,0.60)',
+    particleColor:'rgba(180,230,100,0.8)',
+    wispColors:['rgba(120,180,60,.25)','rgba(80,160,40,.18)','rgba(150,210,80,.15)'],
+    bg:'radial-gradient(ellipse 80% 60% at 20% -5%,rgba(60,120,20,.4) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 80% 15%,rgba(40,100,10,.25) 0%,transparent 50%)',
+    description:'24–29°C — Warm & pleasant',
+    tickerColor:'linear-gradient(90deg,#65a30d,#a3e635,#65a30d)',
+    heroFilter:'brightness(.22) saturate(.5) hue-rotate(80deg)',
+    label:'🌤 Mild Warmth',
+  },
+  warm: {
+    name:'WARM MODE',
+    emoji:'☀️',
+    range:[29,34],
+    '--void':'#100800',
+    '--deep':'#1a0e00',
+    '--surface':'#221400',
+    '--card':'#2c1a00',
+    '--card2':'#341f00',
+    '--border':'rgba(255,180,60,0.10)',
+    '--border2':'rgba(255,160,30,0.28)',
+    '--cyan':'#f59e0b',
+    '--cyan-l':'#fbbf24',
+    '--cyan-d':'#d97706',
+    '--white':'#fff7ed',
+    '--muted':'rgba(255,200,100,0.38)',
+    '--muted2':'rgba(255,200,100,0.62)',
+    particleColor:'rgba(255,200,80,0.6)',
+    wispColors:['rgba(240,140,30,.3)','rgba(200,100,20,.2)','rgba(255,160,40,.18)'],
+    bg:'radial-gradient(ellipse 80% 60% at 20% -5%,rgba(180,80,0,.5) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 80% 15%,rgba(200,100,0,.3) 0%,transparent 50%)',
+    description:'29–34°C — Getting hot!',
+    tickerColor:'linear-gradient(90deg,#d97706,#f59e0b,#d97706)',
+    heroFilter:'brightness(.2) saturate(.5) hue-rotate(0deg)',
+    label:'☀️ Warm — Service Recommended',
+  },
+  heat: {
+    name:'HEAT MODE',
+    emoji:'🔥',
+    range:[34,100],
+    '--void':'#140300',
+    '--deep':'#1f0500',
+    '--surface':'#280600',
+    '--card':'#330800',
+    '--card2':'#3d0900',
+    '--border':'rgba(255,80,20,0.12)',
+    '--border2':'rgba(255,60,10,0.35)',
+    '--cyan':'#ef4444',
+    '--cyan-l':'#f87171',
+    '--cyan-d':'#dc2626',
+    '--white':'#fff1ee',
+    '--muted':'rgba(255,150,100,0.38)',
+    '--muted2':'rgba(255,150,100,0.65)',
+    particleColor:'rgba(255,120,60,0.5)',
+    wispColors:['rgba(220,50,10,.35)','rgba(180,30,5,.22)','rgba(255,80,20,.18)'],
+    bg:'radial-gradient(ellipse 80% 60% at 20% -5%,rgba(200,30,0,.65) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 80% 15%,rgba(180,10,0,.4) 0%,transparent 50%)',
+    description:'34°C+ — CRITICAL HEAT — Book Emergency Service!',
+    tickerColor:'linear-gradient(90deg,#dc2626,#ef4444,#dc2626)',
+    heroFilter:'brightness(.18) saturate(.7) hue-rotate(320deg)',
+    label:'🔥 Extreme Heat — Call ProfAirZw Now!',
+  }
+};
+
+let currentTheme = 'cool';
+
+function getThemeForTemp(t){
+  if(t < 18) return 'arctic';
+  if(t < 24) return 'cool';
+  if(t < 29) return 'mild';
+  if(t < 34) return 'warm';
+  return 'heat';
+}
+
+function applyClimateTheme(temp, animate=true){
+  const key = getThemeForTemp(temp);
+  if(key === currentTheme && animate) return; // no change
+  currentTheme = key;
+  const T = THEMES[key];
+  const root = document.documentElement;
+  // Apply CSS vars
+  Object.entries(T).forEach(([k,v])=>{ if(k.startsWith('--')) root.style.setProperty(k,v); });
+  // Body bg gradient
+  document.body.style.setProperty('--bg-grad', T.bg);
+  // Update wisps
+  const wisps = document.querySelectorAll('.wisp');
+  T.wispColors.forEach((c,i)=>{ if(wisps[i]) wisps[i].style.background=c; });
+  // Update ticker
+  const ticker = document.querySelector('.ticker');
+  if(ticker) ticker.style.background = T.tickerColor;
+  // Hero images
+  document.querySelectorAll('.hero-bg img, .nc img, .pj-item img, .sg-item img').forEach(img=>{ img.style.filter = T.heroFilter; });
+  // Particle color stored
+  window._particleColor = T.particleColor;
+  // Update climate widget display
+  const themeLabel = $('cc-theme-label');
+  if(themeLabel) themeLabel.textContent = T.label;
+  const themeEmoji = $('cc-theme-emoji');
+  if(themeEmoji) themeEmoji.textContent = T.emoji;
+  // Ticker item symbol
+  document.querySelectorAll('.t-item').forEach(el=>{ el.style.setProperty('--ti-before', T.emoji==='🔥'?'"🔥"':T.emoji==='☀️'?'"☀️"':'"❄"'); });
+  // Flash body for visual feedback
+  if(animate){
+    document.body.style.transition='background .8s ease';
+    showToast(`${T.emoji} ${T.name} activated — ${T.description}`);
+  }
+  // Update thermostat ring color
+  updateThermoRing(temp);
+}
+
+function updateThermoRing(temp){
+  const ring = $('thermo-ring');
+  if(!ring) return;
+  const pct = Math.min(100, Math.max(0, ((temp-10)/(50-10))*100));
+  const angle = (pct/100)*280 - 140; // -140 to +140 degrees
+  const T = THEMES[getThemeForTemp(temp)];
+  ring.style.setProperty('--ring-color', T['--cyan']||'#38bdf8');
+  ring.style.setProperty('--ring-pct', pct+'%');
+}
+
+/* THERMOSTAT WIDGET INTERACTIONS */
+function thermoUp(){
+  thermoTarget = Math.min(40, thermoTarget+1);
+  updateThermoWidget();
+  applyClimateTheme(thermoTarget);
+}
+function thermoDown(){
+  thermoTarget = Math.max(10, thermoTarget-1);
+  updateThermoWidget();
+  applyClimateTheme(thermoTarget);
+}
+function updateThermoWidget(){
+  const disp = $('thermo-temp-disp');
+  if(disp) disp.textContent = thermoTarget;
+  const diff = thermoTarget - ambientReal;
+  const status = $('thermo-status');
+  if(status){
+    if(diff < -3) status.textContent = '❄️ Cooling — ' + Math.abs(diff) + '° below ambient';
+    else if(diff > 3) status.textContent = '🔥 Heating — ' + diff + '° above ambient';
+    else status.textContent = '✓ At comfort zone';
+  }
+  updateThermoRing(thermoTarget);
+  // ripple effect
+  const ripple = $('thermo-ripple');
+  if(ripple){ ripple.style.animation='none'; setTimeout(()=>ripple.style.animation='thermoRipple .5s ease',10); }
+}
+function setThermoCity(city){
+  currentCity = city;
+  loadAllTemps();
+  showToast(`📍 Loading live temperature for ${city}…`);
+}
+function thermoSliderChange(val){
+  thermoTarget = parseInt(val);
+  updateThermoWidget();
+  applyClimateTheme(thermoTarget);
+}
+
+/* ════════════════════════════════════════════
+   FEATURE 3 — WHATSAPP BUSINESS API
+   Direct to +263780000000
+════════════════════════════════════════════ */
+const WA_NUMBER = '263780000000'; // business number without +
+
+function sendWhatsApp(msgOverride){
+  const name = $('cf-name')?.value?.trim() || '';
+  const phone = $('cf-phone')?.value?.trim() || '';
+  const service = $('cf-service')?.value || 'General Enquiry';
+  const size = $('cf-size')?.value || 'Not specified';
+  const msg = $('cf-msg')?.value?.trim() || '';
+  const city = $('wa-city')?.value || currentCity;
+
+  const text = msgOverride || `Hello ProfAirZw! 👋
+
+*New Enquiry from Website*
+━━━━━━━━━━━━━━━━━
+👤 *Name:* ${name||'Not provided'}
+📞 *Phone:* ${phone||'See WhatsApp number'}
+📍 *Location:* ${city}
+🛠️ *Service Needed:* ${service}
+🏠 *Property Size:* ${size}
+🌡️ *Current Temp (${city}):* ${ambientReal}°C
+━━━━━━━━━━━━━━━━━
+📝 *Message:* ${msg||'Please contact me for a free assessment.'}
+━━━━━━━━━━━━━━━━━
+_Sent via ProfAirZw Website_`;
+
+  const encoded = encodeURIComponent(text);
+  window.open(`https://api.whatsapp.com/send?phone=${WA_NUMBER}&text=${encoded}`, '_blank');
+  showToast('✅ Opening WhatsApp — your message is ready to send!');
+}
+
+function quickWhatsApp(service){
+  const text = `Hello ProfAirZw! 👋
+
+I'm interested in *${service}*.
+📍 Location: ${currentCity}
+🌡️ Current temperature: ${ambientReal}°C
+
+Please contact me for a free assessment.
+_Sent via ProfAirZw Website_`;
+  const encoded = encodeURIComponent(text);
+  window.open(`https://api.whatsapp.com/send?phone=${WA_NUMBER}&text=${encoded}`, '_blank');
+  showToast(`💬 Opening WhatsApp for ${service}…`);
+}
+
+// Override form submit to send via WhatsApp
+function submitForm(){
+  const name = $('cf-name')?.value?.trim();
+  const phone = $('cf-phone')?.value?.trim();
+  const service = $('cf-service')?.value;
+  if(!name||!phone){ showToast('⚠️ Please fill in your name and phone number','var(--warm)'); return; }
+  if(!service){ showToast('⚠️ Please select a service','var(--warm)'); return; }
+  sendWhatsApp();
+}
+
+/* ════════════════════════════════════════════
+   FEATURE 4 — LANDING PAGE / SPLASH SCREEN
+════════════════════════════════════════════ */
+(function buildLanding(){
+  const lp = document.createElement('div');
+  lp.id = 'landing';
+  lp.innerHTML = `
+  <canvas id="lp-canvas"></canvas>
+  <div id="lp-content">
+    <div id="lp-logo-wrap">
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" id="lp-snowflake">
+        <circle cx="40" cy="40" r="38" fill="rgba(56,189,248,0.08)" stroke="rgba(56,189,248,0.5)" stroke-width="1.5"/>
+        <line x1="40" y1="8" x2="40" y2="72" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+        <line x1="8" y1="40" x2="72" y2="40" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+        <line x1="17" y1="17" x2="63" y2="63" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+        <line x1="63" y1="17" x2="17" y2="63" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+        <line x1="40" y1="8" x2="32" y2="18" stroke="#38bdf8" stroke-width="2"/><line x1="40" y1="8" x2="48" y2="18" stroke="#38bdf8" stroke-width="2"/>
+        <line x1="40" y1="72" x2="32" y2="62" stroke="#38bdf8" stroke-width="2"/><line x1="40" y1="72" x2="48" y2="62" stroke="#38bdf8" stroke-width="2"/>
+        <line x1="8" y1="40" x2="18" y2="32" stroke="#38bdf8" stroke-width="2"/><line x1="8" y1="40" x2="18" y2="48" stroke="#38bdf8" stroke-width="2"/>
+        <line x1="72" y1="40" x2="62" y2="32" stroke="#38bdf8" stroke-width="2"/><line x1="72" y1="40" x2="62" y2="48" stroke="#38bdf8" stroke-width="2"/>
+        <circle cx="40" cy="40" r="7" fill="#38bdf8" opacity=".9"/>
+        <circle cx="40" cy="40" r="12" fill="none" stroke="#38bdf8" stroke-width="1" opacity=".35"/>
+      </svg>
+    </div>
+    <div id="lp-tagline">
+      <span id="lp-word1">COOL.</span>
+      <span id="lp-word2">PRECISE.</span>
+      <span id="lp-word3">ZIMBABWE.</span>
+    </div>
+    <div id="lp-brand">ProfAirZw</div>
+    <div id="lp-sub">Climate Solutions</div>
+    <div id="lp-temp-row">
+      <span id="lp-city-temp">Loading live temperature…</span>
+    </div>
+    <div id="lp-progress-wrap">
+      <div id="lp-progress-bar"></div>
+    </div>
+    <div id="lp-skip" onclick="closeLanding()">SKIP INTRO</div>
+  </div>
+  <div id="lp-overlay"></div>
+  `;
+  document.body.insertBefore(lp, document.body.firstChild);
+
+  // Particle canvas for landing
+  const lc = document.getElementById('lp-canvas');
+  const ltx = lc.getContext('2d');
+  lc.width = window.innerWidth; lc.height = window.innerHeight;
+  const lparts = [];
+  for(let i=0;i<60;i++) lparts.push({x:Math.random()*lc.width,y:Math.random()*lc.height,vx:(Math.random()-.5)*.4,vy:Math.random()*.5+.1,s:Math.random()*2+.5,o:Math.random()*.5+.1});
+  function drawLP(){
+    ltx.clearRect(0,0,lc.width,lc.height);
+    lparts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.y>lc.height)p.y=0;if(p.x<0)p.x=lc.width;if(p.x>lc.width)p.x=0;ltx.beginPath();ltx.arc(p.x,p.y,p.s,0,Math.PI*2);ltx.fillStyle=`rgba(168,230,255,${p.o})`;ltx.fill();});
+    requestAnimationFrame(drawLP);
+  }
+  drawLP();
+
+  // Animate words in
+  let delay = 400;
+  ['lp-word1','lp-word2','lp-word3'].forEach((id,i)=>{
+    setTimeout(()=>{const el=$(id);if(el){el.style.opacity='1';el.style.transform='translateY(0)'}},delay+i*320);
+  });
+  setTimeout(()=>{ [$('lp-brand'),$('lp-sub')].forEach(el=>{if(el){el.style.opacity='1';el.style.transform='translateY(0)'}}) }, 1600);
+
+  // Load landing temp
+  fetchCityTemp('Harare').then(d=>{
+    const el=$('lp-city-temp');
+    if(el&&d) el.textContent=`Harare is ${d.temp}°C right now — let us handle your comfort`;
+  });
+
+  // Progress bar → auto close
+  const pb = $('lp-progress-bar');
+  let prog=0;
+  const progTimer = setInterval(()=>{
+    prog += 100/40; // 4s total
+    if(pb) pb.style.width = Math.min(100,prog)+'%';
+    if(prog >= 100){ clearInterval(progTimer); closeLanding(); }
+  },100);
+
+  window._closeLanding = false;
+})();
+
+function closeLanding(){
+  if(window._closeLanding) return;
+  window._closeLanding = true;
+  const lp = $('landing');
+  if(!lp) return;
+  lp.style.transition = 'opacity .8s ease, transform .8s ease';
+  lp.style.opacity = '0';
+  lp.style.transform = 'scale(1.04)';
+  setTimeout(()=>{ lp.style.display='none'; loadAllTemps(); },800);
+}
 </script>
+
+<!-- ══════════════════════════════════════════
+     LANDING PAGE STYLES
+══════════════════════════════════════════ -->
+<style>
+#landing{
+  position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#010a18 0%,#020e22 40%,#031020 100%);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+#lp-canvas{position:absolute;inset:0;pointer-events:none}
+#lp-overlay{position:absolute;inset:0;background:radial-gradient(ellipse 70% 70% at 50% 50%,transparent 30%,rgba(1,6,15,.7) 100%);pointer-events:none}
+#lp-content{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.75rem}
+#lp-logo-wrap{margin-bottom:.5rem}
+#lp-snowflake{animation:lpSpin 12s linear infinite, lpPulse 3s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(56,189,248,.6))}
+@keyframes lpSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes lpPulse{0%,100%{filter:drop-shadow(0 0 20px rgba(56,189,248,.4))}50%{filter:drop-shadow(0 0 50px rgba(56,189,248,.9))}}
+#lp-tagline{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-bottom:.25rem}
+#lp-tagline span{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,7vw,5.5rem);letter-spacing:.08em;color:#38bdf8;opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease;text-shadow:0 0 40px rgba(56,189,248,.5)}
+#lp-tagline span:nth-child(2){color:rgba(56,189,248,.65)}
+#lp-tagline span:nth-child(3){color:rgba(56,189,248,.35)}
+#lp-brand{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,3vw,2.2rem);letter-spacing:.3em;color:rgba(255,255,255,.9);opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+#lp-sub{font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;letter-spacing:.32em;color:rgba(56,189,248,.55);opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease;text-transform:uppercase}
+#lp-temp-row{margin-top:.5rem;font-family:'Outfit',sans-serif;font-size:12px;color:rgba(168,230,255,.45);letter-spacing:.1em}
+#lp-progress-wrap{width:240px;height:1px;background:rgba(56,189,248,.12);margin-top:1.5rem;overflow:hidden}
+#lp-progress-bar{height:100%;background:rgba(56,189,248,.6);width:0;transition:width .1s linear}
+#lp-skip{margin-top:.75rem;font-size:9px;font-weight:700;letter-spacing:.22em;color:rgba(56,189,248,.25);cursor:pointer;text-transform:uppercase;padding:6px 14px;border:1px solid rgba(56,189,248,.1);transition:all .2s}
+#lp-skip:hover{color:rgba(56,189,248,.6);border-color:rgba(56,189,248,.3)}
+
+/* ══════════════════════════
+   CLIMATE CONTROL WIDGET
+══════════════════════════ */
+#climate-widget{
+  position:fixed;bottom:5.5rem;left:2rem;z-index:9950;
+  width:300px;background:rgba(6,13,24,.95);border:1px solid var(--border2);
+  backdrop-filter:blur(24px);transition:all .3s;
+  box-shadow:0 8px 40px rgba(0,0,0,.6),0 0 0 1px rgba(56,189,248,.08) inset;
+  overflow:hidden;
+}
+#climate-widget::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+#cw-toggle{
+  width:100%;padding:14px 16px;background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;gap:12px;color:var(--white);font-family:var(--B);
+  text-align:left;transition:background .2s;
+}
+#cw-toggle:hover{background:rgba(56,189,248,.05)}
+#cw-icon{font-size:1.2rem;width:28px;text-align:center;flex-shrink:0}
+#cw-label{font-size:11px;font-weight:700;letter-spacing:.12em;flex:1;text-align:left;color:var(--muted2)}
+#cw-live-temp{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--cyan);letter-spacing:.08em}
+#cw-body{display:none;padding:0 16px 16px;border-top:1px solid var(--border)}
+
+/* THERMOSTAT RING */
+.thermo-wrap{display:flex;flex-direction:column;align-items:center;padding:1.25rem 0}
+.thermo-ring-outer{position:relative;width:150px;height:150px}
+#thermo-svg{width:150px;height:150px}
+.thermo-track{fill:none;stroke:rgba(56,189,248,.1);stroke-width:8;stroke-linecap:round}
+#thermo-arc{fill:none;stroke:var(--cyan);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .5s ease,stroke .5s ease;filter:drop-shadow(0 0 6px var(--cyan))}
+.thermo-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+#thermo-temp-disp{font-family:'Bebas Neue',sans-serif;font-size:2.6rem;color:var(--white);line-height:1}
+.thermo-unit{font-size:11px;color:var(--muted2);letter-spacing:.1em}
+#thermo-ripple{position:absolute;inset:0;border-radius:50%;background:transparent;animation:thermoRipple .5s ease}
+@keyframes thermoRipple{0%{box-shadow:0 0 0 0 rgba(56,189,248,.3)}100%{box-shadow:0 0 0 24px rgba(56,189,248,0)}}
+.thermo-btns{display:flex;gap:10px;margin-top:.5rem}
+.t-btn{width:42px;height:42px;border-radius:50%;background:rgba(56,189,248,.1);border:1px solid var(--border2);color:var(--cyan);font-size:1.3rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.t-btn:hover{background:rgba(56,189,248,.22);transform:scale(1.08)}
+#thermo-slider{width:100%;-webkit-appearance:none;height:3px;background:rgba(56,189,248,.15);outline:none;border-radius:99px;margin:12px 0 4px}
+#thermo-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--cyan);cursor:pointer;box-shadow:0 0 10px rgba(56,189,248,.5)}
+#thermo-status{font-size:11px;color:var(--muted2);text-align:center;margin-top:4px;min-height:18px}
+
+/* City selector */
+.cw-cities{display:flex;gap:5px;flex-wrap:wrap;padding:8px 0}
+.cw-city{font-size:9.5px;font-weight:700;letter-spacing:.1em;padding:5px 10px;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .2s;background:none}
+.cw-city:hover,.cw-city.active{border-color:var(--border2);color:var(--cyan);background:rgba(56,189,248,.07)}
+
+/* Live stats strip */
+.cw-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:8px}
+.cw-stat{text-align:center;padding:8px 4px;background:rgba(56,189,248,.05);border:1px solid var(--border)}
+.cw-sv{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--cyan)}
+.cw-sl{font-size:8px;font-weight:700;letter-spacing:.14em;color:var(--muted);margin-top:2px}
+
+/* theme badge */
+#cc-theme-label{font-size:10px;font-weight:700;color:var(--cyan);text-align:center;padding:6px;border:1px solid var(--border2);margin-top:6px;letter-spacing:.1em;background:rgba(56,189,248,.05)}
+
+/* WA float button */
+#wa-float{
+  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);z-index:9960;
+  background:#25D366;color:#fff;border:none;cursor:pointer;
+  display:flex;align-items:center;gap:10px;padding:13px 24px;
+  font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;letter-spacing:.07em;
+  box-shadow:0 4px 24px rgba(37,211,102,.45);
+  clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);
+  transition:all .25s;animation:waPop 3s ease-in-out infinite;
+}
+#wa-float:hover{background:#1ebe5d;transform:translateX(-50%) translateY(-2px);box-shadow:0 8px 32px rgba(37,211,102,.6)}
+@keyframes waPop{0%,100%{box-shadow:0 4px 24px rgba(37,211,102,.4)}50%{box-shadow:0 4px 32px rgba(37,211,102,.7)}}
+#wa-float svg{width:20px;height:20px;flex-shrink:0}
+
+/* gallery additions */
+.photo-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:3px}
+.pg-item{position:relative;overflow:hidden;cursor:pointer;background:var(--card);aspect-ratio:1.4}
+.pg-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease,filter .35s;filter:brightness(.65) saturate(.6)}
+.pg-item:hover img{transform:scale(1.07);filter:brightness(.45)}
+.pg-over{position:absolute;inset:0;background:linear-gradient(to top,rgba(3,8,15,.95),transparent 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:14px;opacity:0;transition:opacity .3s}
+.pg-item:hover .pg-over{opacity:1}
+.pg-cat{font-size:8px;font-weight:700;letter-spacing:.2em;color:var(--cyan);margin-bottom:4px}
+.pg-cap{font-size:12px;font-weight:600}
+</style>
+
+<!-- ═══════════════════════════════════════
+     CLIMATE CONTROL WIDGET (DOM)
+═══════════════════════════════════════ -->
+<div id="climate-widget">
+  <button id="cw-toggle" onclick="toggleCW()">
+    <span id="cw-icon">🌡️</span>
+    <span id="cw-label">CLIMATE CONTROL</span>
+    <span id="cw-live-temp">—°C</span>
+  </button>
+  <div id="cw-body">
+    <!-- City selector -->
+    <div class="eyebrow" style="padding-top:12px;margin-bottom:6px">SELECT YOUR CITY</div>
+    <div class="cw-cities" id="cw-city-row"></div>
+    <!-- Thermostat -->
+    <div class="thermo-wrap">
+      <div class="thermo-ring-outer">
+        <div id="thermo-ripple"></div>
+        <svg id="thermo-svg" viewBox="0 0 150 150">
+          <circle class="thermo-track" cx="75" cy="75" r="58" stroke-dasharray="283" stroke-dashoffset="0" transform="rotate(130,75,75)"/>
+          <circle id="thermo-arc" cx="75" cy="75" r="58" stroke-dasharray="283" stroke-dashoffset="283" transform="rotate(130,75,75)"/>
+        </svg>
+        <div class="thermo-center">
+          <div id="thermo-temp-disp">22</div>
+          <div class="thermo-unit">°C TARGET</div>
+        </div>
+      </div>
+      <div class="thermo-btns">
+        <button class="t-btn" onclick="thermoDown()">−</button>
+        <button class="t-btn" onclick="thermoUp()">+</button>
+      </div>
+      <input type="range" id="thermo-slider" min="10" max="40" value="22" oninput="thermoSliderChange(this.value)">
+      <div id="thermo-status">✓ At comfort zone</div>
+    </div>
+    <!-- Live stats -->
+    <div class="eyebrow" style="margin-bottom:6px">LIVE OUTDOOR CONDITIONS — <span id="cc-city-label">HARARE</span></div>
+    <div class="cw-stats">
+      <div class="cw-stat"><div class="cw-sv" id="cc-real-temp">—°C</div><div class="cw-sl">OUTDOOR</div></div>
+      <div class="cw-stat"><div class="cw-sv" id="cc-humidity">—%</div><div class="cw-sl">HUMIDITY</div></div>
+      <div class="cw-stat"><div class="cw-sv" id="cc-wind">— km/h</div><div class="cw-sl">WIND</div></div>
+    </div>
+    <div id="cc-theme-label">❄️ Comfortable Cool</div>
+    <div id="cc-theme-emoji" style="display:none">❄️</div>
+    <!-- Quick book -->
+    <button class="btn btn-ice" style="width:100%;margin-top:10px;font-size:11px" onclick="quickWhatsApp('AC Service for '+currentCity+' — Temperature Check')">📲 Book Service via WhatsApp</button>
+  </div>
+</div>
+
+<!-- WA FLOAT BUTTON -->
+<div id="wa-float" onclick="quickWhatsApp('General Enquiry — website visitor')">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.116 1.524 5.843L0 24l6.356-1.487A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.017-1.381l-.36-.214-3.732.873.946-3.619-.233-.373A9.778 9.778 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/></svg>
+  Chat with ProfAirZw
+</div>
+
+<!-- ADDED PROJECT PHOTOS SECTION -->
+<div class="wrap tight" id="photos-sec" style="padding-bottom:0">
+  <div class="sh">
+    <div class="sh-l"><div class="eyebrow">OUR WORK</div><div class="sh-title">Gallery</div></div>
+    <button class="btn btn-ghost btn-sm" onclick="quickWhatsApp('Project enquiry — I saw your gallery')">📲 Book Similar Project</button>
+  </div>
+  <div class="photo-gallery">
+    <div class="pg-item rev" onclick="openLB(galleryPhotos,0)">
+      <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=700&q=80&auto=format&fit=crop" alt="VRF installation">
+      <div class="pg-over"><div class="pg-cat">COMMERCIAL · VRF</div><div class="pg-cap">Multi-unit VRF System — Office Complex, Harare</div></div>
+    </div>
+    <div class="pg-item rev" onclick="openLB(galleryPhotos,1)">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80&auto=format&fit=crop" alt="Split unit">
+      <div class="pg-over"><div class="pg-cat">RESIDENTIAL · SPLIT UNIT</div><div class="pg-cap">Daikin 18000 BTU Inverter — Avondale Residence</div></div>
+    </div>
+    <div class="pg-item rev" onclick="openLB(galleryPhotos,2)">
+      <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=700&q=80&auto=format&fit=crop" alt="Duct system">
+      <div class="pg-over"><div class="pg-cat">COMMERCIAL · DUCTED</div><div class="pg-cap">Full Ducted System — Retail Centre, CBD</div></div>
+    </div>
+    <div class="pg-item rev" onclick="openLB(galleryPhotos,3)">
+      <img src="https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=700&q=80&auto=format&fit=crop" alt="Cold room">
+      <div class="pg-over"><div class="pg-cat">COLD ROOM · INDUSTRIAL</div><div class="pg-cap">Walk-in Chiller — Supermarket, Harare</div></div>
+    </div>
+    <div class="pg-item rev" onclick="openLB(galleryPhotos,4)">
+      <img src="https://images.unsplash.com/photo-1581093577421-f561a654a353?w=700&q=80&auto=format&fit=crop" alt="Residential install">
+      <div class="pg-over"><div class="pg-cat">RESIDENTIAL · INSTALLATION</div><div class="pg-cap">LG Dual Cool — Borrowdale Home</div></div>
+    </div>
+    <div class="pg-item rev" onclick="openLB(galleryPhotos,5)">
+      <img src="https://images.unsplash.com/photo-1607400201889-565b1ee75f8e?w=700&q=80&auto=format&fit=crop" alt="Ceiling cassette">
+      <div class="pg-over"><div class="pg-cat">COMMERCIAL · CASSETTE</div><div class="pg-cap">Samsung Ceiling Cassette — Hotel Lobby</div></div>
+    </div>
+    <div class="pg-item rev" onclick="openLB(galleryPhotos,6)">
+      <img src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=700&q=80&auto=format&fit=crop" alt="Outdoor units">
+      <div class="pg-over"><div class="pg-cat">INSTALLATION · OUTDOOR</div><div class="pg-cap">Condenser Array — Commercial Rooftop</div></div>
+    </div>
+    <div class="pg-item rev" onclick="openLB(galleryPhotos,7)">
+      <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=700&q=80&auto=format&fit=crop" alt="Servicing">
+      <div class="pg-over"><div class="pg-cat">MAINTENANCE · SERVICING</div><div class="pg-cap">Annual Deep-Clean Service — Eastlea</div></div>
+    </div>
+    <div class="pg-item rev" onclick="openLB(galleryPhotos,8)">
+      <img src="https://images.unsplash.com/photo-1562183241-b937e95585b6?w=700&q=80&auto=format&fit=crop" alt="Server room cooling">
+      <div class="pg-over"><div class="pg-cat">DATA CENTRE · PRECISION</div><div class="pg-cap">Server Room Precision Cooling — Mount Pleasant</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════
+   GALLERY PHOTOS DATA FOR LIGHTBOX
+══════════════════════════════ */
+const galleryPhotos = [
+  {src:'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=1200&q=90&auto=format&fit=crop',cap:'Multi-unit VRF System — Office Complex, Harare'},
+  {src:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=90&auto=format&fit=crop',cap:'Daikin 18000 BTU Inverter — Avondale Residence'},
+  {src:'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1200&q=90&auto=format&fit=crop',cap:'Full Ducted System — Retail Centre, CBD'},
+  {src:'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=1200&q=90&auto=format&fit=crop',cap:'Walk-in Chiller — Supermarket, Harare'},
+  {src:'https://images.unsplash.com/photo-1581093577421-f561a654a353?w=1200&q=90&auto=format&fit=crop',cap:'LG Dual Cool — Borrowdale Home'},
+  {src:'https://images.unsplash.com/photo-1607400201889-565b1ee75f8e?w=1200&q=90&auto=format&fit=crop',cap:'Samsung Ceiling Cassette — Hotel Lobby'},
+  {src:'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=1200&q=90&auto=format&fit=crop',cap:'Condenser Array — Commercial Rooftop'},
+  {src:'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200&q=90&auto=format&fit=crop',cap:'Annual Deep-Clean Service — Eastlea'},
+  {src:'https://images.unsplash.com/photo-1562183241-b937e95585b6?w=1200&q=90&auto=format&fit=crop',cap:'Server Room Precision Cooling — Mount Pleasant'},
+];
+
+/* ══════════════════════════════
+   CLIMATE WIDGET INIT
+══════════════════════════════ */
+function toggleCW(){
+  const body = $('cw-body');
+  if(!body) return;
+  body.style.display = body.style.display==='block' ? 'none' : 'block';
+}
+
+// Build city buttons
+(function buildCities(){
+  const row = $('cw-city-row');
+  if(!row) return;
+  row.innerHTML = Object.keys(ZW_CITIES).map(city =>
+    `<button class="cw-city${city===currentCity?' active':''}" onclick="setThermoCity('${city}');document.querySelectorAll('.cw-city').forEach(b=>{b.classList.remove('active')});this.classList.add('active')">${city}</button>`
+  ).join('');
+})();
+
+// Init thermostat SVG arc
+(function initThermoArc(){
+  const arc = $('thermo-arc');
+  if(!arc) return;
+  const circumference = 2 * Math.PI * 58;
+  arc.style.strokeDasharray = circumference;
+  function setArc(temp){
+    const pct = Math.min(100, Math.max(0, ((temp-10)/(40-10))*100));
+    const offset = circumference - (circumference * pct * 0.78 / 100); // 280deg arc
+    arc.style.strokeDashoffset = offset;
+    const T = THEMES[getThemeForTemp(temp)];
+    arc.style.stroke = T['--cyan'] || '#38bdf8';
+    arc.style.filter = `drop-shadow(0 0 6px ${T['--cyan']||'#38bdf8'})`;
+  }
+  window._setThermoArc = setArc;
+  setArc(thermoTarget);
+  // Update on thermoUp/Down
+  const origUp = window.thermoUp;
+  const origDown = window.thermoDown;
+  const origSlider = window.thermoSliderChange;
+  window._origThermoUp = thermoUp;
+  // Wrap to update arc
+  const _thermoUp = thermoUp;
+  window.thermoUp = function(){ _thermoUp(); window._setThermoArc(thermoTarget); $('thermo-slider').value=thermoTarget; };
+  const _thermoDown = thermoDown;
+  window.thermoDown = function(){ _thermoDown(); window._setThermoArc(thermoTarget); $('thermo-slider').value=thermoTarget; };
+  const _thermoSlider = thermoSliderChange;
+  window.thermoSliderChange = function(val){ _thermoSlider(val); window._setThermoArc(parseInt(val)); };
+})();
+
+// Live temp → update cw-live-temp pill
+setInterval(()=>{
+  const lt = $('cw-live-temp');
+  if(lt && ambientReal) lt.textContent = ambientReal+'°C';
+}, 5000);
+
+/* Update page bg on body */
+const _origApply = applyClimateTheme;
+window.applyClimateTheme = function(temp, animate){
+  _origApply(temp, animate);
+  const T = THEMES[getThemeForTemp(temp)];
+  // update body before pseudo
+  document.documentElement.style.setProperty('--bg-grad', T.bg);
+};
+
+// hc-stat humidity update (hero card)
+// also populate id on the stat
+const humStat = document.querySelector('.hc-stat:first-child .hc-sv');
+if(humStat) humStat.id = 'hc-hum-val';
+
+/* Also add WhatsApp buttons to existing service items */
+document.querySelectorAll('.sg-item').forEach(item => {
+  const title = item.querySelector('.sg-title')?.textContent || 'AC Service';
+  const waBtn = document.createElement('button');
+  waBtn.className = 'btn btn-ghost btn-sm';
+  waBtn.style.cssText = 'margin-top:10px;width:100%;font-size:10px;border-color:rgba(37,211,102,.3);color:rgba(37,211,102,.8)';
+  waBtn.textContent = '💬 Quick WhatsApp Enquiry';
+  waBtn.onclick = (e) => { e.stopPropagation(); quickWhatsApp(title); };
+  item.appendChild(waBtn);
+});
+
+/* Add WA button to contact form */
+const cfForm = $('contact-form');
+if(cfForm){
+  // Add city selector
+  const cityRow = document.createElement('div');
+  cityRow.className = 'cform-full';
+  cityRow.innerHTML = `<select id="wa-city" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'">${Object.keys(ZW_CITIES).map(c=>`<option value="${c}"${c==='Harare'?' selected':''}>${c}</option>`).join('')}</select>`;
+  cfForm.insertBefore(cityRow, cfForm.lastElementChild);
+  // Replace submit button
+  const lastBtn = cfForm.querySelector('button');
+  if(lastBtn){
+    lastBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="margin-right:8px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg> SEND VIA WHATSAPP — FREE ASSESSMENT`;
+    lastBtn.style.background = '#25D366';
+    lastBtn.style.clipPath = 'polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%)';
+    lastBtn.className = 'btn';
+    lastBtn.style.color = '#fff';
+    lastBtn.style.width = '100%';
+    lastBtn.style.border = 'none';
+    lastBtn.onclick = sendWhatsApp;
+  }
+}
+
+/* Scroll reveal rebind for new elements */
+document.querySelectorAll('.pg-item').forEach(el => revObs.observe(el));
+bindCur();
+</script>
+
 </body>
 </html>
